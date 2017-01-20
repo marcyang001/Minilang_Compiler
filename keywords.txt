@@ -1,0 +1,10 @@
+"while" 					{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return WHILE; }
+"do" 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return DO; }
+"done" 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return DONE; }
+"if" 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return IF; }
+"then" 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return THEN; }
+"else"						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return ELSE; }
+"endif" 					{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return ENDIF; }
+"print" 					{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return PRINT; }
+"read" 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return READ; }
+

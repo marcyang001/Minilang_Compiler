@@ -12,38 +12,45 @@ int line_num = 1;
 
 
 
-digit 	    		[0-9]
-integer 	    	([1-9]{digit}*|0?)
-floatNumber	    	{integer}.{digit}+
+digit 	    			[0-9]
+integer 	    		([1-9]{digit}*|0?)
+floatNumber	    		{integer}\.{digit}+
+string_literal			(\"([^\\\"]|\\.)*\")
+comment 				(\/\/.*)
 
 
 
 %%
-[ \t\r]*				{}
-[\n]					{ ++line_num; }
+[ \t\r]*					{}
+[\n]						{ ++line_num; }
+
+{integer}					{ yylval.int_val = atoi(yytext); return tINT; }
+{floatNumber}				{ yylval.int_val = atof(yytext); return tFLOAT; }
 
 
-"+"						{ yylval.op_val = new std::string(yytext); return PLUS; }
-"*"						{ yylval.op_val = new std::string(yytext); return MULT; }
-"/"						{ yylval.op_val = new std::string(yytext); return DIV; }
-"-"						{ yylval.op_val = new std::string(yytext); return MINUS; }
-"=="					{ yylval.op_val = new std::string(yytext); return EQUAL; }
+"+"							{ yylval.op_val = new std::string(yytext); return PLUS; }
+"*"							{ yylval.op_val = new std::string(yytext); return MULT; }
+"/"							{ yylval.op_val = new std::string(yytext); return DIV; }
+"-"							{ yylval.op_val = new std::string(yytext); return MINUS; }
+"=="						{ yylval.op_val = new std::string(yytext); return EQUAL; }
 
-"="         			{ yylval.op_val = new std::string(yytext); return tASSIGN; }
-
-
-[_a-zA-Z][a-zA-Z0-9]*	{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tIDEN; }
-
-
+"="         				{ yylval.op_val = new std::string(yytext); return tASSIGN; }
+":"							{ yylval.op_val = new std::string(yytext); return COLON; }
+";"							{ yylval.op_val = new std::string(yytext); return ENDL; }
+{comment}					{ yylval.op_val = new std::string(yytext); return COMMENT; }
 
 
-{integer}				{ yylval.int_val = atoi(yytext); return tINT; }
-{floatNumber}			{ yylval.int_val = atof(yytext); return tFLOAT; }
+
+var	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return VAR; }
+while 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return WHILE; }
+int 						{ yylval.op_val = new std::string(yytext); return INT; }
+float 						{ yylval.op_val = new std::string(yytext); return FLOAT; }
+string 						{ yylval.op_val = new std::string(yytext); return STRING; }
 
 
-int 					{ return INT; }
-float 					{ return FLOAT; }
-string 					{ return STRING; }
+[_a-zA-Z][a-zA-Z0-9]*		{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tIDEN; }
+{string_literal}			{ yylval.op_val = new std::string(yytext); return tSTRING_LITERAL; }
 
+.           				{ std::cerr << "SCANNER " << endl; yyerror(""); exit(1);    }
 
-.		{ std::cerr << "SCANNER "; exit(1);	}
+%%

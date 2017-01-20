@@ -21,7 +21,7 @@ int yylex(void);
 // define the keyword tokens:
 
 // keywords
-%token<stringconst>   VAR
+%token<stringconst> VAR
 %token<stringconst>   WHILE 
 %token<stringconst>   DO
 %token<stringconst>   DONE 
@@ -40,9 +40,11 @@ int yylex(void);
 
 
 // values
-%token<stringconst>  tIDEN
-%token<f_val>        tFLOAT 
-%token<int_val>      tINT
+%token<stringconst>   tIDEN
+%token<f_val>         tFLOAT 
+%token<int_val>       tINT
+%token<stringconst>   tSTRING_LITERAL
+
 
 //operators
 %token<op_val> PLUS
@@ -51,36 +53,42 @@ int yylex(void);
 %token<op_val> DIV
 %token<op_val> EQUAL
 %token<op_val> tASSIGN
+%token<op_val> COMMENT
+
+%token<op_val> ENDL
+%left<op_val> COLON
+
+
 
 %start input 
 
 
 %%
 
-input:		/* empty */
-    | input number
-    | input identifier
-    | number
-    | identifier
+input:		/* empty */ 
+    declarations { cout << "VALID!" << endl; }
 		;
 
 
-number:
-    tINT            { cout << "Found an int" << endl; }
-    | tFLOAT          { cout << "Found a float" << endl; } 
+
+declarations:
+    declarations VAR tIDEN COLON FLOAT ENDL  
+    | declarations VAR tIDEN COLON INT ENDL   
+    | declarations VAR tIDEN COLON STRING ENDL 
+    | VAR tIDEN COLON FLOAT ENDL 
+    | VAR tIDEN COLON INT ENDL 
+    | VAR tIDEN COLON STRING ENDL
     ;
+
 
 
 identifier:
-    tIDEN { cout << "found an identifier " << $1 << endl; }
+    tIDEN                   { cout << "found an identifier " << $1 << endl; }
 		;
 
-type:
-    FLOAT
-    | STRING
-    | INT
+comment:
+    COMMENT         { cout << "This is a comment " << endl; }
     ;
-
 
 
 %%
@@ -91,7 +99,7 @@ int yyerror(string s)
   extern int line_num;	// defined and maintained in lex.c
   extern char *yytext;	// defined and maintained in lex.c
   
-  cout << "ERROR: " << s << " at symbol \"" << yytext;
+  cout << "INVALID: " << s << " at symbol \"" << yytext;
   cout << "\" on line " << line_num << endl;
   exit(1);
 }

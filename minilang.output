@@ -1,11 +1,11 @@
 Useless nonterminals
 
-   type
+   identifier
+   comment
 
 
 Terminals which are not used
 
-   VAR
    WHILE
    DO
    DONE
@@ -15,48 +15,44 @@ Terminals which are not used
    ENDIF
    PRINT
    READ
-   FLOAT
-   STRING
-   INT
+   tFLOAT
+   tINT
+   tSTRING_LITERAL
    PLUS
    MINUS
    MULT
    DIV
    EQUAL
    tASSIGN
+   COMMENT
 
 
 Useless rules
 
-    9 type: FLOAT
-   10     | STRING
-   11     | INT
+    8 identifier: tIDEN
 
-
-State 0 conflicts: 3 shift/reduce
+    9 comment: COMMENT
 
 
 Grammar
 
     0 $accept: input $end
 
-    1 input: /* empty */
-    2      | input number
-    3      | input identifier
-    4      | number
-    5      | identifier
+    1 input: declarations
 
-    6 number: tINT
-    7       | tFLOAT
-
-    8 identifier: tIDEN
+    2 declarations: declarations VAR tIDEN COLON FLOAT ENDL
+    3             | declarations VAR tIDEN COLON INT ENDL
+    4             | declarations VAR tIDEN COLON STRING ENDL
+    5             | VAR tIDEN COLON FLOAT ENDL
+    6             | VAR tIDEN COLON INT ENDL
+    7             | VAR tIDEN COLON STRING ENDL
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-VAR (258)
+VAR (258) 2 3 4 5 6 7
 WHILE (259)
 DO (260)
 DONE (261)
@@ -66,116 +62,207 @@ ELSE (264)
 ENDIF (265)
 PRINT (266)
 READ (267)
-FLOAT (268)
-STRING (269)
-INT (270)
-tIDEN (271) 8
-tFLOAT (272) 7
-tINT (273) 6
-PLUS (274)
-MINUS (275)
-MULT (276)
-DIV (277)
-EQUAL (278)
-tASSIGN (279)
+FLOAT (268) 2 5
+STRING (269) 4 7
+INT (270) 3 6
+tIDEN (271) 2 3 4 5 6 7
+tFLOAT (272)
+tINT (273)
+tSTRING_LITERAL (274)
+PLUS (275)
+MINUS (276)
+MULT (277)
+DIV (278)
+EQUAL (279)
+tASSIGN (280)
+COMMENT (281)
+ENDL (282) 2 3 4 5 6 7
+COLON (283) 2 3 4 5 6 7
 
 
 Nonterminals, with rules where they appear
 
-$accept (25)
+$accept (29)
     on left: 0
-input (26)
-    on left: 1 2 3 4 5, on right: 0 2 3
-number (27)
-    on left: 6 7, on right: 2 4
-identifier (28)
-    on left: 8, on right: 3 5
+input (30)
+    on left: 1, on right: 0
+declarations (31)
+    on left: 2 3 4 5 6 7, on right: 1 2 3 4
 
 
 state 0
 
     0 $accept: . input $end
 
-    tIDEN   shift, and go to state 1
-    tFLOAT  shift, and go to state 2
-    tINT    shift, and go to state 3
+    VAR  shift, and go to state 1
 
-    tIDEN     [reduce using rule 1 (input)]
-    tFLOAT    [reduce using rule 1 (input)]
-    tINT      [reduce using rule 1 (input)]
-    $default  reduce using rule 1 (input)
-
-    input       go to state 4
-    number      go to state 5
-    identifier  go to state 6
+    input         go to state 2
+    declarations  go to state 3
 
 
 state 1
 
-    8 identifier: tIDEN .
+    5 declarations: VAR . tIDEN COLON FLOAT ENDL
+    6             | VAR . tIDEN COLON INT ENDL
+    7             | VAR . tIDEN COLON STRING ENDL
 
-    $default  reduce using rule 8 (identifier)
+    tIDEN  shift, and go to state 4
 
 
 state 2
 
-    7 number: tFLOAT .
+    0 $accept: input . $end
 
-    $default  reduce using rule 7 (number)
+    $end  shift, and go to state 5
 
 
 state 3
 
-    6 number: tINT .
+    1 input: declarations .
+    2 declarations: declarations . VAR tIDEN COLON FLOAT ENDL
+    3             | declarations . VAR tIDEN COLON INT ENDL
+    4             | declarations . VAR tIDEN COLON STRING ENDL
 
-    $default  reduce using rule 6 (number)
+    VAR  shift, and go to state 6
+
+    $default  reduce using rule 1 (input)
 
 
 state 4
 
-    0 $accept: input . $end
-    2 input: input . number
-    3      | input . identifier
+    5 declarations: VAR tIDEN . COLON FLOAT ENDL
+    6             | VAR tIDEN . COLON INT ENDL
+    7             | VAR tIDEN . COLON STRING ENDL
 
-    $end    shift, and go to state 7
-    tIDEN   shift, and go to state 1
-    tFLOAT  shift, and go to state 2
-    tINT    shift, and go to state 3
-
-    number      go to state 8
-    identifier  go to state 9
+    COLON  shift, and go to state 7
 
 
 state 5
-
-    4 input: number .
-
-    $default  reduce using rule 4 (input)
-
-
-state 6
-
-    5 input: identifier .
-
-    $default  reduce using rule 5 (input)
-
-
-state 7
 
     0 $accept: input $end .
 
     $default  accept
 
 
+state 6
+
+    2 declarations: declarations VAR . tIDEN COLON FLOAT ENDL
+    3             | declarations VAR . tIDEN COLON INT ENDL
+    4             | declarations VAR . tIDEN COLON STRING ENDL
+
+    tIDEN  shift, and go to state 8
+
+
+state 7
+
+    5 declarations: VAR tIDEN COLON . FLOAT ENDL
+    6             | VAR tIDEN COLON . INT ENDL
+    7             | VAR tIDEN COLON . STRING ENDL
+
+    FLOAT   shift, and go to state 9
+    STRING  shift, and go to state 10
+    INT     shift, and go to state 11
+
+
 state 8
 
-    2 input: input number .
+    2 declarations: declarations VAR tIDEN . COLON FLOAT ENDL
+    3             | declarations VAR tIDEN . COLON INT ENDL
+    4             | declarations VAR tIDEN . COLON STRING ENDL
 
-    $default  reduce using rule 2 (input)
+    COLON  shift, and go to state 12
 
 
 state 9
 
-    3 input: input identifier .
+    5 declarations: VAR tIDEN COLON FLOAT . ENDL
 
-    $default  reduce using rule 3 (input)
+    ENDL  shift, and go to state 13
+
+
+state 10
+
+    7 declarations: VAR tIDEN COLON STRING . ENDL
+
+    ENDL  shift, and go to state 14
+
+
+state 11
+
+    6 declarations: VAR tIDEN COLON INT . ENDL
+
+    ENDL  shift, and go to state 15
+
+
+state 12
+
+    2 declarations: declarations VAR tIDEN COLON . FLOAT ENDL
+    3             | declarations VAR tIDEN COLON . INT ENDL
+    4             | declarations VAR tIDEN COLON . STRING ENDL
+
+    FLOAT   shift, and go to state 16
+    STRING  shift, and go to state 17
+    INT     shift, and go to state 18
+
+
+state 13
+
+    5 declarations: VAR tIDEN COLON FLOAT ENDL .
+
+    $default  reduce using rule 5 (declarations)
+
+
+state 14
+
+    7 declarations: VAR tIDEN COLON STRING ENDL .
+
+    $default  reduce using rule 7 (declarations)
+
+
+state 15
+
+    6 declarations: VAR tIDEN COLON INT ENDL .
+
+    $default  reduce using rule 6 (declarations)
+
+
+state 16
+
+    2 declarations: declarations VAR tIDEN COLON FLOAT . ENDL
+
+    ENDL  shift, and go to state 19
+
+
+state 17
+
+    4 declarations: declarations VAR tIDEN COLON STRING . ENDL
+
+    ENDL  shift, and go to state 20
+
+
+state 18
+
+    3 declarations: declarations VAR tIDEN COLON INT . ENDL
+
+    ENDL  shift, and go to state 21
+
+
+state 19
+
+    2 declarations: declarations VAR tIDEN COLON FLOAT ENDL .
+
+    $default  reduce using rule 2 (declarations)
+
+
+state 20
+
+    4 declarations: declarations VAR tIDEN COLON STRING ENDL .
+
+    $default  reduce using rule 4 (declarations)
+
+
+state 21
+
+    3 declarations: declarations VAR tIDEN COLON INT ENDL .
+
+    $default  reduce using rule 3 (declarations)

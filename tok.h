@@ -55,12 +55,16 @@
      tIDEN = 271,
      tFLOAT = 272,
      tINT = 273,
-     PLUS = 274,
-     MINUS = 275,
-     MULT = 276,
-     DIV = 277,
-     EQUAL = 278,
-     tASSIGN = 279
+     tSTRING_LITERAL = 274,
+     PLUS = 275,
+     MINUS = 276,
+     MULT = 277,
+     DIV = 278,
+     EQUAL = 279,
+     tASSIGN = 280,
+     COMMENT = 281,
+     ENDL = 282,
+     COLON = 283
    };
 #endif
 /* Tokens.  */
@@ -80,12 +84,16 @@
 #define tIDEN 271
 #define tFLOAT 272
 #define tINT 273
-#define PLUS 274
-#define MINUS 275
-#define MULT 276
-#define DIV 277
-#define EQUAL 278
-#define tASSIGN 279
+#define tSTRING_LITERAL 274
+#define PLUS 275
+#define MINUS 276
+#define MULT 277
+#define DIV 278
+#define EQUAL 279
+#define tASSIGN 280
+#define COMMENT 281
+#define ENDL 282
+#define COLON 283
 
 
 
@@ -100,7 +108,7 @@ typedef union YYSTYPE
     float         f_val;
 }
 /* Line 1529 of yacc.c.  */
-#line 104 "minilang.tab.h"
+#line 112 "minilang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -82,12 +82,16 @@
      tIDEN = 271,
      tFLOAT = 272,
      tINT = 273,
-     PLUS = 274,
-     MINUS = 275,
-     MULT = 276,
-     DIV = 277,
-     EQUAL = 278,
-     tASSIGN = 279
+     tSTRING_LITERAL = 274,
+     PLUS = 275,
+     MINUS = 276,
+     MULT = 277,
+     DIV = 278,
+     EQUAL = 279,
+     tASSIGN = 280,
+     COMMENT = 281,
+     ENDL = 282,
+     COLON = 283
    };
 #endif
 /* Tokens.  */
@@ -107,12 +111,16 @@
 #define tIDEN 271
 #define tFLOAT 272
 #define tINT 273
-#define PLUS 274
-#define MINUS 275
-#define MULT 276
-#define DIV 277
-#define EQUAL 278
-#define tASSIGN 279
+#define tSTRING_LITERAL 274
+#define PLUS 275
+#define MINUS 276
+#define MULT 277
+#define DIV 278
+#define EQUAL 279
+#define tASSIGN 280
+#define COMMENT 281
+#define ENDL 282
+#define COLON 283
 
 
 
@@ -156,7 +164,7 @@ typedef union YYSTYPE
     float         f_val;
 }
 /* Line 193 of yacc.c.  */
-#line 160 "minilang.tab.c"
+#line 168 "minilang.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -169,7 +177,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 173 "minilang.tab.c"
+#line 181 "minilang.tab.c"
 
 #ifdef short
 # undef short
@@ -382,22 +390,22 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  7
+#define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   18
+#define YYLAST   21
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  25
+#define YYNTOKENS  29
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  4
+#define YYNNTS  3
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  9
+#define YYNRULES  8
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  10
+#define YYNSTATES  22
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   279
+#define YYMAXUTOK   283
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -432,7 +440,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,    23,    24
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28
 };
 
 #if YYDEBUG
@@ -440,20 +449,23 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     4,     7,    10,    12,    14,    16,    18
+       0,     0,     3,     5,    12,    19,    26,    32,    38
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      26,     0,    -1,    -1,    26,    27,    -1,    26,    28,    -1,
-      27,    -1,    28,    -1,    18,    -1,    17,    -1,    16,    -1
+      30,     0,    -1,    31,    -1,    31,     3,    16,    28,    13,
+      27,    -1,    31,     3,    16,    28,    15,    27,    -1,    31,
+       3,    16,    28,    14,    27,    -1,     3,    16,    28,    13,
+      27,    -1,     3,    16,    28,    15,    27,    -1,     3,    16,
+      28,    14,    27,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    60,    60,    61,    62,    63,    64,    69,    70,    75
+       0,    69,    69,    75,    76,    77,    78,    79,    80
 };
 #endif
 
@@ -464,8 +476,9 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "VAR", "WHILE", "DO", "DONE", "IF",
   "THEN", "ELSE", "ENDIF", "PRINT", "READ", "FLOAT", "STRING", "INT",
-  "tIDEN", "tFLOAT", "tINT", "PLUS", "MINUS", "MULT", "DIV", "EQUAL",
-  "tASSIGN", "$accept", "input", "number", "identifier", 0
+  "tIDEN", "tFLOAT", "tINT", "tSTRING_LITERAL", "PLUS", "MINUS", "MULT",
+  "DIV", "EQUAL", "tASSIGN", "COMMENT", "ENDL", "COLON", "$accept",
+  "input", "declarations", 0
 };
 #endif
 
@@ -476,20 +489,20 @@ static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,   279
+     275,   276,   277,   278,   279,   280,   281,   282,   283
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    25,    26,    26,    26,    26,    26,    27,    27,    28
+       0,    29,    30,    31,    31,    31,    31,    31,    31
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     2,     1,     1,     1,     1,     1
+       0,     2,     1,     6,     6,     6,     5,     5,     5
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -497,27 +510,31 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,     9,     8,     7,     0,     5,     6,     1,     3,     4
+       0,     0,     0,     2,     0,     1,     0,     0,     0,     0,
+       0,     0,     0,     6,     8,     7,     0,     0,     0,     3,
+       5,     4
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     4,     5,     6
+      -1,     2,     3
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -16
+#define YYPACT_NINF -19
 static const yytype_int8 yypact[] =
 {
-     -15,   -16,   -16,   -16,     0,   -16,   -16,   -16,   -16,   -16
+       3,    -9,     8,     6,   -18,   -19,    -5,   -13,   -16,   -14,
+     -12,   -11,   -10,   -19,   -19,   -19,    -8,    -7,    -6,   -19,
+     -19,   -19
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -16,   -16,     1,     2
+     -19,   -19,   -19
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -527,21 +544,25 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       7,     1,     2,     3,     0,     8,     9,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     1,     2,     3
+       9,    10,    11,    16,    17,    18,     1,     4,     5,     6,
+       7,     8,    12,    13,     0,    14,    15,     0,     0,    19,
+      20,    21
 };
 
 static const yytype_int8 yycheck[] =
 {
-       0,    16,    17,    18,    -1,     4,     4,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    16,    17,    18
+      13,    14,    15,    13,    14,    15,     3,    16,     0,     3,
+      28,    16,    28,    27,    -1,    27,    27,    -1,    -1,    27,
+      27,    27
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    16,    17,    18,    26,    27,    28,     0,    27,    28
+       0,     3,    30,    31,    16,     0,     3,    28,    16,    13,
+      14,    15,    28,    27,    27,    27,    13,    14,    15,    27,
+      27,    27
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1355,24 +1376,14 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 7:
+        case 2:
 #line 69 "minilang.y"
-    { cout << "Found an int" << endl; ;}
-    break;
-
-  case 8:
-#line 70 "minilang.y"
-    { cout << "Found a float" << endl; ;}
-    break;
-
-  case 9:
-#line 75 "minilang.y"
-    { cout << "found an identifier " << (yyvsp[(1) - (1)].stringconst) << endl; ;}
+    { cout << "VALID!" << endl; ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1376 "minilang.tab.c"
+#line 1387 "minilang.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1586,7 +1597,7 @@ yyreturn:
 }
 
 
-#line 86 "minilang.y"
+#line 94 "minilang.y"
 
 
 
@@ -1595,7 +1606,7 @@ int yyerror(string s)
   extern int line_num;	// defined and maintained in lex.c
   extern char *yytext;	// defined and maintained in lex.c
   
-  cout << "ERROR: " << s << " at symbol \"" << yytext;
+  cout << "INVALID: " << s << " at symbol \"" << yytext;
   cout << "\" on line " << line_num << endl;
   exit(1);
 }
