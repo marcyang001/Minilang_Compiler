@@ -784,22 +784,22 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 31 "minilang.lex"
-{ yylval.op_val = new std::string(yytext); return PLUS; }
+{ return '+'; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 32 "minilang.lex"
-{ yylval.op_val = new std::string(yytext); return MULT; }
+{ return '*'; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 33 "minilang.lex"
-{ yylval.op_val = new std::string(yytext); return DIV; }
+{ return '/'; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 34 "minilang.lex"
-{ yylval.op_val = new std::string(yytext); return MINUS; }
+{ return '-'; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
@@ -828,48 +828,48 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 44 "minilang.lex"
+#line 43 "minilang.lex"
 { yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return VAR; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 45 "minilang.lex"
+#line 44 "minilang.lex"
 { yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return WHILE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 46 "minilang.lex"
+#line 45 "minilang.lex"
 { yylval.op_val = new std::string(yytext); return INT; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 47 "minilang.lex"
+#line 46 "minilang.lex"
 { yylval.op_val = new std::string(yytext); return FLOAT; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 48 "minilang.lex"
+#line 47 "minilang.lex"
 { yylval.op_val = new std::string(yytext); return STRING; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 51 "minilang.lex"
+#line 50 "minilang.lex"
 { yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tIDEN; }
 	YY_BREAK
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 52 "minilang.lex"
+#line 51 "minilang.lex"
 { yylval.op_val = new std::string(yytext); return tSTRING_LITERAL; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 54 "minilang.lex"
+#line 53 "minilang.lex"
 { std::cerr << "SCANNER " << endl; yyerror(""); exit(1);    }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 56 "minilang.lex"
+#line 55 "minilang.lex"
 ECHO;
 	YY_BREAK
 #line 876 "lex.yy.c"
@@ -1869,7 +1869,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 56 "minilang.lex"
+#line 55 "minilang.lex"
 
 
 

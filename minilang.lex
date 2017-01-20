@@ -28,17 +28,16 @@ comment 				(\/\/.*)
 {floatNumber}				{ yylval.int_val = atof(yytext); return tFLOAT; }
 
 
-"+"							{ yylval.op_val = new std::string(yytext); return PLUS; }
-"*"							{ yylval.op_val = new std::string(yytext); return MULT; }
-"/"							{ yylval.op_val = new std::string(yytext); return DIV; }
-"-"							{ yylval.op_val = new std::string(yytext); return MINUS; }
+"+"							{ return '+'; }
+"*"							{ return '*'; }
+"/"							{ return '/'; }
+"-"							{ return '-'; }
 "=="						{ yylval.op_val = new std::string(yytext); return EQUAL; }
 
 "="         				{ yylval.op_val = new std::string(yytext); return tASSIGN; }
 ":"							{ yylval.op_val = new std::string(yytext); return COLON; }
 ";"							{ yylval.op_val = new std::string(yytext); return ENDL; }
 {comment}					{ yylval.op_val = new std::string(yytext); return COMMENT; }
-
 
 
 var	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return VAR; }

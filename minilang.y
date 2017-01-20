@@ -21,7 +21,7 @@ int yylex(void);
 // define the keyword tokens:
 
 // keywords
-%token<stringconst> VAR
+%token<stringconst>   VAR
 %token<stringconst>   WHILE 
 %token<stringconst>   DO
 %token<stringconst>   DONE 
@@ -47,10 +47,9 @@ int yylex(void);
 
 
 //operators
-%token<op_val> PLUS
-%token<op_val> MINUS
-%token<op_val> MULT
-%token<op_val> DIV
+%left '+' '-'
+%left '*' '/'
+%left UMINUS
 %token<op_val> EQUAL
 %token<op_val> tASSIGN
 %token<op_val> COMMENT
@@ -66,9 +65,9 @@ int yylex(void);
 %%
 
 input:		/* empty */ 
-    declarations { cout << "VALID!" << endl; }
-		;
-
+    numberExp input
+    | numberExp
+    ;
 
 
 declarations:
@@ -80,6 +79,24 @@ declarations:
     | VAR tIDEN COLON STRING ENDL
     ;
 
+
+numberExp:
+    numberExp '-' numberExp
+    | numberExp '+' numberExp
+    | numberExp '*' numberExp
+    | numberExp '/' numberExp
+    | '-' numberExp %prec UMINUS
+    | tINT 
+    | tFLOAT
+    | tIDEN
+    ;
+
+testnumber:
+    tFLOAT input { cout << "found a float " << endl; }
+    | tINT input  { cout << "found a int " << endl; }
+    | tFLOAT  { cout << "found a float " << endl; }
+    | tINT      { cout << "found a int " << endl; }
+    ;
 
 
 identifier:

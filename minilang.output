@@ -1,11 +1,14 @@
 Useless nonterminals
 
+   declarations
+   testnumber
    identifier
    comment
 
 
 Terminals which are not used
 
+   VAR
    WHILE
    DO
    DONE
@@ -15,44 +18,65 @@ Terminals which are not used
    ENDIF
    PRINT
    READ
-   tFLOAT
-   tINT
+   FLOAT
+   STRING
+   INT
    tSTRING_LITERAL
-   PLUS
-   MINUS
-   MULT
-   DIV
    EQUAL
    tASSIGN
    COMMENT
+   ENDL
+   COLON
 
 
 Useless rules
 
-    8 identifier: tIDEN
+   11 declarations: declarations VAR tIDEN COLON FLOAT ENDL
+   12             | declarations VAR tIDEN COLON INT ENDL
+   13             | declarations VAR tIDEN COLON STRING ENDL
+   14             | VAR tIDEN COLON FLOAT ENDL
+   15             | VAR tIDEN COLON INT ENDL
+   16             | VAR tIDEN COLON STRING ENDL
 
-    9 comment: COMMENT
+   17 testnumber: tFLOAT input
+   18           | tINT input
+   19           | tFLOAT
+   20           | tINT
+
+   21 identifier: tIDEN
+
+   22 comment: COMMENT
+
+
+State 16 conflicts: 6 reduce/reduce
 
 
 Grammar
 
     0 $accept: input $end
 
-    1 input: declarations
+    1 input: numberExp input
+    2      | numberExp
 
-    2 declarations: declarations VAR tIDEN COLON FLOAT ENDL
-    3             | declarations VAR tIDEN COLON INT ENDL
-    4             | declarations VAR tIDEN COLON STRING ENDL
-    5             | VAR tIDEN COLON FLOAT ENDL
-    6             | VAR tIDEN COLON INT ENDL
-    7             | VAR tIDEN COLON STRING ENDL
+    3 numberExp: numberExp '-' numberExp
+    4          | numberExp '+' numberExp
+    5          | numberExp '*' numberExp
+    6          | numberExp '/' numberExp
+    7          | '-' numberExp
+    8          | tINT
+    9          | tFLOAT
+   10          | tIDEN
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
+'*' (42) 5
+'+' (43) 4
+'-' (45) 3 7
+'/' (47) 6
 error (256)
-VAR (258) 2 3 4 5 6 7
+VAR (258)
 WHILE (259)
 DO (260)
 DONE (261)
@@ -62,207 +86,264 @@ ELSE (264)
 ENDIF (265)
 PRINT (266)
 READ (267)
-FLOAT (268) 2 5
-STRING (269) 4 7
-INT (270) 3 6
-tIDEN (271) 2 3 4 5 6 7
-tFLOAT (272)
-tINT (273)
+FLOAT (268)
+STRING (269)
+INT (270)
+tIDEN (271) 10
+tFLOAT (272) 9
+tINT (273) 8
 tSTRING_LITERAL (274)
-PLUS (275)
-MINUS (276)
-MULT (277)
-DIV (278)
-EQUAL (279)
-tASSIGN (280)
-COMMENT (281)
-ENDL (282) 2 3 4 5 6 7
-COLON (283) 2 3 4 5 6 7
+UMINUS (275)
+EQUAL (276)
+tASSIGN (277)
+COMMENT (278)
+ENDL (279)
+COLON (280)
 
 
 Nonterminals, with rules where they appear
 
-$accept (29)
+$accept (30)
     on left: 0
-input (30)
-    on left: 1, on right: 0
-declarations (31)
-    on left: 2 3 4 5 6 7, on right: 1 2 3 4
+input (31)
+    on left: 1 2, on right: 0 1
+numberExp (32)
+    on left: 3 4 5 6 7 8 9 10, on right: 1 2 3 4 5 6 7
 
 
 state 0
 
     0 $accept: . input $end
 
-    VAR  shift, and go to state 1
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
 
-    input         go to state 2
-    declarations  go to state 3
+    input      go to state 5
+    numberExp  go to state 6
 
 
 state 1
 
-    5 declarations: VAR . tIDEN COLON FLOAT ENDL
-    6             | VAR . tIDEN COLON INT ENDL
-    7             | VAR . tIDEN COLON STRING ENDL
+   10 numberExp: tIDEN .
 
-    tIDEN  shift, and go to state 4
+    $default  reduce using rule 10 (numberExp)
 
 
 state 2
 
-    0 $accept: input . $end
+    9 numberExp: tFLOAT .
 
-    $end  shift, and go to state 5
+    $default  reduce using rule 9 (numberExp)
 
 
 state 3
 
-    1 input: declarations .
-    2 declarations: declarations . VAR tIDEN COLON FLOAT ENDL
-    3             | declarations . VAR tIDEN COLON INT ENDL
-    4             | declarations . VAR tIDEN COLON STRING ENDL
+    8 numberExp: tINT .
 
-    VAR  shift, and go to state 6
-
-    $default  reduce using rule 1 (input)
+    $default  reduce using rule 8 (numberExp)
 
 
 state 4
 
-    5 declarations: VAR tIDEN . COLON FLOAT ENDL
-    6             | VAR tIDEN . COLON INT ENDL
-    7             | VAR tIDEN . COLON STRING ENDL
+    7 numberExp: '-' . numberExp
 
-    COLON  shift, and go to state 7
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
+
+    numberExp  go to state 7
 
 
 state 5
+
+    0 $accept: input . $end
+
+    $end  shift, and go to state 8
+
+
+state 6
+
+    1 input: numberExp . input
+    2      | numberExp .
+    3 numberExp: numberExp . '-' numberExp
+    4          | numberExp . '+' numberExp
+    5          | numberExp . '*' numberExp
+    6          | numberExp . '/' numberExp
+
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '+'     shift, and go to state 9
+    '-'     shift, and go to state 10
+    '*'     shift, and go to state 11
+    '/'     shift, and go to state 12
+
+    $default  reduce using rule 2 (input)
+
+    input      go to state 13
+    numberExp  go to state 6
+
+
+state 7
+
+    3 numberExp: numberExp . '-' numberExp
+    4          | numberExp . '+' numberExp
+    5          | numberExp . '*' numberExp
+    6          | numberExp . '/' numberExp
+    7          | '-' numberExp .
+
+    $default  reduce using rule 7 (numberExp)
+
+
+state 8
 
     0 $accept: input $end .
 
     $default  accept
 
 
-state 6
-
-    2 declarations: declarations VAR . tIDEN COLON FLOAT ENDL
-    3             | declarations VAR . tIDEN COLON INT ENDL
-    4             | declarations VAR . tIDEN COLON STRING ENDL
-
-    tIDEN  shift, and go to state 8
-
-
-state 7
-
-    5 declarations: VAR tIDEN COLON . FLOAT ENDL
-    6             | VAR tIDEN COLON . INT ENDL
-    7             | VAR tIDEN COLON . STRING ENDL
-
-    FLOAT   shift, and go to state 9
-    STRING  shift, and go to state 10
-    INT     shift, and go to state 11
-
-
-state 8
-
-    2 declarations: declarations VAR tIDEN . COLON FLOAT ENDL
-    3             | declarations VAR tIDEN . COLON INT ENDL
-    4             | declarations VAR tIDEN . COLON STRING ENDL
-
-    COLON  shift, and go to state 12
-
-
 state 9
 
-    5 declarations: VAR tIDEN COLON FLOAT . ENDL
+    4 numberExp: numberExp '+' . numberExp
 
-    ENDL  shift, and go to state 13
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
+
+    numberExp  go to state 15
 
 
 state 10
 
-    7 declarations: VAR tIDEN COLON STRING . ENDL
+    3 numberExp: numberExp '-' . numberExp
+    7          | '-' . numberExp
 
-    ENDL  shift, and go to state 14
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
+
+    numberExp  go to state 16
 
 
 state 11
 
-    6 declarations: VAR tIDEN COLON INT . ENDL
+    5 numberExp: numberExp '*' . numberExp
 
-    ENDL  shift, and go to state 15
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
+
+    numberExp  go to state 17
 
 
 state 12
 
-    2 declarations: declarations VAR tIDEN COLON . FLOAT ENDL
-    3             | declarations VAR tIDEN COLON . INT ENDL
-    4             | declarations VAR tIDEN COLON . STRING ENDL
+    6 numberExp: numberExp '/' . numberExp
 
-    FLOAT   shift, and go to state 16
-    STRING  shift, and go to state 17
-    INT     shift, and go to state 18
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
+
+    numberExp  go to state 18
 
 
 state 13
 
-    5 declarations: VAR tIDEN COLON FLOAT ENDL .
+    1 input: numberExp input .
 
-    $default  reduce using rule 5 (declarations)
+    $default  reduce using rule 1 (input)
 
 
 state 14
 
-    7 declarations: VAR tIDEN COLON STRING ENDL .
+    3 numberExp: numberExp '-' . numberExp
 
-    $default  reduce using rule 7 (declarations)
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
+
+    numberExp  go to state 19
 
 
 state 15
 
-    6 declarations: VAR tIDEN COLON INT ENDL .
+    3 numberExp: numberExp . '-' numberExp
+    4          | numberExp . '+' numberExp
+    4          | numberExp '+' numberExp .
+    5          | numberExp . '*' numberExp
+    6          | numberExp . '/' numberExp
 
-    $default  reduce using rule 6 (declarations)
+    '*'  shift, and go to state 11
+    '/'  shift, and go to state 12
+
+    $default  reduce using rule 4 (numberExp)
 
 
 state 16
 
-    2 declarations: declarations VAR tIDEN COLON FLOAT . ENDL
+    3 numberExp: numberExp . '-' numberExp
+    3          | numberExp '-' numberExp .
+    4          | numberExp . '+' numberExp
+    5          | numberExp . '*' numberExp
+    6          | numberExp . '/' numberExp
+    7          | '-' numberExp .
 
-    ENDL  shift, and go to state 19
+    $end      reduce using rule 3 (numberExp)
+    $end      [reduce using rule 7 (numberExp)]
+    tIDEN     reduce using rule 3 (numberExp)
+    tIDEN     [reduce using rule 7 (numberExp)]
+    tFLOAT    reduce using rule 3 (numberExp)
+    tFLOAT    [reduce using rule 7 (numberExp)]
+    tINT      reduce using rule 3 (numberExp)
+    tINT      [reduce using rule 7 (numberExp)]
+    '+'       reduce using rule 3 (numberExp)
+    '+'       [reduce using rule 7 (numberExp)]
+    '-'       reduce using rule 3 (numberExp)
+    '-'       [reduce using rule 7 (numberExp)]
+    '*'       reduce using rule 7 (numberExp)
+    '/'       reduce using rule 7 (numberExp)
+    $default  reduce using rule 3 (numberExp)
 
 
 state 17
 
-    4 declarations: declarations VAR tIDEN COLON STRING . ENDL
+    3 numberExp: numberExp . '-' numberExp
+    4          | numberExp . '+' numberExp
+    5          | numberExp . '*' numberExp
+    5          | numberExp '*' numberExp .
+    6          | numberExp . '/' numberExp
 
-    ENDL  shift, and go to state 20
+    $default  reduce using rule 5 (numberExp)
 
 
 state 18
 
-    3 declarations: declarations VAR tIDEN COLON INT . ENDL
+    3 numberExp: numberExp . '-' numberExp
+    4          | numberExp . '+' numberExp
+    5          | numberExp . '*' numberExp
+    6          | numberExp . '/' numberExp
+    6          | numberExp '/' numberExp .
 
-    ENDL  shift, and go to state 21
+    $default  reduce using rule 6 (numberExp)
 
 
 state 19
 
-    2 declarations: declarations VAR tIDEN COLON FLOAT ENDL .
+    3 numberExp: numberExp . '-' numberExp
+    3          | numberExp '-' numberExp .
+    4          | numberExp . '+' numberExp
+    5          | numberExp . '*' numberExp
+    6          | numberExp . '/' numberExp
 
-    $default  reduce using rule 2 (declarations)
+    '*'  shift, and go to state 11
+    '/'  shift, and go to state 12
 
-
-state 20
-
-    4 declarations: declarations VAR tIDEN COLON STRING ENDL .
-
-    $default  reduce using rule 4 (declarations)
-
-
-state 21
-
-    3 declarations: declarations VAR tIDEN COLON INT ENDL .
-
-    $default  reduce using rule 3 (declarations)
+    $default  reduce using rule 3 (numberExp)
