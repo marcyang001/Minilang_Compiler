@@ -46,11 +46,17 @@ int yylex(void);
 %token<stringconst>   tSTRING_LITERAL
 
 
-//operators
+// numeric operators
 %left '+' '-'
 %left '*' '/'
-%left UMINUS
+%left NEG
+%token '(' ')'
+
+// boolean
+%token '<' '>'
+%token LEQUAL GEQUAL
 %token<op_val> EQUAL
+
 %token<op_val> tASSIGN
 %token<op_val> COMMENT
 
@@ -65,10 +71,9 @@ int yylex(void);
 %%
 
 input:		/* empty */ 
-    numberExp input
-    | numberExp
+    expOp input
+    | expOp
     ;
-
 
 declarations:
     declarations VAR tIDEN COLON FLOAT ENDL  
@@ -79,17 +84,33 @@ declarations:
     | VAR tIDEN COLON STRING ENDL
     ;
 
-
-numberExp:
-    numberExp '-' numberExp
-    | numberExp '+' numberExp
-    | numberExp '*' numberExp
-    | numberExp '/' numberExp
-    | '-' numberExp %prec UMINUS
+expOp:
+    expOp '-' expOp
+    | expOp '+' expOp
+    | expOp '*' expOp
+    | expOp '/' expOp
+    | '(' expOp ')'
+    | '-' expOp %prec UMINUS
     | tINT 
     | tFLOAT
     | tIDEN
     ;
+
+assignOp:
+    | tIDEN tASSIGN expOp  
+    | tIDEN tASSIGN tIDEN
+    | tIDEN tASSIGN boolean
+    | tIDEN
+    ;
+
+booleanOp:
+    | expOp '<' expOp
+    | expOp '>' expOp
+    | expOp LEQUAL expOp
+    | expOp GEQUAL expOp
+    | expOp EQUAL expOp
+    ;
+
 
 testnumber:
     tFLOAT input { cout << "found a float " << endl; }
@@ -98,10 +119,6 @@ testnumber:
     | tINT      { cout << "found a int " << endl; }
     ;
 
-
-identifier:
-    tIDEN                   { cout << "found an identifier " << $1 << endl; }
-		;
 
 comment:
     COMMENT         { cout << "This is a comment " << endl; }

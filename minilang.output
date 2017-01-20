@@ -31,49 +31,52 @@ Terminals which are not used
 
 Useless rules
 
-   11 declarations: declarations VAR tIDEN COLON FLOAT ENDL
-   12             | declarations VAR tIDEN COLON INT ENDL
-   13             | declarations VAR tIDEN COLON STRING ENDL
-   14             | VAR tIDEN COLON FLOAT ENDL
-   15             | VAR tIDEN COLON INT ENDL
-   16             | VAR tIDEN COLON STRING ENDL
+   12 declarations: declarations VAR tIDEN COLON FLOAT ENDL
+   13             | declarations VAR tIDEN COLON INT ENDL
+   14             | declarations VAR tIDEN COLON STRING ENDL
+   15             | VAR tIDEN COLON FLOAT ENDL
+   16             | VAR tIDEN COLON INT ENDL
+   17             | VAR tIDEN COLON STRING ENDL
 
-   17 testnumber: tFLOAT input
-   18           | tINT input
-   19           | tFLOAT
-   20           | tINT
+   18 testnumber: tFLOAT input
+   19           | tINT input
+   20           | tFLOAT
+   21           | tINT
 
-   21 identifier: tIDEN
+   22 identifier: tIDEN
 
-   22 comment: COMMENT
+   23 comment: COMMENT
 
 
-State 16 conflicts: 6 reduce/reduce
+State 19 conflicts: 7 reduce/reduce
 
 
 Grammar
 
     0 $accept: input $end
 
-    1 input: numberExp input
-    2      | numberExp
+    1 input: expression input
+    2      | expression
 
-    3 numberExp: numberExp '-' numberExp
-    4          | numberExp '+' numberExp
-    5          | numberExp '*' numberExp
-    6          | numberExp '/' numberExp
-    7          | '-' numberExp
-    8          | tINT
-    9          | tFLOAT
-   10          | tIDEN
+    3 expression: expression '-' expression
+    4           | expression '+' expression
+    5           | expression '*' expression
+    6           | expression '/' expression
+    7           | '(' expression ')'
+    8           | '-' expression
+    9           | tINT
+   10           | tFLOAT
+   11           | tIDEN
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
+'(' (40) 7
+')' (41) 7
 '*' (42) 5
 '+' (43) 4
-'-' (45) 3 7
+'-' (45) 3 8
 '/' (47) 6
 error (256)
 VAR (258)
@@ -89,9 +92,9 @@ READ (267)
 FLOAT (268)
 STRING (269)
 INT (270)
-tIDEN (271) 10
-tFLOAT (272) 9
-tINT (273) 8
+tIDEN (271) 11
+tFLOAT (272) 10
+tINT (273) 9
 tSTRING_LITERAL (274)
 UMINUS (275)
 EQUAL (276)
@@ -103,12 +106,12 @@ COLON (280)
 
 Nonterminals, with rules where they appear
 
-$accept (30)
+$accept (32)
     on left: 0
-input (31)
+input (33)
     on left: 1 2, on right: 0 1
-numberExp (32)
-    on left: 3 4 5 6 7 8 9 10, on right: 1 2 3 4 5 6 7
+expression (34)
+    on left: 3 4 5 6 7 8 9 10 11, on right: 1 2 3 4 5 6 7 8
 
 
 state 0
@@ -119,231 +122,276 @@ state 0
     tFLOAT  shift, and go to state 2
     tINT    shift, and go to state 3
     '-'     shift, and go to state 4
+    '('     shift, and go to state 5
 
-    input      go to state 5
-    numberExp  go to state 6
+    input       go to state 6
+    expression  go to state 7
 
 
 state 1
 
-   10 numberExp: tIDEN .
+   11 expression: tIDEN .
 
-    $default  reduce using rule 10 (numberExp)
+    $default  reduce using rule 11 (expression)
 
 
 state 2
 
-    9 numberExp: tFLOAT .
+   10 expression: tFLOAT .
 
-    $default  reduce using rule 9 (numberExp)
+    $default  reduce using rule 10 (expression)
 
 
 state 3
 
-    8 numberExp: tINT .
+    9 expression: tINT .
 
-    $default  reduce using rule 8 (numberExp)
+    $default  reduce using rule 9 (expression)
 
 
 state 4
 
-    7 numberExp: '-' . numberExp
+    8 expression: '-' . expression
 
     tIDEN   shift, and go to state 1
     tFLOAT  shift, and go to state 2
     tINT    shift, and go to state 3
     '-'     shift, and go to state 4
+    '('     shift, and go to state 5
 
-    numberExp  go to state 7
+    expression  go to state 8
 
 
 state 5
 
-    0 $accept: input . $end
-
-    $end  shift, and go to state 8
-
-
-state 6
-
-    1 input: numberExp . input
-    2      | numberExp .
-    3 numberExp: numberExp . '-' numberExp
-    4          | numberExp . '+' numberExp
-    5          | numberExp . '*' numberExp
-    6          | numberExp . '/' numberExp
+    7 expression: '(' . expression ')'
 
     tIDEN   shift, and go to state 1
     tFLOAT  shift, and go to state 2
     tINT    shift, and go to state 3
-    '+'     shift, and go to state 9
-    '-'     shift, and go to state 10
-    '*'     shift, and go to state 11
-    '/'     shift, and go to state 12
+    '-'     shift, and go to state 4
+    '('     shift, and go to state 5
 
-    $default  reduce using rule 2 (input)
+    expression  go to state 9
 
-    input      go to state 13
-    numberExp  go to state 6
+
+state 6
+
+    0 $accept: input . $end
+
+    $end  shift, and go to state 10
 
 
 state 7
 
-    3 numberExp: numberExp . '-' numberExp
-    4          | numberExp . '+' numberExp
-    5          | numberExp . '*' numberExp
-    6          | numberExp . '/' numberExp
-    7          | '-' numberExp .
+    1 input: expression . input
+    2      | expression .
+    3 expression: expression . '-' expression
+    4           | expression . '+' expression
+    5           | expression . '*' expression
+    6           | expression . '/' expression
 
-    $default  reduce using rule 7 (numberExp)
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '+'     shift, and go to state 11
+    '-'     shift, and go to state 12
+    '*'     shift, and go to state 13
+    '/'     shift, and go to state 14
+    '('     shift, and go to state 5
+
+    $default  reduce using rule 2 (input)
+
+    input       go to state 15
+    expression  go to state 7
 
 
 state 8
+
+    3 expression: expression . '-' expression
+    4           | expression . '+' expression
+    5           | expression . '*' expression
+    6           | expression . '/' expression
+    8           | '-' expression .
+
+    $default  reduce using rule 8 (expression)
+
+
+state 9
+
+    3 expression: expression . '-' expression
+    4           | expression . '+' expression
+    5           | expression . '*' expression
+    6           | expression . '/' expression
+    7           | '(' expression . ')'
+
+    '+'  shift, and go to state 11
+    '-'  shift, and go to state 16
+    '*'  shift, and go to state 13
+    '/'  shift, and go to state 14
+    ')'  shift, and go to state 17
+
+
+state 10
 
     0 $accept: input $end .
 
     $default  accept
 
 
-state 9
-
-    4 numberExp: numberExp '+' . numberExp
-
-    tIDEN   shift, and go to state 1
-    tFLOAT  shift, and go to state 2
-    tINT    shift, and go to state 3
-    '-'     shift, and go to state 4
-
-    numberExp  go to state 15
-
-
-state 10
-
-    3 numberExp: numberExp '-' . numberExp
-    7          | '-' . numberExp
-
-    tIDEN   shift, and go to state 1
-    tFLOAT  shift, and go to state 2
-    tINT    shift, and go to state 3
-    '-'     shift, and go to state 4
-
-    numberExp  go to state 16
-
-
 state 11
 
-    5 numberExp: numberExp '*' . numberExp
+    4 expression: expression '+' . expression
 
     tIDEN   shift, and go to state 1
     tFLOAT  shift, and go to state 2
     tINT    shift, and go to state 3
     '-'     shift, and go to state 4
+    '('     shift, and go to state 5
 
-    numberExp  go to state 17
+    expression  go to state 18
 
 
 state 12
 
-    6 numberExp: numberExp '/' . numberExp
+    3 expression: expression '-' . expression
+    8           | '-' . expression
 
     tIDEN   shift, and go to state 1
     tFLOAT  shift, and go to state 2
     tINT    shift, and go to state 3
     '-'     shift, and go to state 4
+    '('     shift, and go to state 5
 
-    numberExp  go to state 18
+    expression  go to state 19
 
 
 state 13
 
-    1 input: numberExp input .
-
-    $default  reduce using rule 1 (input)
-
-
-state 14
-
-    3 numberExp: numberExp '-' . numberExp
+    5 expression: expression '*' . expression
 
     tIDEN   shift, and go to state 1
     tFLOAT  shift, and go to state 2
     tINT    shift, and go to state 3
     '-'     shift, and go to state 4
+    '('     shift, and go to state 5
 
-    numberExp  go to state 19
+    expression  go to state 20
+
+
+state 14
+
+    6 expression: expression '/' . expression
+
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
+    '('     shift, and go to state 5
+
+    expression  go to state 21
 
 
 state 15
 
-    3 numberExp: numberExp . '-' numberExp
-    4          | numberExp . '+' numberExp
-    4          | numberExp '+' numberExp .
-    5          | numberExp . '*' numberExp
-    6          | numberExp . '/' numberExp
+    1 input: expression input .
 
-    '*'  shift, and go to state 11
-    '/'  shift, and go to state 12
-
-    $default  reduce using rule 4 (numberExp)
+    $default  reduce using rule 1 (input)
 
 
 state 16
 
-    3 numberExp: numberExp . '-' numberExp
-    3          | numberExp '-' numberExp .
-    4          | numberExp . '+' numberExp
-    5          | numberExp . '*' numberExp
-    6          | numberExp . '/' numberExp
-    7          | '-' numberExp .
+    3 expression: expression '-' . expression
 
-    $end      reduce using rule 3 (numberExp)
-    $end      [reduce using rule 7 (numberExp)]
-    tIDEN     reduce using rule 3 (numberExp)
-    tIDEN     [reduce using rule 7 (numberExp)]
-    tFLOAT    reduce using rule 3 (numberExp)
-    tFLOAT    [reduce using rule 7 (numberExp)]
-    tINT      reduce using rule 3 (numberExp)
-    tINT      [reduce using rule 7 (numberExp)]
-    '+'       reduce using rule 3 (numberExp)
-    '+'       [reduce using rule 7 (numberExp)]
-    '-'       reduce using rule 3 (numberExp)
-    '-'       [reduce using rule 7 (numberExp)]
-    '*'       reduce using rule 7 (numberExp)
-    '/'       reduce using rule 7 (numberExp)
-    $default  reduce using rule 3 (numberExp)
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+    '-'     shift, and go to state 4
+    '('     shift, and go to state 5
+
+    expression  go to state 22
 
 
 state 17
 
-    3 numberExp: numberExp . '-' numberExp
-    4          | numberExp . '+' numberExp
-    5          | numberExp . '*' numberExp
-    5          | numberExp '*' numberExp .
-    6          | numberExp . '/' numberExp
+    7 expression: '(' expression ')' .
 
-    $default  reduce using rule 5 (numberExp)
+    $default  reduce using rule 7 (expression)
 
 
 state 18
 
-    3 numberExp: numberExp . '-' numberExp
-    4          | numberExp . '+' numberExp
-    5          | numberExp . '*' numberExp
-    6          | numberExp . '/' numberExp
-    6          | numberExp '/' numberExp .
+    3 expression: expression . '-' expression
+    4           | expression . '+' expression
+    4           | expression '+' expression .
+    5           | expression . '*' expression
+    6           | expression . '/' expression
 
-    $default  reduce using rule 6 (numberExp)
+    '*'  shift, and go to state 13
+    '/'  shift, and go to state 14
+
+    $default  reduce using rule 4 (expression)
 
 
 state 19
 
-    3 numberExp: numberExp . '-' numberExp
-    3          | numberExp '-' numberExp .
-    4          | numberExp . '+' numberExp
-    5          | numberExp . '*' numberExp
-    6          | numberExp . '/' numberExp
+    3 expression: expression . '-' expression
+    3           | expression '-' expression .
+    4           | expression . '+' expression
+    5           | expression . '*' expression
+    6           | expression . '/' expression
+    8           | '-' expression .
 
-    '*'  shift, and go to state 11
-    '/'  shift, and go to state 12
+    $end      reduce using rule 3 (expression)
+    $end      [reduce using rule 8 (expression)]
+    tIDEN     reduce using rule 3 (expression)
+    tIDEN     [reduce using rule 8 (expression)]
+    tFLOAT    reduce using rule 3 (expression)
+    tFLOAT    [reduce using rule 8 (expression)]
+    tINT      reduce using rule 3 (expression)
+    tINT      [reduce using rule 8 (expression)]
+    '+'       reduce using rule 3 (expression)
+    '+'       [reduce using rule 8 (expression)]
+    '-'       reduce using rule 3 (expression)
+    '-'       [reduce using rule 8 (expression)]
+    '*'       reduce using rule 8 (expression)
+    '/'       reduce using rule 8 (expression)
+    '('       reduce using rule 3 (expression)
+    '('       [reduce using rule 8 (expression)]
+    $default  reduce using rule 3 (expression)
 
-    $default  reduce using rule 3 (numberExp)
+
+state 20
+
+    3 expression: expression . '-' expression
+    4           | expression . '+' expression
+    5           | expression . '*' expression
+    5           | expression '*' expression .
+    6           | expression . '/' expression
+
+    $default  reduce using rule 5 (expression)
+
+
+state 21
+
+    3 expression: expression . '-' expression
+    4           | expression . '+' expression
+    5           | expression . '*' expression
+    6           | expression . '/' expression
+    6           | expression '/' expression .
+
+    $default  reduce using rule 6 (expression)
+
+
+state 22
+
+    3 expression: expression . '-' expression
+    3           | expression '-' expression .
+    4           | expression . '+' expression
+    5           | expression . '*' expression
+    6           | expression . '/' expression
+
+    '*'  shift, and go to state 13
+    '/'  shift, and go to state 14
+
+    $default  reduce using rule 3 (expression)

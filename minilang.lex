@@ -32,7 +32,14 @@ comment 				(\/\/.*)
 "*"							{ return '*'; }
 "/"							{ return '/'; }
 "-"							{ return '-'; }
+"("							{ return '('; }
+")"							{ return ')'; }
+"<="						{ return LEQUAL; }
+">=" 						{ return GEQUAL; }
+">"							{ return '>'; }
+"<"							{ return '<'; }
 "=="						{ yylval.op_val = new std::string(yytext); return EQUAL; }
+
 
 "="         				{ yylval.op_val = new std::string(yytext); return tASSIGN; }
 ":"							{ yylval.op_val = new std::string(yytext); return COLON; }
