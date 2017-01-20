@@ -1,0 +1,181 @@
+Useless nonterminals
+
+   type
+
+
+Terminals which are not used
+
+   VAR
+   WHILE
+   DO
+   DONE
+   IF
+   THEN
+   ELSE
+   ENDIF
+   PRINT
+   READ
+   FLOAT
+   STRING
+   INT
+   PLUS
+   MINUS
+   MULT
+   DIV
+   EQUAL
+   tASSIGN
+
+
+Useless rules
+
+    9 type: FLOAT
+   10     | STRING
+   11     | INT
+
+
+State 0 conflicts: 3 shift/reduce
+
+
+Grammar
+
+    0 $accept: input $end
+
+    1 input: /* empty */
+    2      | input number
+    3      | input identifier
+    4      | number
+    5      | identifier
+
+    6 number: tINT
+    7       | tFLOAT
+
+    8 identifier: tIDEN
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+VAR (258)
+WHILE (259)
+DO (260)
+DONE (261)
+IF (262)
+THEN (263)
+ELSE (264)
+ENDIF (265)
+PRINT (266)
+READ (267)
+FLOAT (268)
+STRING (269)
+INT (270)
+tIDEN (271) 8
+tFLOAT (272) 7
+tINT (273) 6
+PLUS (274)
+MINUS (275)
+MULT (276)
+DIV (277)
+EQUAL (278)
+tASSIGN (279)
+
+
+Nonterminals, with rules where they appear
+
+$accept (25)
+    on left: 0
+input (26)
+    on left: 1 2 3 4 5, on right: 0 2 3
+number (27)
+    on left: 6 7, on right: 2 4
+identifier (28)
+    on left: 8, on right: 3 5
+
+
+state 0
+
+    0 $accept: . input $end
+
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+
+    tIDEN     [reduce using rule 1 (input)]
+    tFLOAT    [reduce using rule 1 (input)]
+    tINT      [reduce using rule 1 (input)]
+    $default  reduce using rule 1 (input)
+
+    input       go to state 4
+    number      go to state 5
+    identifier  go to state 6
+
+
+state 1
+
+    8 identifier: tIDEN .
+
+    $default  reduce using rule 8 (identifier)
+
+
+state 2
+
+    7 number: tFLOAT .
+
+    $default  reduce using rule 7 (number)
+
+
+state 3
+
+    6 number: tINT .
+
+    $default  reduce using rule 6 (number)
+
+
+state 4
+
+    0 $accept: input . $end
+    2 input: input . number
+    3      | input . identifier
+
+    $end    shift, and go to state 7
+    tIDEN   shift, and go to state 1
+    tFLOAT  shift, and go to state 2
+    tINT    shift, and go to state 3
+
+    number      go to state 8
+    identifier  go to state 9
+
+
+state 5
+
+    4 input: number .
+
+    $default  reduce using rule 4 (input)
+
+
+state 6
+
+    5 input: identifier .
+
+    $default  reduce using rule 5 (input)
+
+
+state 7
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+state 8
+
+    2 input: input number .
+
+    $default  reduce using rule 2 (input)
+
+
+state 9
+
+    3 input: input identifier .
+
+    $default  reduce using rule 3 (input)
