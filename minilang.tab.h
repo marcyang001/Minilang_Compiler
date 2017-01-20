@@ -56,12 +56,14 @@
      tFLOAT = 272,
      tINT = 273,
      tSTRING_LITERAL = 274,
-     UMINUS = 275,
-     EQUAL = 276,
-     tASSIGN = 277,
-     COMMENT = 278,
-     ENDL = 279,
-     COLON = 280
+     NEG = 275,
+     LEQUAL = 276,
+     GEQUAL = 277,
+     EQUAL = 278,
+     tASSIGN = 279,
+     COMMENT = 280,
+     ENDL = 281,
+     COLON = 282
    };
 #endif
 /* Tokens.  */
@@ -82,19 +84,21 @@
 #define tFLOAT 272
 #define tINT 273
 #define tSTRING_LITERAL 274
-#define UMINUS 275
-#define EQUAL 276
-#define tASSIGN 277
-#define COMMENT 278
-#define ENDL 279
-#define COLON 280
+#define NEG 275
+#define LEQUAL 276
+#define GEQUAL 277
+#define EQUAL 278
+#define tASSIGN 279
+#define COMMENT 280
+#define ENDL 281
+#define COLON 282
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 13 "minilang.y"
+#line 10 "minilang.y"
 {
     int		        int_val;
     std::string*	op_val;
@@ -102,7 +106,7 @@ typedef union YYSTYPE
     float         f_val;
 }
 /* Line 1529 of yacc.c.  */
-#line 106 "minilang.tab.h"
+#line 110 "minilang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

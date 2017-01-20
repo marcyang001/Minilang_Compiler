@@ -49,6 +49,10 @@ comment 				(\/\/.*)
 
 var	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return VAR; }
 while 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return WHILE; }
+do 	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return DO; }
+done 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return DONE; }
+print   					{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return PRINT; }
+read 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return READ; }
 int 						{ yylval.op_val = new std::string(yytext); return INT; }
 float 						{ yylval.op_val = new std::string(yytext); return FLOAT; }
 string 						{ yylval.op_val = new std::string(yytext); return STRING; }

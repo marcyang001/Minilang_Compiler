@@ -1,4 +1,4 @@
-"while" 					{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return WHILE; }
+
 "do" 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return DO; }
 "done" 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return DONE; }
 "if" 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return IF; }

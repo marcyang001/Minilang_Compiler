@@ -1,6 +1,3 @@
-
-
-
 %{
 
 #include "heading.h"
@@ -71,8 +68,7 @@ int yylex(void);
 %%
 
 input:		/* empty */ 
-    expOp input
-    | expOp
+    whileLoop
     ;
 
 declarations:
@@ -84,13 +80,35 @@ declarations:
     | VAR tIDEN COLON STRING ENDL
     ;
 
+simpleAndIfStmts: 
+  simpleStmts
+  ;
+
+simpleStmts:
+    PRINT expOp ENDL
+    | PRINT booleanOp ENDL
+    | PRINT tSTRING_LITERAL ENDL
+    | PRINT ENDL
+    | READ tIDEN ENDL
+    | assignOp ENDL
+    ;
+
+whileLoop:
+    WHILE assignOp DO whileLoop DONE
+    | WHILE booleanOp DO whileLoop DONE
+    | WHILE tINT DO whileLoop DONE
+    | simpleAndIfStmts whileLoop
+    | whileLoop simpleAndIfStmts
+    | simpleAndIfStmts
+    ;
+
 expOp:
     expOp '-' expOp
     | expOp '+' expOp
     | expOp '*' expOp
     | expOp '/' expOp
     | '(' expOp ')'
-    | '-' expOp %prec UMINUS
+    | '-' expOp %prec NEG
     | tINT 
     | tFLOAT
     | tIDEN
@@ -99,7 +117,8 @@ expOp:
 assignOp:
     | tIDEN tASSIGN expOp  
     | tIDEN tASSIGN tIDEN
-    | tIDEN tASSIGN boolean
+    | tIDEN tASSIGN booleanOp
+    | tIDEN tASSIGN tSTRING_LITERAL
     | tIDEN
     ;
 
@@ -110,6 +129,8 @@ booleanOp:
     | expOp GEQUAL expOp
     | expOp EQUAL expOp
     ;
+
+
 
 
 testnumber:

@@ -1,1 +1,7 @@
-(-1)
+while 100 do
+	while a < 100 do
+		quot = x / guess;
+	done
+	guess = 0.5 * (guess + quot);
+	iter = iter - 1;
+done
