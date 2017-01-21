@@ -95,9 +95,9 @@ ifstatement:
 
 
 ifwhilecombo:
-    | WHILE expOp DO whileLoop DONE
-    | IF expOp THEN whileLoop ELSE whileLoop ENDIF
-    | IF expOp THEN whileLoop ENDIF
+    | WHILE expOp DO ifwhilecombo DONE
+    | IF expOp THEN ifwhilecombo ELSE ifwhilecombo ENDIF
+    | IF expOp THEN ifwhilecombo ENDIF
     | simpleStmts ifwhilecombo
     | ifwhilecombo simpleStmts
     | simpleStmts

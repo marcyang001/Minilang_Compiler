@@ -2,11 +2,20 @@ while x do
 	x = 1;
 	if x+x then 
 		a =1;
-	else
-		x = 1;
-		if y then
+		if x - a then
 			print x;
+		else
+			read b;
 		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
 	endif
-	x = 1;
 done
