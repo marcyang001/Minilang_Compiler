@@ -64,7 +64,7 @@ int yylex(void);
 %%
 
 input:		/* empty */ 
-    whileLoop
+    ifwhilecombo
     ;
 
 declarations:
@@ -75,12 +75,6 @@ declarations:
     | VAR tIDEN COLON INT ENDL 
     | VAR tIDEN COLON STRING ENDL
     ;
-
-simpleAndIfStmts: 
-  simpleStmts simpleAndIfStmts
-  | ifstatement simpleAndIfStmts
-  | simpleStmts
-  ;
 
 simpleStmts:
     PRINT expOp ENDL
@@ -100,11 +94,13 @@ ifstatement:
     ;
 
 
-whileLoop:
+ifwhilecombo:
     | WHILE expOp DO whileLoop DONE
-    | simpleAndIfStmts whileLoop
-    | whileLoop simpleAndIfStmts
-    | simpleAndIfStmts
+    | IF expOp THEN whileLoop ELSE whileLoop ENDIF
+    | IF expOp THEN whileLoop ENDIF
+    | simpleStmts ifwhilecombo
+    | ifwhilecombo simpleStmts
+    | simpleStmts
     ;
 
 expOp:

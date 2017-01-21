@@ -28,28 +28,26 @@ Useless rules
 
 Rules never reduced
 
-   15 ifstatement: simpleStmts
+   13 ifstatement: simpleStmts
 
-   20 whileLoop: simpleAndIfStmts
+   20 whileLoop: simpleStmts
 
    32 assignOp: tIDEN tASSIGN tIDEN
 
 
-State 0 conflicts: 4 shift/reduce, 5 reduce/reduce
-State 7 conflicts: 4 shift/reduce, 7 reduce/reduce
-State 8 conflicts: 4 shift/reduce, 5 reduce/reduce
-State 9 conflicts: 4 shift/reduce, 1 reduce/reduce
-State 10 conflicts: 4 shift/reduce, 1 reduce/reduce
-State 25 conflicts: 4 shift/reduce, 5 reduce/reduce
-State 27 conflicts: 4 shift/reduce, 5 reduce/reduce
-State 29 conflicts: 4 shift/reduce, 5 reduce/reduce
-State 34 conflicts: 4 shift/reduce, 5 reduce/reduce
-State 39 conflicts: 3 shift/reduce, 1 reduce/reduce
-State 43 conflicts: 1 reduce/reduce
-State 47 conflicts: 4 shift/reduce, 1 reduce/reduce
-State 52 conflicts: 3 shift/reduce, 6 reduce/reduce
+State 0 conflicts: 3 shift/reduce, 5 reduce/reduce
+State 7 conflicts: 3 shift/reduce, 7 reduce/reduce
+State 24 conflicts: 3 shift/reduce, 1 reduce/reduce
+State 25 conflicts: 3 shift/reduce, 1 reduce/reduce
+State 31 conflicts: 3 shift/reduce, 1 reduce/reduce
+State 36 conflicts: 3 shift/reduce, 6 reduce/reduce
+State 40 conflicts: 1 reduce/reduce
+State 45 conflicts: 3 shift/reduce, 7 reduce/reduce
 State 55 conflicts: 3 shift/reduce, 1 reduce/reduce
-State 56 conflicts: 3 shift/reduce, 1 reduce/reduce
+State 57 conflicts: 3 shift/reduce, 1 reduce/reduce
+State 59 conflicts: 3 shift/reduce, 1 reduce/reduce
+State 61 conflicts: 3 shift/reduce, 6 reduce/reduce
+State 67 conflicts: 3 shift/reduce, 1 reduce/reduce
 
 
 Grammar
@@ -57,29 +55,28 @@ Grammar
     0 $accept: input $end
 
     1 input: whileLoop
+    2      | ifstatement
 
-    2 simpleAndIfStmts: simpleStmts simpleAndIfStmts
-    3                 | ifstatement simpleAndIfStmts
-    4                 | simpleStmts
+    3 simpleStmts: PRINT expOp ENDL
+    4            | PRINT tSTRING_LITERAL ENDL
+    5            | PRINT ENDL
+    6            | READ tIDEN ENDL
+    7            | assignOp ENDL
 
-    5 simpleStmts: PRINT expOp ENDL
-    6            | PRINT tSTRING_LITERAL ENDL
-    7            | PRINT ENDL
-    8            | READ tIDEN ENDL
-    9            | assignOp ENDL
+    8 ifstatement: /* empty */
+    9            | IF expOp THEN ifstatement ELSE ifstatement ENDIF
+   10            | IF expOp THEN ifstatement ENDIF
+   11            | simpleStmts ifstatement
+   12            | ifstatement simpleStmts
+   13            | simpleStmts
 
-   10 ifstatement: /* empty */
-   11            | IF expOp THEN ifstatement ELSE ifstatement ENDIF
-   12            | IF expOp THEN ifstatement ENDIF
-   13            | simpleStmts ifstatement
-   14            | ifstatement simpleStmts
-   15            | simpleStmts
-
-   16 whileLoop: /* empty */
-   17          | WHILE expOp DO whileLoop DONE
-   18          | simpleAndIfStmts whileLoop
-   19          | whileLoop simpleAndIfStmts
-   20          | simpleAndIfStmts
+   14 whileLoop: /* empty */
+   15          | WHILE expOp DO whileLoop DONE
+   16          | IF expOp THEN whileLoop ELSE whileLoop ENDIF
+   17          | IF expOp THEN whileLoop ENDIF
+   18          | simpleStmts whileLoop
+   19          | whileLoop simpleStmts
+   20          | simpleStmts
 
    21 expOp: expOp '-' expOp
    22      | expOp '+' expOp
@@ -109,26 +106,26 @@ $end (0) 0
 '/' (47) 24
 error (256)
 VAR (258)
-WHILE (259) 17
-DO (260) 17
-DONE (261) 17
-IF (262) 11 12
-THEN (263) 11 12
-ELSE (264) 11
-ENDIF (265) 11 12
-PRINT (266) 5 6 7
-READ (267) 8
+WHILE (259) 15
+DO (260) 15
+DONE (261) 15
+IF (262) 9 10 16 17
+THEN (263) 9 10 16 17
+ELSE (264) 9 16
+ENDIF (265) 9 10 16 17
+PRINT (266) 3 4 5
+READ (267) 6
 FLOAT (268)
 STRING (269)
 INT (270)
-tIDEN (271) 8 29 31 32 33 34
+tIDEN (271) 6 29 31 32 33 34
 tFLOAT (272) 28
 tINT (273) 27
-tSTRING_LITERAL (274) 6 33
+tSTRING_LITERAL (274) 4 33
 NEG (275)
 tASSIGN (276) 31 32 33
 COMMENT (277)
-ENDL (278) 5 6 7 8 9
+ENDL (278) 3 4 5 6 7
 COLON (279)
 
 
@@ -137,20 +134,18 @@ Nonterminals, with rules where they appear
 $accept (31)
     on left: 0
 input (32)
-    on left: 1, on right: 0
-simpleAndIfStmts (33)
-    on left: 2 3 4, on right: 2 3 18 19 20
-simpleStmts (34)
-    on left: 5 6 7 8 9, on right: 2 4 13 14 15
-ifstatement (35)
-    on left: 10 11 12 13 14 15, on right: 3 11 12 13 14
-whileLoop (36)
-    on left: 16 17 18 19 20, on right: 1 17 18 19
-expOp (37)
-    on left: 21 22 23 24 25 26 27 28 29, on right: 5 11 12 17 21 22
-    23 24 25 26 31
-assignOp (38)
-    on left: 30 31 32 33 34, on right: 9
+    on left: 1 2, on right: 0
+simpleStmts (33)
+    on left: 3 4 5 6 7, on right: 11 12 13 18 19 20
+ifstatement (34)
+    on left: 8 9 10 11 12 13, on right: 2 9 10 11 12
+whileLoop (35)
+    on left: 14 15 16 17 18 19 20, on right: 1 15 16 17 18 19
+expOp (36)
+    on left: 21 22 23 24 25 26 27 28 29, on right: 3 9 10 15 16 17
+    21 22 23 24 25 26 31
+assignOp (37)
+    on left: 30 31 32 33 34, on right: 7
 
 
 state 0
@@ -163,77 +158,77 @@ state 0
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    $end      reduce using rule 16 (whileLoop)
-    IF        [reduce using rule 10 (ifstatement)]
-    IF        [reduce using rule 16 (whileLoop)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 16 (whileLoop)]
-    READ      [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 16 (whileLoop)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 16 (whileLoop)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 16 (whileLoop)]
+    $end      reduce using rule 8 (ifstatement)
+    $end      [reduce using rule 14 (whileLoop)]
+    PRINT     [reduce using rule 8 (ifstatement)]
+    PRINT     [reduce using rule 14 (whileLoop)]
+    READ      [reduce using rule 8 (ifstatement)]
+    READ      [reduce using rule 14 (whileLoop)]
+    tIDEN     [reduce using rule 8 (ifstatement)]
+    tIDEN     [reduce using rule 14 (whileLoop)]
+    ENDL      reduce using rule 8 (ifstatement)
+    ENDL      [reduce using rule 14 (whileLoop)]
     ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 10 (ifstatement)
+    $default  reduce using rule 8 (ifstatement)
 
-    input             go to state 6
-    simpleAndIfStmts  go to state 7
-    simpleStmts       go to state 8
-    ifstatement       go to state 9
-    whileLoop         go to state 10
-    assignOp          go to state 11
+    input        go to state 6
+    simpleStmts  go to state 7
+    ifstatement  go to state 8
+    whileLoop    go to state 9
+    assignOp     go to state 10
 
 
 state 1
 
-   17 whileLoop: WHILE . expOp DO whileLoop DONE
+   15 whileLoop: WHILE . expOp DO whileLoop DONE
 
-    tIDEN   shift, and go to state 12
-    tFLOAT  shift, and go to state 13
-    tINT    shift, and go to state 14
-    '-'     shift, and go to state 15
-    '('     shift, and go to state 16
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
 
-    expOp  go to state 17
+    expOp  go to state 16
 
 
 state 2
 
-   11 ifstatement: IF . expOp THEN ifstatement ELSE ifstatement ENDIF
-   12            | IF . expOp THEN ifstatement ENDIF
+    9 ifstatement: IF . expOp THEN ifstatement ELSE ifstatement ENDIF
+   10            | IF . expOp THEN ifstatement ENDIF
+   16 whileLoop: IF . expOp THEN whileLoop ELSE whileLoop ENDIF
+   17          | IF . expOp THEN whileLoop ENDIF
 
-    tIDEN   shift, and go to state 12
-    tFLOAT  shift, and go to state 13
-    tINT    shift, and go to state 14
-    '-'     shift, and go to state 15
-    '('     shift, and go to state 16
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
 
-    expOp  go to state 18
+    expOp  go to state 17
 
 
 state 3
 
-    5 simpleStmts: PRINT . expOp ENDL
-    6            | PRINT . tSTRING_LITERAL ENDL
-    7            | PRINT . ENDL
+    3 simpleStmts: PRINT . expOp ENDL
+    4            | PRINT . tSTRING_LITERAL ENDL
+    5            | PRINT . ENDL
 
-    tIDEN            shift, and go to state 12
-    tFLOAT           shift, and go to state 13
-    tINT             shift, and go to state 14
-    tSTRING_LITERAL  shift, and go to state 19
-    '-'              shift, and go to state 15
-    '('              shift, and go to state 16
-    ENDL             shift, and go to state 20
+    tIDEN            shift, and go to state 11
+    tFLOAT           shift, and go to state 12
+    tINT             shift, and go to state 13
+    tSTRING_LITERAL  shift, and go to state 18
+    '-'              shift, and go to state 14
+    '('              shift, and go to state 15
+    ENDL             shift, and go to state 19
 
-    expOp  go to state 21
+    expOp  go to state 20
 
 
 state 4
 
-    8 simpleStmts: READ . tIDEN ENDL
+    6 simpleStmts: READ . tIDEN ENDL
 
-    tIDEN  shift, and go to state 22
+    tIDEN  shift, and go to state 21
 
 
 state 5
@@ -243,7 +238,7 @@ state 5
    33         | tIDEN . tASSIGN tSTRING_LITERAL
    34         | tIDEN .
 
-    tASSIGN  shift, and go to state 23
+    tASSIGN  shift, and go to state 22
 
     $default  reduce using rule 34 (assignOp)
 
@@ -252,13 +247,15 @@ state 6
 
     0 $accept: input . $end
 
-    $end  shift, and go to state 24
+    $end  shift, and go to state 23
 
 
 state 7
 
-   18 whileLoop: simpleAndIfStmts . whileLoop
-   20          | simpleAndIfStmts .
+   11 ifstatement: simpleStmts . ifstatement
+   13            | simpleStmts .
+   18 whileLoop: simpleStmts . whileLoop
+   20          | simpleStmts .
 
     WHILE  shift, and go to state 1
     IF     shift, and go to state 2
@@ -266,393 +263,283 @@ state 7
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    $end      reduce using rule 16 (whileLoop)
+    $end      reduce using rule 8 (ifstatement)
+    $end      [reduce using rule 13 (ifstatement)]
+    $end      [reduce using rule 14 (whileLoop)]
     $end      [reduce using rule 20 (whileLoop)]
-    DONE      reduce using rule 16 (whileLoop)
-    DONE      [reduce using rule 20 (whileLoop)]
-    IF        [reduce using rule 10 (ifstatement)]
-    IF        [reduce using rule 16 (whileLoop)]
-    IF        [reduce using rule 20 (whileLoop)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 16 (whileLoop)]
+    ELSE      reduce using rule 8 (ifstatement)
+    ELSE      [reduce using rule 13 (ifstatement)]
+    ELSE      [reduce using rule 14 (whileLoop)]
+    ELSE      [reduce using rule 20 (whileLoop)]
+    ENDIF     reduce using rule 8 (ifstatement)
+    ENDIF     [reduce using rule 13 (ifstatement)]
+    ENDIF     [reduce using rule 14 (whileLoop)]
+    ENDIF     [reduce using rule 20 (whileLoop)]
+    PRINT     [reduce using rule 8 (ifstatement)]
+    PRINT     [reduce using rule 13 (ifstatement)]
+    PRINT     [reduce using rule 14 (whileLoop)]
     PRINT     [reduce using rule 20 (whileLoop)]
-    READ      [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 16 (whileLoop)]
+    READ      [reduce using rule 8 (ifstatement)]
+    READ      [reduce using rule 13 (ifstatement)]
+    READ      [reduce using rule 14 (whileLoop)]
     READ      [reduce using rule 20 (whileLoop)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 16 (whileLoop)]
+    tIDEN     [reduce using rule 8 (ifstatement)]
+    tIDEN     [reduce using rule 13 (ifstatement)]
+    tIDEN     [reduce using rule 14 (whileLoop)]
     tIDEN     [reduce using rule 20 (whileLoop)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 16 (whileLoop)]
+    ENDL      reduce using rule 8 (ifstatement)
+    ENDL      [reduce using rule 13 (ifstatement)]
+    ENDL      [reduce using rule 14 (whileLoop)]
     ENDL      [reduce using rule 20 (whileLoop)]
     ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 16 (whileLoop)
+    $default  reduce using rule 8 (ifstatement)
 
-    simpleAndIfStmts  go to state 7
-    simpleStmts       go to state 8
-    ifstatement       go to state 9
-    whileLoop         go to state 25
-    assignOp          go to state 11
+    simpleStmts  go to state 7
+    ifstatement  go to state 24
+    whileLoop    go to state 25
+    assignOp     go to state 10
 
 
 state 8
 
-    2 simpleAndIfStmts: simpleStmts . simpleAndIfStmts
-    4                 | simpleStmts .
-   13 ifstatement: simpleStmts . ifstatement
-   15            | simpleStmts .
+    2 input: ifstatement .
+   12 ifstatement: ifstatement . simpleStmts
 
-    IF     shift, and go to state 2
     PRINT  shift, and go to state 3
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    IF        [reduce using rule 4 (simpleAndIfStmts)]
-    IF        [reduce using rule 10 (ifstatement)]
-    IF        [reduce using rule 15 (ifstatement)]
-    PRINT     [reduce using rule 4 (simpleAndIfStmts)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 15 (ifstatement)]
-    READ      [reduce using rule 4 (simpleAndIfStmts)]
-    READ      [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 15 (ifstatement)]
-    tIDEN     [reduce using rule 4 (simpleAndIfStmts)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 15 (ifstatement)]
-    ENDL      reduce using rule 4 (simpleAndIfStmts)
-    ENDL      [reduce using rule 10 (ifstatement)]
-    ENDL      [reduce using rule 15 (ifstatement)]
-    ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 4 (simpleAndIfStmts)
+    ENDL      reduce using rule 30 (assignOp)
+    $default  reduce using rule 2 (input)
 
-    simpleAndIfStmts  go to state 26
-    simpleStmts       go to state 8
-    ifstatement       go to state 27
-    assignOp          go to state 11
+    simpleStmts  go to state 26
+    assignOp     go to state 10
 
 
 state 9
 
-    3 simpleAndIfStmts: ifstatement . simpleAndIfStmts
-   14 ifstatement: ifstatement . simpleStmts
+    1 input: whileLoop .
+   19 whileLoop: whileLoop . simpleStmts
 
-    IF     shift, and go to state 2
     PRINT  shift, and go to state 3
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    IF        [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 10 (ifstatement)
+    ENDL      reduce using rule 30 (assignOp)
+    $default  reduce using rule 1 (input)
 
-    simpleAndIfStmts  go to state 28
-    simpleStmts       go to state 29
-    ifstatement       go to state 9
-    assignOp          go to state 11
+    simpleStmts  go to state 27
+    assignOp     go to state 10
 
 
 state 10
 
-    1 input: whileLoop .
-   19 whileLoop: whileLoop . simpleAndIfStmts
+    7 simpleStmts: assignOp . ENDL
 
-    IF     shift, and go to state 2
-    PRINT  shift, and go to state 3
-    READ   shift, and go to state 4
-    tIDEN  shift, and go to state 5
-
-    IF        [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 1 (input)
-
-    simpleAndIfStmts  go to state 30
-    simpleStmts       go to state 8
-    ifstatement       go to state 9
-    assignOp          go to state 11
+    ENDL  shift, and go to state 28
 
 
 state 11
-
-    9 simpleStmts: assignOp . ENDL
-
-    ENDL  shift, and go to state 31
-
-
-state 12
 
    29 expOp: tIDEN .
 
     $default  reduce using rule 29 (expOp)
 
 
-state 13
+state 12
 
    28 expOp: tFLOAT .
 
     $default  reduce using rule 28 (expOp)
 
 
-state 14
+state 13
 
    27 expOp: tINT .
 
     $default  reduce using rule 27 (expOp)
 
 
-state 15
+state 14
 
    26 expOp: '-' . expOp
 
-    tIDEN   shift, and go to state 12
-    tFLOAT  shift, and go to state 13
-    tINT    shift, and go to state 14
-    '-'     shift, and go to state 15
-    '('     shift, and go to state 16
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
 
-    expOp  go to state 32
+    expOp  go to state 29
+
+
+state 15
+
+   25 expOp: '(' . expOp ')'
+
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
+
+    expOp  go to state 30
 
 
 state 16
 
-   25 expOp: '(' . expOp ')'
+   15 whileLoop: WHILE expOp . DO whileLoop DONE
+   21 expOp: expOp . '-' expOp
+   22      | expOp . '+' expOp
+   23      | expOp . '*' expOp
+   24      | expOp . '/' expOp
 
-    tIDEN   shift, and go to state 12
-    tFLOAT  shift, and go to state 13
-    tINT    shift, and go to state 14
-    '-'     shift, and go to state 15
-    '('     shift, and go to state 16
-
-    expOp  go to state 33
+    DO   shift, and go to state 31
+    '+'  shift, and go to state 32
+    '-'  shift, and go to state 33
+    '*'  shift, and go to state 34
+    '/'  shift, and go to state 35
 
 
 state 17
 
-   17 whileLoop: WHILE expOp . DO whileLoop DONE
+    9 ifstatement: IF expOp . THEN ifstatement ELSE ifstatement ENDIF
+   10            | IF expOp . THEN ifstatement ENDIF
+   16 whileLoop: IF expOp . THEN whileLoop ELSE whileLoop ENDIF
+   17          | IF expOp . THEN whileLoop ENDIF
    21 expOp: expOp . '-' expOp
    22      | expOp . '+' expOp
    23      | expOp . '*' expOp
    24      | expOp . '/' expOp
 
-    DO   shift, and go to state 34
-    '+'  shift, and go to state 35
-    '-'  shift, and go to state 36
-    '*'  shift, and go to state 37
-    '/'  shift, and go to state 38
+    THEN  shift, and go to state 36
+    '+'   shift, and go to state 32
+    '-'   shift, and go to state 33
+    '*'   shift, and go to state 34
+    '/'   shift, and go to state 35
 
 
 state 18
 
-   11 ifstatement: IF expOp . THEN ifstatement ELSE ifstatement ENDIF
-   12            | IF expOp . THEN ifstatement ENDIF
-   21 expOp: expOp . '-' expOp
-   22      | expOp . '+' expOp
-   23      | expOp . '*' expOp
-   24      | expOp . '/' expOp
+    4 simpleStmts: PRINT tSTRING_LITERAL . ENDL
 
-    THEN  shift, and go to state 39
-    '+'   shift, and go to state 35
-    '-'   shift, and go to state 36
-    '*'   shift, and go to state 37
-    '/'   shift, and go to state 38
+    ENDL  shift, and go to state 37
 
 
 state 19
 
-    6 simpleStmts: PRINT tSTRING_LITERAL . ENDL
+    5 simpleStmts: PRINT ENDL .
 
-    ENDL  shift, and go to state 40
+    $default  reduce using rule 5 (simpleStmts)
 
 
 state 20
 
-    7 simpleStmts: PRINT ENDL .
-
-    $default  reduce using rule 7 (simpleStmts)
-
-
-state 21
-
-    5 simpleStmts: PRINT expOp . ENDL
+    3 simpleStmts: PRINT expOp . ENDL
    21 expOp: expOp . '-' expOp
    22      | expOp . '+' expOp
    23      | expOp . '*' expOp
    24      | expOp . '/' expOp
 
-    '+'   shift, and go to state 35
-    '-'   shift, and go to state 36
-    '*'   shift, and go to state 37
-    '/'   shift, and go to state 38
-    ENDL  shift, and go to state 41
+    '+'   shift, and go to state 32
+    '-'   shift, and go to state 33
+    '*'   shift, and go to state 34
+    '/'   shift, and go to state 35
+    ENDL  shift, and go to state 38
+
+
+state 21
+
+    6 simpleStmts: READ tIDEN . ENDL
+
+    ENDL  shift, and go to state 39
 
 
 state 22
-
-    8 simpleStmts: READ tIDEN . ENDL
-
-    ENDL  shift, and go to state 42
-
-
-state 23
 
    31 assignOp: tIDEN tASSIGN . expOp
    32         | tIDEN tASSIGN . tIDEN
    33         | tIDEN tASSIGN . tSTRING_LITERAL
 
-    tIDEN            shift, and go to state 43
-    tFLOAT           shift, and go to state 13
-    tINT             shift, and go to state 14
-    tSTRING_LITERAL  shift, and go to state 44
-    '-'              shift, and go to state 15
-    '('              shift, and go to state 16
+    tIDEN            shift, and go to state 40
+    tFLOAT           shift, and go to state 12
+    tINT             shift, and go to state 13
+    tSTRING_LITERAL  shift, and go to state 41
+    '-'              shift, and go to state 14
+    '('              shift, and go to state 15
 
-    expOp  go to state 45
+    expOp  go to state 42
 
 
-state 24
+state 23
 
     0 $accept: input $end .
 
     $default  accept
 
 
-state 25
+state 24
 
-   18 whileLoop: simpleAndIfStmts whileLoop .
-   19          | whileLoop . simpleAndIfStmts
+   11 ifstatement: simpleStmts ifstatement .
+   12            | ifstatement . simpleStmts
 
-    IF     shift, and go to state 2
     PRINT  shift, and go to state 3
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    IF        [reduce using rule 10 (ifstatement)]
-    IF        [reduce using rule 18 (whileLoop)]
-    PRINT     [reduce using rule 10 (ifstatement)]
+    PRINT     [reduce using rule 11 (ifstatement)]
+    READ      [reduce using rule 11 (ifstatement)]
+    tIDEN     [reduce using rule 11 (ifstatement)]
+    ENDL      reduce using rule 11 (ifstatement)
+    ENDL      [reduce using rule 30 (assignOp)]
+    $default  reduce using rule 11 (ifstatement)
+
+    simpleStmts  go to state 26
+    assignOp     go to state 10
+
+
+state 25
+
+   18 whileLoop: simpleStmts whileLoop .
+   19          | whileLoop . simpleStmts
+
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
     PRINT     [reduce using rule 18 (whileLoop)]
-    READ      [reduce using rule 10 (ifstatement)]
     READ      [reduce using rule 18 (whileLoop)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
     tIDEN     [reduce using rule 18 (whileLoop)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 18 (whileLoop)]
+    ENDL      reduce using rule 18 (whileLoop)
     ENDL      [reduce using rule 30 (assignOp)]
     $default  reduce using rule 18 (whileLoop)
 
-    simpleAndIfStmts  go to state 30
-    simpleStmts       go to state 8
-    ifstatement       go to state 9
-    assignOp          go to state 11
+    simpleStmts  go to state 27
+    assignOp     go to state 10
 
 
 state 26
 
-    2 simpleAndIfStmts: simpleStmts simpleAndIfStmts .
+   12 ifstatement: ifstatement simpleStmts .
 
-    $default  reduce using rule 2 (simpleAndIfStmts)
+    $default  reduce using rule 12 (ifstatement)
 
 
 state 27
 
-    3 simpleAndIfStmts: ifstatement . simpleAndIfStmts
-   13 ifstatement: simpleStmts ifstatement .
-   14            | ifstatement . simpleStmts
-
-    IF     shift, and go to state 2
-    PRINT  shift, and go to state 3
-    READ   shift, and go to state 4
-    tIDEN  shift, and go to state 5
-
-    IF        [reduce using rule 10 (ifstatement)]
-    IF        [reduce using rule 13 (ifstatement)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 13 (ifstatement)]
-    READ      [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 13 (ifstatement)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 13 (ifstatement)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 13 (ifstatement)]
-    ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 10 (ifstatement)
-
-    simpleAndIfStmts  go to state 28
-    simpleStmts       go to state 29
-    ifstatement       go to state 9
-    assignOp          go to state 11
-
-
-state 28
-
-    3 simpleAndIfStmts: ifstatement simpleAndIfStmts .
-
-    $default  reduce using rule 3 (simpleAndIfStmts)
-
-
-state 29
-
-    2 simpleAndIfStmts: simpleStmts . simpleAndIfStmts
-    4                 | simpleStmts .
-   13 ifstatement: simpleStmts . ifstatement
-   14            | ifstatement simpleStmts .
-   15            | simpleStmts .
-
-    IF     shift, and go to state 2
-    PRINT  shift, and go to state 3
-    READ   shift, and go to state 4
-    tIDEN  shift, and go to state 5
-
-    IF        [reduce using rule 4 (simpleAndIfStmts)]
-    IF        [reduce using rule 10 (ifstatement)]
-    IF        [reduce using rule 14 (ifstatement)]
-    IF        [reduce using rule 15 (ifstatement)]
-    PRINT     [reduce using rule 4 (simpleAndIfStmts)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 14 (ifstatement)]
-    PRINT     [reduce using rule 15 (ifstatement)]
-    READ      [reduce using rule 4 (simpleAndIfStmts)]
-    READ      [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 14 (ifstatement)]
-    READ      [reduce using rule 15 (ifstatement)]
-    tIDEN     [reduce using rule 4 (simpleAndIfStmts)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 14 (ifstatement)]
-    tIDEN     [reduce using rule 15 (ifstatement)]
-    ENDL      reduce using rule 4 (simpleAndIfStmts)
-    ENDL      [reduce using rule 10 (ifstatement)]
-    ENDL      [reduce using rule 14 (ifstatement)]
-    ENDL      [reduce using rule 15 (ifstatement)]
-    ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 4 (simpleAndIfStmts)
-
-    simpleAndIfStmts  go to state 26
-    simpleStmts       go to state 8
-    ifstatement       go to state 27
-    assignOp          go to state 11
-
-
-state 30
-
-   19 whileLoop: whileLoop simpleAndIfStmts .
+   19 whileLoop: whileLoop simpleStmts .
 
     $default  reduce using rule 19 (whileLoop)
 
 
-state 31
+state 28
 
-    9 simpleStmts: assignOp ENDL .
+    7 simpleStmts: assignOp ENDL .
 
-    $default  reduce using rule 9 (simpleStmts)
+    $default  reduce using rule 7 (simpleStmts)
 
 
-state 32
+state 29
 
    21 expOp: expOp . '-' expOp
    22      | expOp . '+' expOp
@@ -663,7 +550,7 @@ state 32
     $default  reduce using rule 26 (expOp)
 
 
-state 33
+state 30
 
    21 expOp: expOp . '-' expOp
    22      | expOp . '+' expOp
@@ -671,16 +558,93 @@ state 33
    24      | expOp . '/' expOp
    25      | '(' expOp . ')'
 
-    '+'  shift, and go to state 35
-    '-'  shift, and go to state 36
-    '*'  shift, and go to state 37
-    '/'  shift, and go to state 38
-    ')'  shift, and go to state 46
+    '+'  shift, and go to state 32
+    '-'  shift, and go to state 33
+    '*'  shift, and go to state 34
+    '/'  shift, and go to state 35
+    ')'  shift, and go to state 43
+
+
+state 31
+
+   15 whileLoop: WHILE expOp DO . whileLoop DONE
+
+    WHILE  shift, and go to state 1
+    IF     shift, and go to state 44
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
+    PRINT     [reduce using rule 14 (whileLoop)]
+    READ      [reduce using rule 14 (whileLoop)]
+    tIDEN     [reduce using rule 14 (whileLoop)]
+    ENDL      reduce using rule 14 (whileLoop)
+    ENDL      [reduce using rule 30 (assignOp)]
+    $default  reduce using rule 14 (whileLoop)
+
+    simpleStmts  go to state 45
+    whileLoop    go to state 46
+    assignOp     go to state 10
+
+
+state 32
+
+   22 expOp: expOp '+' . expOp
+
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
+
+    expOp  go to state 47
+
+
+state 33
+
+   21 expOp: expOp '-' . expOp
+
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
+
+    expOp  go to state 48
 
 
 state 34
 
-   17 whileLoop: WHILE expOp DO . whileLoop DONE
+   23 expOp: expOp '*' . expOp
+
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
+
+    expOp  go to state 49
+
+
+state 35
+
+   24 expOp: expOp '/' . expOp
+
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
+
+    expOp  go to state 50
+
+
+state 36
+
+    9 ifstatement: IF expOp THEN . ifstatement ELSE ifstatement ENDIF
+   10            | IF expOp THEN . ifstatement ENDIF
+   16 whileLoop: IF expOp THEN . whileLoop ELSE whileLoop ENDIF
+   17          | IF expOp THEN . whileLoop ENDIF
 
     WHILE  shift, and go to state 1
     IF     shift, and go to state 2
@@ -688,123 +652,49 @@ state 34
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    DONE      reduce using rule 16 (whileLoop)
-    IF        [reduce using rule 10 (ifstatement)]
-    IF        [reduce using rule 16 (whileLoop)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 16 (whileLoop)]
-    READ      [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 16 (whileLoop)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 16 (whileLoop)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 16 (whileLoop)]
+    ELSE      reduce using rule 8 (ifstatement)
+    ELSE      [reduce using rule 14 (whileLoop)]
+    ENDIF     reduce using rule 8 (ifstatement)
+    ENDIF     [reduce using rule 14 (whileLoop)]
+    PRINT     [reduce using rule 8 (ifstatement)]
+    PRINT     [reduce using rule 14 (whileLoop)]
+    READ      [reduce using rule 8 (ifstatement)]
+    READ      [reduce using rule 14 (whileLoop)]
+    tIDEN     [reduce using rule 8 (ifstatement)]
+    tIDEN     [reduce using rule 14 (whileLoop)]
+    ENDL      reduce using rule 8 (ifstatement)
+    ENDL      [reduce using rule 14 (whileLoop)]
     ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 10 (ifstatement)
+    $default  reduce using rule 8 (ifstatement)
 
-    simpleAndIfStmts  go to state 7
-    simpleStmts       go to state 8
-    ifstatement       go to state 9
-    whileLoop         go to state 47
-    assignOp          go to state 11
-
-
-state 35
-
-   22 expOp: expOp '+' . expOp
-
-    tIDEN   shift, and go to state 12
-    tFLOAT  shift, and go to state 13
-    tINT    shift, and go to state 14
-    '-'     shift, and go to state 15
-    '('     shift, and go to state 16
-
-    expOp  go to state 48
-
-
-state 36
-
-   21 expOp: expOp '-' . expOp
-
-    tIDEN   shift, and go to state 12
-    tFLOAT  shift, and go to state 13
-    tINT    shift, and go to state 14
-    '-'     shift, and go to state 15
-    '('     shift, and go to state 16
-
-    expOp  go to state 49
+    simpleStmts  go to state 7
+    ifstatement  go to state 51
+    whileLoop    go to state 52
+    assignOp     go to state 10
 
 
 state 37
 
-   23 expOp: expOp '*' . expOp
+    4 simpleStmts: PRINT tSTRING_LITERAL ENDL .
 
-    tIDEN   shift, and go to state 12
-    tFLOAT  shift, and go to state 13
-    tINT    shift, and go to state 14
-    '-'     shift, and go to state 15
-    '('     shift, and go to state 16
-
-    expOp  go to state 50
+    $default  reduce using rule 4 (simpleStmts)
 
 
 state 38
 
-   24 expOp: expOp '/' . expOp
+    3 simpleStmts: PRINT expOp ENDL .
 
-    tIDEN   shift, and go to state 12
-    tFLOAT  shift, and go to state 13
-    tINT    shift, and go to state 14
-    '-'     shift, and go to state 15
-    '('     shift, and go to state 16
-
-    expOp  go to state 51
+    $default  reduce using rule 3 (simpleStmts)
 
 
 state 39
 
-   11 ifstatement: IF expOp THEN . ifstatement ELSE ifstatement ENDIF
-   12            | IF expOp THEN . ifstatement ENDIF
-
-    IF     shift, and go to state 2
-    PRINT  shift, and go to state 3
-    READ   shift, and go to state 4
-    tIDEN  shift, and go to state 5
-
-    PRINT     [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 10 (ifstatement)
-
-    simpleStmts  go to state 52
-    ifstatement  go to state 53
-    assignOp     go to state 11
-
-
-state 40
-
-    6 simpleStmts: PRINT tSTRING_LITERAL ENDL .
+    6 simpleStmts: READ tIDEN ENDL .
 
     $default  reduce using rule 6 (simpleStmts)
 
 
-state 41
-
-    5 simpleStmts: PRINT expOp ENDL .
-
-    $default  reduce using rule 5 (simpleStmts)
-
-
-state 42
-
-    8 simpleStmts: READ tIDEN ENDL .
-
-    $default  reduce using rule 8 (simpleStmts)
-
-
-state 43
+state 40
 
    29 expOp: tIDEN .
    32 assignOp: tIDEN tASSIGN tIDEN .
@@ -814,14 +704,14 @@ state 43
     $default  reduce using rule 29 (expOp)
 
 
-state 44
+state 41
 
    33 assignOp: tIDEN tASSIGN tSTRING_LITERAL .
 
     $default  reduce using rule 33 (assignOp)
 
 
-state 45
+state 42
 
    21 expOp: expOp . '-' expOp
    22      | expOp . '+' expOp
@@ -829,47 +719,85 @@ state 45
    24      | expOp . '/' expOp
    31 assignOp: tIDEN tASSIGN expOp .
 
-    '+'  shift, and go to state 35
-    '-'  shift, and go to state 36
-    '*'  shift, and go to state 37
-    '/'  shift, and go to state 38
+    '+'  shift, and go to state 32
+    '-'  shift, and go to state 33
+    '*'  shift, and go to state 34
+    '/'  shift, and go to state 35
 
     $default  reduce using rule 31 (assignOp)
 
 
-state 46
+state 43
 
    25 expOp: '(' expOp ')' .
 
     $default  reduce using rule 25 (expOp)
 
 
-state 47
+state 44
 
-   17 whileLoop: WHILE expOp DO whileLoop . DONE
-   19          | whileLoop . simpleAndIfStmts
+   16 whileLoop: IF . expOp THEN whileLoop ELSE whileLoop ENDIF
+   17          | IF . expOp THEN whileLoop ENDIF
 
-    DONE   shift, and go to state 54
-    IF     shift, and go to state 2
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
+
+    expOp  go to state 53
+
+
+state 45
+
+   18 whileLoop: simpleStmts . whileLoop
+   20          | simpleStmts .
+
+    WHILE  shift, and go to state 1
+    IF     shift, and go to state 44
     PRINT  shift, and go to state 3
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    IF        [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    ENDL      reduce using rule 10 (ifstatement)
+    DONE      reduce using rule 14 (whileLoop)
+    DONE      [reduce using rule 20 (whileLoop)]
+    ELSE      reduce using rule 14 (whileLoop)
+    ELSE      [reduce using rule 20 (whileLoop)]
+    ENDIF     reduce using rule 14 (whileLoop)
+    ENDIF     [reduce using rule 20 (whileLoop)]
+    PRINT     [reduce using rule 14 (whileLoop)]
+    PRINT     [reduce using rule 20 (whileLoop)]
+    READ      [reduce using rule 14 (whileLoop)]
+    READ      [reduce using rule 20 (whileLoop)]
+    tIDEN     [reduce using rule 14 (whileLoop)]
+    tIDEN     [reduce using rule 20 (whileLoop)]
+    ENDL      reduce using rule 14 (whileLoop)
+    ENDL      [reduce using rule 20 (whileLoop)]
     ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 10 (ifstatement)
+    $default  reduce using rule 14 (whileLoop)
 
-    simpleAndIfStmts  go to state 30
-    simpleStmts       go to state 8
-    ifstatement       go to state 9
-    assignOp          go to state 11
+    simpleStmts  go to state 45
+    whileLoop    go to state 25
+    assignOp     go to state 10
 
 
-state 48
+state 46
+
+   15 whileLoop: WHILE expOp DO whileLoop . DONE
+   19          | whileLoop . simpleStmts
+
+    DONE   shift, and go to state 54
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
+    $default  reduce using rule 30 (assignOp)
+
+    simpleStmts  go to state 27
+    assignOp     go to state 10
+
+
+state 47
 
    21 expOp: expOp . '-' expOp
    22      | expOp . '+' expOp
@@ -877,13 +805,13 @@ state 48
    23      | expOp . '*' expOp
    24      | expOp . '/' expOp
 
-    '*'  shift, and go to state 37
-    '/'  shift, and go to state 38
+    '*'  shift, and go to state 34
+    '/'  shift, and go to state 35
 
     $default  reduce using rule 22 (expOp)
 
 
-state 49
+state 48
 
    21 expOp: expOp . '-' expOp
    21      | expOp '-' expOp .
@@ -891,13 +819,13 @@ state 49
    23      | expOp . '*' expOp
    24      | expOp . '/' expOp
 
-    '*'  shift, and go to state 37
-    '/'  shift, and go to state 38
+    '*'  shift, and go to state 34
+    '/'  shift, and go to state 35
 
     $default  reduce using rule 21 (expOp)
 
 
-state 50
+state 49
 
    21 expOp: expOp . '-' expOp
    22      | expOp . '+' expOp
@@ -908,7 +836,7 @@ state 50
     $default  reduce using rule 23 (expOp)
 
 
-state 51
+state 50
 
    21 expOp: expOp . '-' expOp
    22      | expOp . '+' expOp
@@ -919,134 +847,268 @@ state 51
     $default  reduce using rule 24 (expOp)
 
 
-state 52
+state 51
 
-   13 ifstatement: simpleStmts . ifstatement
-   15            | simpleStmts .
+    9 ifstatement: IF expOp THEN ifstatement . ELSE ifstatement ENDIF
+   10            | IF expOp THEN ifstatement . ENDIF
+   12            | ifstatement . simpleStmts
 
-    IF     shift, and go to state 2
+    ELSE   shift, and go to state 55
+    ENDIF  shift, and go to state 56
     PRINT  shift, and go to state 3
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    ELSE      reduce using rule 10 (ifstatement)
-    ELSE      [reduce using rule 15 (ifstatement)]
-    ENDIF     reduce using rule 10 (ifstatement)
-    ENDIF     [reduce using rule 15 (ifstatement)]
-    PRINT     [reduce using rule 10 (ifstatement)]
-    PRINT     [reduce using rule 15 (ifstatement)]
-    READ      [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 15 (ifstatement)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 15 (ifstatement)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 15 (ifstatement)]
-    ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 10 (ifstatement)
+    $default  reduce using rule 30 (assignOp)
 
-    simpleStmts  go to state 52
-    ifstatement  go to state 55
-    assignOp     go to state 11
+    simpleStmts  go to state 26
+    assignOp     go to state 10
+
+
+state 52
+
+   16 whileLoop: IF expOp THEN whileLoop . ELSE whileLoop ENDIF
+   17          | IF expOp THEN whileLoop . ENDIF
+   19          | whileLoop . simpleStmts
+
+    ELSE   shift, and go to state 57
+    ENDIF  shift, and go to state 58
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
+    $default  reduce using rule 30 (assignOp)
+
+    simpleStmts  go to state 27
+    assignOp     go to state 10
 
 
 state 53
 
-   11 ifstatement: IF expOp THEN ifstatement . ELSE ifstatement ENDIF
-   12            | IF expOp THEN ifstatement . ENDIF
-   14            | ifstatement . simpleStmts
+   16 whileLoop: IF expOp . THEN whileLoop ELSE whileLoop ENDIF
+   17          | IF expOp . THEN whileLoop ENDIF
+   21 expOp: expOp . '-' expOp
+   22      | expOp . '+' expOp
+   23      | expOp . '*' expOp
+   24      | expOp . '/' expOp
 
-    ELSE   shift, and go to state 56
-    ENDIF  shift, and go to state 57
-    PRINT  shift, and go to state 3
-    READ   shift, and go to state 4
-    tIDEN  shift, and go to state 5
-
-    $default  reduce using rule 30 (assignOp)
-
-    simpleStmts  go to state 58
-    assignOp     go to state 11
+    THEN  shift, and go to state 59
+    '+'   shift, and go to state 32
+    '-'   shift, and go to state 33
+    '*'   shift, and go to state 34
+    '/'   shift, and go to state 35
 
 
 state 54
 
-   17 whileLoop: WHILE expOp DO whileLoop DONE .
+   15 whileLoop: WHILE expOp DO whileLoop DONE .
 
-    $default  reduce using rule 17 (whileLoop)
+    $default  reduce using rule 15 (whileLoop)
 
 
 state 55
 
-   13 ifstatement: simpleStmts ifstatement .
-   14            | ifstatement . simpleStmts
+    9 ifstatement: IF expOp THEN ifstatement ELSE . ifstatement ENDIF
 
+    IF     shift, and go to state 60
     PRINT  shift, and go to state 3
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
-    PRINT     [reduce using rule 13 (ifstatement)]
-    READ      [reduce using rule 13 (ifstatement)]
-    tIDEN     [reduce using rule 13 (ifstatement)]
-    ENDL      reduce using rule 13 (ifstatement)
+    PRINT     [reduce using rule 8 (ifstatement)]
+    READ      [reduce using rule 8 (ifstatement)]
+    tIDEN     [reduce using rule 8 (ifstatement)]
+    ENDL      reduce using rule 8 (ifstatement)
     ENDL      [reduce using rule 30 (assignOp)]
-    $default  reduce using rule 13 (ifstatement)
+    $default  reduce using rule 8 (ifstatement)
 
-    simpleStmts  go to state 58
-    assignOp     go to state 11
+    simpleStmts  go to state 61
+    ifstatement  go to state 62
+    assignOp     go to state 10
 
 
 state 56
 
-   11 ifstatement: IF expOp THEN ifstatement ELSE . ifstatement ENDIF
+   10 ifstatement: IF expOp THEN ifstatement ENDIF .
 
-    IF     shift, and go to state 2
-    PRINT  shift, and go to state 3
-    READ   shift, and go to state 4
-    tIDEN  shift, and go to state 5
-
-    PRINT     [reduce using rule 10 (ifstatement)]
-    READ      [reduce using rule 10 (ifstatement)]
-    tIDEN     [reduce using rule 10 (ifstatement)]
-    ENDL      reduce using rule 10 (ifstatement)
-    ENDL      [reduce using rule 30 (assignOp)]
     $default  reduce using rule 10 (ifstatement)
-
-    simpleStmts  go to state 52
-    ifstatement  go to state 59
-    assignOp     go to state 11
 
 
 state 57
 
-   12 ifstatement: IF expOp THEN ifstatement ENDIF .
+   16 whileLoop: IF expOp THEN whileLoop ELSE . whileLoop ENDIF
 
-    $default  reduce using rule 12 (ifstatement)
+    WHILE  shift, and go to state 1
+    IF     shift, and go to state 44
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
+    PRINT     [reduce using rule 14 (whileLoop)]
+    READ      [reduce using rule 14 (whileLoop)]
+    tIDEN     [reduce using rule 14 (whileLoop)]
+    ENDL      reduce using rule 14 (whileLoop)
+    ENDL      [reduce using rule 30 (assignOp)]
+    $default  reduce using rule 14 (whileLoop)
+
+    simpleStmts  go to state 45
+    whileLoop    go to state 63
+    assignOp     go to state 10
 
 
 state 58
 
-   14 ifstatement: ifstatement simpleStmts .
+   17 whileLoop: IF expOp THEN whileLoop ENDIF .
 
-    $default  reduce using rule 14 (ifstatement)
+    $default  reduce using rule 17 (whileLoop)
 
 
 state 59
 
-   11 ifstatement: IF expOp THEN ifstatement ELSE ifstatement . ENDIF
-   14            | ifstatement . simpleStmts
+   16 whileLoop: IF expOp THEN . whileLoop ELSE whileLoop ENDIF
+   17          | IF expOp THEN . whileLoop ENDIF
 
-    ENDIF  shift, and go to state 60
+    WHILE  shift, and go to state 1
+    IF     shift, and go to state 44
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
+    PRINT     [reduce using rule 14 (whileLoop)]
+    READ      [reduce using rule 14 (whileLoop)]
+    tIDEN     [reduce using rule 14 (whileLoop)]
+    ENDL      reduce using rule 14 (whileLoop)
+    ENDL      [reduce using rule 30 (assignOp)]
+    $default  reduce using rule 14 (whileLoop)
+
+    simpleStmts  go to state 45
+    whileLoop    go to state 52
+    assignOp     go to state 10
+
+
+state 60
+
+    9 ifstatement: IF . expOp THEN ifstatement ELSE ifstatement ENDIF
+   10            | IF . expOp THEN ifstatement ENDIF
+
+    tIDEN   shift, and go to state 11
+    tFLOAT  shift, and go to state 12
+    tINT    shift, and go to state 13
+    '-'     shift, and go to state 14
+    '('     shift, and go to state 15
+
+    expOp  go to state 64
+
+
+state 61
+
+   11 ifstatement: simpleStmts . ifstatement
+   13            | simpleStmts .
+
+    IF     shift, and go to state 60
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
+    ELSE      reduce using rule 8 (ifstatement)
+    ELSE      [reduce using rule 13 (ifstatement)]
+    ENDIF     reduce using rule 8 (ifstatement)
+    ENDIF     [reduce using rule 13 (ifstatement)]
+    PRINT     [reduce using rule 8 (ifstatement)]
+    PRINT     [reduce using rule 13 (ifstatement)]
+    READ      [reduce using rule 8 (ifstatement)]
+    READ      [reduce using rule 13 (ifstatement)]
+    tIDEN     [reduce using rule 8 (ifstatement)]
+    tIDEN     [reduce using rule 13 (ifstatement)]
+    ENDL      reduce using rule 8 (ifstatement)
+    ENDL      [reduce using rule 13 (ifstatement)]
+    ENDL      [reduce using rule 30 (assignOp)]
+    $default  reduce using rule 8 (ifstatement)
+
+    simpleStmts  go to state 61
+    ifstatement  go to state 24
+    assignOp     go to state 10
+
+
+state 62
+
+    9 ifstatement: IF expOp THEN ifstatement ELSE ifstatement . ENDIF
+   12            | ifstatement . simpleStmts
+
+    ENDIF  shift, and go to state 65
     PRINT  shift, and go to state 3
     READ   shift, and go to state 4
     tIDEN  shift, and go to state 5
 
     $default  reduce using rule 30 (assignOp)
 
-    simpleStmts  go to state 58
-    assignOp     go to state 11
+    simpleStmts  go to state 26
+    assignOp     go to state 10
 
 
-state 60
+state 63
 
-   11 ifstatement: IF expOp THEN ifstatement ELSE ifstatement ENDIF .
+   16 whileLoop: IF expOp THEN whileLoop ELSE whileLoop . ENDIF
+   19          | whileLoop . simpleStmts
 
-    $default  reduce using rule 11 (ifstatement)
+    ENDIF  shift, and go to state 66
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
+    $default  reduce using rule 30 (assignOp)
+
+    simpleStmts  go to state 27
+    assignOp     go to state 10
+
+
+state 64
+
+    9 ifstatement: IF expOp . THEN ifstatement ELSE ifstatement ENDIF
+   10            | IF expOp . THEN ifstatement ENDIF
+   21 expOp: expOp . '-' expOp
+   22      | expOp . '+' expOp
+   23      | expOp . '*' expOp
+   24      | expOp . '/' expOp
+
+    THEN  shift, and go to state 67
+    '+'   shift, and go to state 32
+    '-'   shift, and go to state 33
+    '*'   shift, and go to state 34
+    '/'   shift, and go to state 35
+
+
+state 65
+
+    9 ifstatement: IF expOp THEN ifstatement ELSE ifstatement ENDIF .
+
+    $default  reduce using rule 9 (ifstatement)
+
+
+state 66
+
+   16 whileLoop: IF expOp THEN whileLoop ELSE whileLoop ENDIF .
+
+    $default  reduce using rule 16 (whileLoop)
+
+
+state 67
+
+    9 ifstatement: IF expOp THEN . ifstatement ELSE ifstatement ENDIF
+   10            | IF expOp THEN . ifstatement ENDIF
+
+    IF     shift, and go to state 60
+    PRINT  shift, and go to state 3
+    READ   shift, and go to state 4
+    tIDEN  shift, and go to state 5
+
+    PRINT     [reduce using rule 8 (ifstatement)]
+    READ      [reduce using rule 8 (ifstatement)]
+    tIDEN     [reduce using rule 8 (ifstatement)]
+    ENDL      reduce using rule 8 (ifstatement)
+    ENDL      [reduce using rule 30 (assignOp)]
+    $default  reduce using rule 8 (ifstatement)
+
+    simpleStmts  go to state 61
+    ifstatement  go to state 51
+    assignOp     go to state 10
