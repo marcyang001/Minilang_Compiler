@@ -64,7 +64,10 @@ int yylex(void);
 %%
 
 input:		/* empty */ 
-    ifwhilecombo
+    input declarations ifwhilecombo
+    | input ifwhilecombo
+    | declarations ifwhilecombo
+    | ifwhilecombo
     ;
 
 declarations:
@@ -84,22 +87,14 @@ simpleStmts:
     | assignOp ENDL
     ;
 
-
-ifstatement:
-    | IF expOp THEN ifstatement ELSE ifstatement ENDIF
-    | IF expOp THEN ifstatement ENDIF
-    | simpleStmts ifstatement
-    | ifstatement simpleStmts
-    | simpleStmts
-    ;
-
-
 ifwhilecombo:
+    ifwhilecombo WHILE expOp DO ifwhilecombo DONE
+    | ifwhilecombo IF expOp THEN ifwhilecombo ELSE ifwhilecombo ENDIF
+    | ifwhilecombo IF expOp THEN ifwhilecombo ENDIF 
+    | ifwhilecombo simpleStmts
     | WHILE expOp DO ifwhilecombo DONE
     | IF expOp THEN ifwhilecombo ELSE ifwhilecombo ENDIF
-    | IF expOp THEN ifwhilecombo ENDIF
-    | simpleStmts ifwhilecombo
-    | ifwhilecombo simpleStmts
+    | IF expOp THEN ifwhilecombo ENDIF 
     | simpleStmts
     ;
 
