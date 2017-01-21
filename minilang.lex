@@ -34,11 +34,6 @@ comment 				(\/\/.*)
 "-"							{ return '-'; }
 "("							{ return '('; }
 ")"							{ return ')'; }
-"<="						{ return LEQUAL; }
-">=" 						{ return GEQUAL; }
-">"							{ return '>'; }
-"<"							{ return '<'; }
-"=="						{ yylval.op_val = new std::string(yytext); return EQUAL; }
 
 
 "="         				{ yylval.op_val = new std::string(yytext); return tASSIGN; }
@@ -47,7 +42,6 @@ comment 				(\/\/.*)
 {comment}					{ yylval.op_val = new std::string(yytext); return COMMENT; }
 
 
-var	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return VAR; }
 while 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return WHILE; }
 do 	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return DO; }
 done 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return DONE; }
@@ -56,6 +50,11 @@ read 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return 
 int 						{ yylval.op_val = new std::string(yytext); return INT; }
 float 						{ yylval.op_val = new std::string(yytext); return FLOAT; }
 string 						{ yylval.op_val = new std::string(yytext); return STRING; }
+if  						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return IF; }
+then 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return THEN; }
+else						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return ELSE; }
+endif  						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return ENDIF; }
+var	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return VAR; }
 
 
 [_a-zA-Z][a-zA-Z0-9]*		{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tIDEN; }

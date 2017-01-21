@@ -1,7 +1,21 @@
-while 100 do
-	while a < 100 do
-		quot = x / guess;
-	done
-	guess = 0.5 * (guess + quot);
-	iter = iter - 1;
+while x do
+	x = 1;
+	if x+x then 
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
+	endif
 done

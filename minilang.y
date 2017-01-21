@@ -49,10 +49,6 @@ int yylex(void);
 %left NEG
 %token '(' ')'
 
-// boolean
-%token '<' '>'
-%token LEQUAL GEQUAL
-%token<op_val> EQUAL
 
 %token<op_val> tASSIGN
 %token<op_val> COMMENT
@@ -81,22 +77,31 @@ declarations:
     ;
 
 simpleAndIfStmts: 
-  simpleStmts
+  simpleStmts simpleAndIfStmts
+  | ifstatement simpleAndIfStmts
+  | simpleStmts
   ;
 
 simpleStmts:
     PRINT expOp ENDL
-    | PRINT booleanOp ENDL
     | PRINT tSTRING_LITERAL ENDL
     | PRINT ENDL
     | READ tIDEN ENDL
     | assignOp ENDL
     ;
 
+
+ifstatement:
+    | IF expOp THEN ifstatement ELSE ifstatement ENDIF
+    | IF expOp THEN ifstatement ENDIF
+    | simpleStmts ifstatement
+    | ifstatement simpleStmts
+    | simpleStmts
+    ;
+
+
 whileLoop:
-    WHILE assignOp DO whileLoop DONE
-    | WHILE booleanOp DO whileLoop DONE
-    | WHILE tINT DO whileLoop DONE
+    | WHILE expOp DO whileLoop DONE
     | simpleAndIfStmts whileLoop
     | whileLoop simpleAndIfStmts
     | simpleAndIfStmts
@@ -117,29 +122,9 @@ expOp:
 assignOp:
     | tIDEN tASSIGN expOp  
     | tIDEN tASSIGN tIDEN
-    | tIDEN tASSIGN booleanOp
     | tIDEN tASSIGN tSTRING_LITERAL
     | tIDEN
     ;
-
-booleanOp:
-    | expOp '<' expOp
-    | expOp '>' expOp
-    | expOp LEQUAL expOp
-    | expOp GEQUAL expOp
-    | expOp EQUAL expOp
-    ;
-
-
-
-
-testnumber:
-    tFLOAT input { cout << "found a float " << endl; }
-    | tINT input  { cout << "found a int " << endl; }
-    | tFLOAT  { cout << "found a float " << endl; }
-    | tINT      { cout << "found a int " << endl; }
-    ;
-
 
 comment:
     COMMENT         { cout << "This is a comment " << endl; }

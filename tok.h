@@ -57,13 +57,10 @@
      tINT = 273,
      tSTRING_LITERAL = 274,
      NEG = 275,
-     LEQUAL = 276,
-     GEQUAL = 277,
-     EQUAL = 278,
-     tASSIGN = 279,
-     COMMENT = 280,
-     ENDL = 281,
-     COLON = 282
+     tASSIGN = 276,
+     COMMENT = 277,
+     ENDL = 278,
+     COLON = 279
    };
 #endif
 /* Tokens.  */
@@ -85,13 +82,10 @@
 #define tINT 273
 #define tSTRING_LITERAL 274
 #define NEG 275
-#define LEQUAL 276
-#define GEQUAL 277
-#define EQUAL 278
-#define tASSIGN 279
-#define COMMENT 280
-#define ENDL 281
-#define COLON 282
+#define tASSIGN 276
+#define COMMENT 277
+#define ENDL 278
+#define COLON 279
 
 
 
@@ -106,7 +100,7 @@ typedef union YYSTYPE
     float         f_val;
 }
 /* Line 1529 of yacc.c.  */
-#line 110 "minilang.tab.h"
+#line 104 "minilang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
