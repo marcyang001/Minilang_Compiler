@@ -66,6 +66,8 @@ int yylex(void);
 input:		/* empty */ 
     input declarations ifwhilecombo
     | input ifwhilecombo
+    | input comment
+    | comment
     | declarations ifwhilecombo
     | ifwhilecombo
     ;
@@ -74,6 +76,8 @@ declarations:
     declarations VAR tIDEN COLON FLOAT ENDL  
     | declarations VAR tIDEN COLON INT ENDL   
     | declarations VAR tIDEN COLON STRING ENDL 
+    | declarations comment
+    | comment
     | VAR tIDEN COLON FLOAT ENDL 
     | VAR tIDEN COLON INT ENDL 
     | VAR tIDEN COLON STRING ENDL
@@ -92,6 +96,8 @@ ifwhilecombo:
     | ifwhilecombo IF expOp THEN ifwhilecombo ELSE ifwhilecombo ENDIF
     | ifwhilecombo IF expOp THEN ifwhilecombo ENDIF 
     | ifwhilecombo simpleStmts
+    | ifwhilecombo comment
+    | comment
     | WHILE expOp DO ifwhilecombo DONE
     | IF expOp THEN ifwhilecombo ELSE ifwhilecombo ENDIF
     | IF expOp THEN ifwhilecombo ENDIF 
@@ -118,7 +124,7 @@ assignOp:
     ;
 
 comment:
-    COMMENT         { cout << "This is a comment " << endl; }
+    COMMENT
     ;
 
 

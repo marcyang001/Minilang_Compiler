@@ -1,5 +1,10 @@
+var a : int;
+// this is a comment
+var a : int;
+if x then
 
 	x = 1;
+	// this is a comment
 	if x+x then 
 		a =1;
 		if x - a then
@@ -18,6 +23,8 @@
 		a =1;
 		a =1;
 	endif
+endif 
+
 
 while x do
 	x = 1;
@@ -58,3 +65,5 @@ while x do
 		a =1;
 	endif
 done
+
+
