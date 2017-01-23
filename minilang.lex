@@ -15,7 +15,7 @@ int line_num = 1;
 digit 	    			[0-9]
 integer 	    		([1-9]{digit}*|0?)
 floatNumber	    		{integer}\.{digit}+
-string_literal			(\"([^\\\"]|\\.)*\")
+string_literal			(\"(\\[atrn"\\]|[^\\"])*\")
 comment 				(\/\/.*)
 
 
@@ -60,6 +60,6 @@ var	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return 
 [_a-zA-Z][a-zA-Z0-9]*		{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tIDEN; }
 {string_literal}			{ yylval.op_val = new std::string(yytext); return tSTRING_LITERAL; }
 
-.           				{ std::cerr << "SCANNER " << endl; yyerror(""); exit(1);    }
+.           				{ yyerror(yytext); exit(1);    }
 
 %%
