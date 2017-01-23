@@ -15,6 +15,8 @@ int main(int argc, char **argv)
   }
   
   yyparse();
+  
+  cout << "VALID" << endl;
 
   return 0;
 }

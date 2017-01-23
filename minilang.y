@@ -63,13 +63,14 @@ int yylex(void);
 
 %%
 
-input:		/* empty */ 
+input:		
     input declarations ifwhilecombo
     | input ifwhilecombo
     | input comment
-    | comment
     | declarations ifwhilecombo
+    | declarations
     | ifwhilecombo
+    | comment
     ;
 
 declarations:
@@ -137,7 +138,7 @@ int yyerror(string s)
   extern char *yytext;	// defined and maintained in lex.c
   
   cout << "INVALID: " << s << " at symbol \"" << yytext;
-  cout << "\" on line " << line_num << endl;
+  cout << "\" on line " << (line_num) << endl;
   exit(1);
 }
 

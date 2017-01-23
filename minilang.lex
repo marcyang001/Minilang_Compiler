@@ -22,7 +22,7 @@ comment 				(\/\/.*)
 
 %%
 [ \t\r]*					{}
-[\n]						{ ++line_num; }
+[\n]						{ line_num++; }
 
 {integer}					{ yylval.int_val = atoi(yytext); return tINT; }
 {floatNumber}				{ yylval.int_val = atof(yytext); return tFLOAT; }
