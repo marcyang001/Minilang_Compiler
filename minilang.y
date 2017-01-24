@@ -93,7 +93,8 @@ simpleStmts:
     ;
 
 ifwhilecombo:
-    ifwhilecombo WHILE expOp DO ifwhilecombo DONE
+    ifwhilecombo WHILE tSTRING_LITERAL DO ifwhilecombo DONE
+    | ifwhilecombo WHILE expOp DO ifwhilecombo DONE
     | ifwhilecombo IF expOp THEN ifwhilecombo ELSE ifwhilecombo ENDIF
     | ifwhilecombo IF expOp THEN ifwhilecombo ENDIF 
     | ifwhilecombo simpleStmts
