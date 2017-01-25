@@ -5,6 +5,7 @@ using namespace std;
 int yyerror(char *s);
 int yylex(void);
 
+
 %}
 
 %union  {
@@ -13,6 +14,7 @@ int yylex(void);
     char*         stringconst;
     float         f_val;
 }
+
 
 
 // define the keyword tokens:
@@ -60,16 +62,14 @@ int yylex(void);
 
 %start input 
 
-
 %%
 
-input:		
-    input declarations ifwhilecombo
-    | input ifwhilecombo
+input:      
+    input statements
     | input comment
-    | declarations ifwhilecombo
-    | declarations
-    | ifwhilecombo
+    | declarations input
+    | declarations statements
+    | statements
     | comment
     ;
 
@@ -86,23 +86,21 @@ declarations:
 
 simpleStmts:
     PRINT expOp ENDL
-    | PRINT tSTRING_LITERAL ENDL
-    | PRINT ENDL
     | READ tIDEN ENDL
-    | assignOp ENDL
+    | tIDEN tASSIGN expOp ENDL
     ;
 
-ifwhilecombo:
-    ifwhilecombo WHILE tSTRING_LITERAL DO ifwhilecombo DONE
-    | ifwhilecombo WHILE expOp DO ifwhilecombo DONE
-    | ifwhilecombo IF expOp THEN ifwhilecombo ELSE ifwhilecombo ENDIF
-    | ifwhilecombo IF expOp THEN ifwhilecombo ENDIF 
-    | ifwhilecombo simpleStmts
-    | ifwhilecombo comment
+statements:
+    statements WHILE tSTRING_LITERAL DO statements DONE
+    | statements WHILE expOp DO statements DONE
+    | statements IF expOp THEN statements ELSE statements ENDIF
+    | statements IF expOp THEN statements ENDIF 
+    | statements simpleStmts
+    | statements comment
     | comment
-    | WHILE expOp DO ifwhilecombo DONE
-    | IF expOp THEN ifwhilecombo ELSE ifwhilecombo ENDIF
-    | IF expOp THEN ifwhilecombo ENDIF 
+    | WHILE expOp DO statements DONE
+    | IF expOp THEN statements ELSE statements ENDIF
+    | IF expOp THEN statements ENDIF 
     | simpleStmts
     ;
 
@@ -116,19 +114,12 @@ expOp:
     | tINT 
     | tFLOAT
     | tIDEN
-    ;
-
-assignOp:
-    | tIDEN tASSIGN expOp  
-    | tIDEN tASSIGN tIDEN
-    | tIDEN tASSIGN tSTRING_LITERAL
-    | tIDEN
+    | tSTRING_LITERAL
     ;
 
 comment:
     COMMENT
     ;
-
 
 %%
 

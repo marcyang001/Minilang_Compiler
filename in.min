@@ -1,1 +1,161 @@
-a = 12312;
+// declarations
+var x: float;
+var guess: float; 
+var quot: float; 
+var iter: int; 
+read x; 
+guess = 1; 
+iter = 10;
+
+while iter do
+	if y + 1 then
+		quot = x / guess;
+		guess = 0.5 * (guess + quot); 
+		iter = iter - 1; 
+	else
+		x = x - 1;
+	endif
+done 
+
+print guess; 
+print guess * guess;
+
+// nested if statement
+
+if x then
+	x = 1;
+	// this is a comment
+	if x+x then 
+	// this is a comment
+		a =1;
+		// this is a comment
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
+	endif
+endif 
+
+// nested while and if statements
+while x do
+	while x do
+		x = 1;
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+	done
+
+
+
+
+	while 100 do
+		while 100 do
+			quot = x / guess;
+		done
+		guess = 0.5 * (guess + quot);
+		iter = iter - 1;
+	done
+
+	if x+x then 
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
+	endif
+	if x+x then 
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
+	endif
+
+	while x do
+		x = 1;
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+	done
+done

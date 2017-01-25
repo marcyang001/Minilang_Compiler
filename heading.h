@@ -3,6 +3,7 @@
 #define YY_NO_UNPUT
 
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 
