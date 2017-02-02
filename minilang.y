@@ -5,16 +5,14 @@ using namespace std;
 int yyerror(char *s);
 int yylex(void);
 
-
 %}
 
 %union  {
     int		        int_val;
     std::string*	op_val;
-    char*         stringconst;
-    float         f_val;
+    std::string*    stringconst;
+    float           f_val;
 }
-
 
 
 // define the keyword tokens:
@@ -53,7 +51,6 @@ int yylex(void);
 
 
 %token<op_val> tASSIGN
-%token<op_val> COMMENT
 
 %token<op_val> ENDL
 %left<op_val> COLON
@@ -62,23 +59,19 @@ int yylex(void);
 
 %start input 
 
+
 %%
 
-input:      
-    input statements
-    | input comment
-    | declarations input
+input:		
+    statements
+    | declarations
     | declarations statements
-    | statements
-    | comment
     ;
 
 declarations:
     declarations VAR tIDEN COLON FLOAT ENDL  
     | declarations VAR tIDEN COLON INT ENDL   
     | declarations VAR tIDEN COLON STRING ENDL 
-    | declarations comment
-    | comment
     | VAR tIDEN COLON FLOAT ENDL 
     | VAR tIDEN COLON INT ENDL 
     | VAR tIDEN COLON STRING ENDL
@@ -91,14 +84,11 @@ simpleStmts:
     ;
 
 statements:
-    statements WHILE tSTRING_LITERAL DO statements DONE
-    | statements WHILE expOp DO statements DONE
+    statements WHILE expOp DO statements DONE
     | statements IF expOp THEN statements ELSE statements ENDIF
     | statements IF expOp THEN statements ENDIF 
     | statements simpleStmts
-    | statements comment
-    | comment
-    | WHILE expOp DO statements DONE
+    | WHILE expOp DO statements DONE 
     | IF expOp THEN statements ELSE statements ENDIF
     | IF expOp THEN statements ENDIF 
     | simpleStmts
@@ -117,10 +107,6 @@ expOp:
     | tSTRING_LITERAL
     ;
 
-comment:
-    COMMENT
-    ;
-
 %%
 
 
@@ -129,7 +115,7 @@ int yyerror(string s)
   extern int line_num;	// defined and maintained in lex.c
   extern char *yytext;	// defined and maintained in lex.c
   
-  cout << "INVALID: " << s << " at symbol \"" << yytext;
+  cout << "INVALID: at symbol \"" << yytext;
   cout << "\" on line " << (line_num) << endl;
   exit(1);
 }
