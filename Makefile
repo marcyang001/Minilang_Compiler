@@ -3,7 +3,7 @@
 OBJS	= bison.o lex.o main.o
 
 CC	= g++
-CFLAGS	= -g -Wall -pedantic -Wno-write-strings -Wunused-function
+CFLAGS	= -g -Wall -pedantic
 
 minilang:		$(OBJS)
 		$(CC) $(CFLAGS) $(OBJS) -o minilang -ll

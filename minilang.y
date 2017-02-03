@@ -15,6 +15,7 @@ int yylex(void);
 }
 
 
+
 // define the keyword tokens:
 
 // keywords
@@ -62,19 +63,32 @@ int yylex(void);
 
 %%
 
-input:		
-    statements
-    | declarations
-    | declarations statements
+input:
+    declarations statements
+    | statements
     ;
 
 declarations:
-    declarations VAR tIDEN COLON FLOAT ENDL  
-    | declarations VAR tIDEN COLON INT ENDL   
-    | declarations VAR tIDEN COLON STRING ENDL 
-    | VAR tIDEN COLON FLOAT ENDL 
+    | declarations declaration
+    | declaration
+    ;
+
+declaration:
+    VAR tIDEN COLON FLOAT ENDL 
     | VAR tIDEN COLON INT ENDL 
     | VAR tIDEN COLON STRING ENDL
+    ;
+
+statements:
+    statements statement
+    | statement
+
+statement:
+    IF expOp THEN statement ELSE statement ENDIF
+    | IF expOp THEN statement ENDIF 
+    | WHILE expOp DO statement DONE 
+    | simpleStmts
+    | %empty
     ;
 
 simpleStmts:
@@ -83,16 +97,7 @@ simpleStmts:
     | tIDEN tASSIGN expOp ENDL
     ;
 
-statements:
-    statements WHILE expOp DO statements DONE
-    | statements IF expOp THEN statements ELSE statements ENDIF
-    | statements IF expOp THEN statements ENDIF 
-    | statements simpleStmts
-    | WHILE expOp DO statements DONE 
-    | IF expOp THEN statements ELSE statements ENDIF
-    | IF expOp THEN statements ENDIF 
-    | simpleStmts
-    ;
+
 
 expOp:
     expOp '-' expOp

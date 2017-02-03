@@ -14,7 +14,7 @@ int line_num = 1;
 digit 	    			[0-9]
 integer 	    		([1-9]{digit}*|0?)
 floatNumber	    		{integer}\.{digit}+
-string_literal			(\"(\\[atrn"\\]|[^\\"])*\")
+string_literal			(\"(\\[abfnrtv"\\]|[^\\"])*\")
 comment 				(\/\/.*)
 
 
@@ -57,7 +57,7 @@ endif  						{ yylval.stringconst = new std::string(yytext); return ENDIF; }
 var	 						{ yylval.stringconst = new std::string(yytext); return VAR; }
 
 
-[_a-zA-Z][a-zA-Z0-9]*		{ yylval.stringconst = new std::string(yytext); return tIDEN; }
+[_a-zA-Z][_a-zA-Z0-9]*		{ yylval.stringconst = new std::string(yytext); return tIDEN; }
 {string_literal}			{ yylval.op_val = new std::string(yytext); return tSTRING_LITERAL; }
 
 .           				{ yyerror(yytext); exit(1);    }
