@@ -8,12 +8,11 @@ int yylex(void);
 %}
 
 %union  {
-    int		        int_val;
-    std::string*	op_val;
+    int             int_val;
+    std::string*    op_val;
     std::string*    stringconst;
     float           f_val;
 }
-
 
 
 // define the keyword tokens:
@@ -63,32 +62,18 @@ int yylex(void);
 
 %%
 
-input:
-    declarations statements
-    | statements
+input:      
+    statements
+    | declarations statements
     ;
 
 declarations:
-    | declarations declaration
-    | declaration
-    ;
-
-declaration:
-    VAR tIDEN COLON FLOAT ENDL 
+    declarations VAR tIDEN COLON FLOAT ENDL  
+    | declarations VAR tIDEN COLON INT ENDL   
+    | declarations VAR tIDEN COLON STRING ENDL 
+    | VAR tIDEN COLON FLOAT ENDL 
     | VAR tIDEN COLON INT ENDL 
     | VAR tIDEN COLON STRING ENDL
-    ;
-
-statements:
-    statements statement
-    | statement
-
-statement:
-    IF expOp THEN statement ELSE statement ENDIF
-    | IF expOp THEN statement ENDIF 
-    | WHILE expOp DO statement DONE 
-    | simpleStmts
-    | %empty
     ;
 
 simpleStmts:
@@ -97,7 +82,17 @@ simpleStmts:
     | tIDEN tASSIGN expOp ENDL
     ;
 
-
+statements:
+    statements WHILE expOp DO statements DONE
+    | statements IF expOp THEN statements ELSE statements ENDIF
+    | statements IF expOp THEN statements ENDIF 
+    | statements simpleStmts
+    | WHILE expOp DO statements DONE 
+    | IF expOp THEN statements ELSE statements ENDIF
+    | IF expOp THEN statements ENDIF 
+    | simpleStmts
+    | %empty
+    ;
 
 expOp:
     expOp '-' expOp
@@ -117,8 +112,8 @@ expOp:
 
 int yyerror(string s)
 {
-  extern int line_num;	// defined and maintained in lex.c
-  extern char *yytext;	// defined and maintained in lex.c
+  extern int line_num;  // defined and maintained in lex.c
+  extern char *yytext;  // defined and maintained in lex.c
   
   cout << "INVALID: at symbol \"" << yytext;
   cout << "\" on line " << (line_num) << endl;
@@ -129,4 +124,3 @@ int yyerror(char *s)
 {
   return yyerror(string(s));
 }
-

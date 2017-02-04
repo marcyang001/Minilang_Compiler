@@ -1,0 +1,238 @@
+var a : int;
+var b : string;
+
+if x then
+	x = 1;
+	b = "asdasda\n\as\as";
+	// this is a comment
+	if x+x then 
+	endif
+endif 
+
+
+// nested while and if statements
+while x do
+	while x do
+		x = 1;
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+	done
+
+
+
+
+	while 100 do
+		while 100 do
+			quot = x / guess;
+		done
+		guess = 0.5 * (guess + quot);
+		iter = iter - 1;
+	done
+
+	if x+x then 
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
+	endif
+	if x+x then 
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
+	endif
+
+	while x do
+		x = 1;
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+	done
+done
+
+
+// nested while and if statements
+while x do
+	while x do
+		x = 1;
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+	done
+
+
+
+
+	while 100 do
+		while 100 do
+			quot = x / guess;
+		done
+		guess = 0.5 * (guess + quot);
+		iter = iter - 1;
+	done
+
+	if x+x then 
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
+	endif
+	if x+x then 
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+	else
+		a =1;
+		if x - a then
+			print x;
+		else
+			read b;
+		endif
+		a =1;
+		a =1;
+	endif
+
+	while x do
+		x = 1;
+		if x+x then 
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+		else
+			a =1;
+			if x - a then
+				print x;
+			else
+				read b;
+			endif
+			a =1;
+			a =1;
+		endif
+	done
+done

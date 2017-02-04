@@ -1,4 +1,8 @@
-// valid if-else, empty body
-if 1 then
-else
-endif
+// Approximate the square root of x.
+
+
+while iter do
+	quot = x / guess;
+	guess = 0.5 * (guess + quot);
+	iter = iter - 1;
+done
