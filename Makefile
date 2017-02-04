@@ -1,8 +1,8 @@
 # Makefile
 
-OBJS	= bison.o lex.o main.o
+OBJS	= bison.o lex.o main.o tree.o memory.o
 
-CC	= g++
+CC	= gcc
 CFLAGS	= -g -Wall -pedantic
 
 minilang:		$(OBJS)
@@ -23,8 +23,14 @@ bison.c:	minilang.y
 		cp minilang.tab.c bison.c
 		cmp -s minilang.tab.h tok.h || cp minilang.tab.h tok.h
 
-main.o:		main.cc
-		$(CC) $(CFLAGS) -c main.cc -o main.o
+memory.o: memory.c memory.h
+		$(CC) $(CFLAGS) -c memory.c -o memory.o
+
+tree.o:  tree.c tree.h
+		$(CC) $(CFLAGS) -c tree.c -o tree.o
+
+main.o:		main.c
+		$(CC) $(CFLAGS) -c main.c -o main.o
 
 lex.o yac.o main.o	: heading.h
 lex.o main.o		: tok.h

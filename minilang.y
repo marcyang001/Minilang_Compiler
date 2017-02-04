@@ -1,23 +1,26 @@
 %{
 
 #include "heading.h"
-using namespace std;
 int yyerror(char *s);
 int yylex(void);
+
+extern int line_num;  // defined and maintained in lex.c
+extern char *yytext;  // defined and maintained in lex.c
+extern EXP *theexpression;
 
 %}
 
 %union  {
     int             int_val;
-    std::string*    op_val;
-    std::string*    stringconst;
+    char*    stringconst;
     float           f_val;
+    struct EXP *exp;
 }
 
 
 // define the keyword tokens:
 
-// keywords
+// keyword tokens 
 %token<stringconst>   VAR
 %token<stringconst>   WHILE 
 %token<stringconst>   DO
@@ -30,13 +33,13 @@ int yylex(void);
 %token<stringconst>   READ
 
 
-// types
+// type tokens
 %token<stringconst>   FLOAT 
 %token<stringconst>   STRING 
 %token<stringconst>   INT
 
 
-// values
+// value tokens
 %token<stringconst>   tIDEN
 %token<f_val>         tFLOAT 
 %token<int_val>       tINT
@@ -47,13 +50,15 @@ int yylex(void);
 %left '+' '-'
 %left '*' '/'
 %left NEG
-%token '(' ')'
+
+// other operators
+%token<stringconst> tASSIGN
+%token<stringconst> ENDL
+%left<stringconst> COLON
 
 
-%token<op_val> tASSIGN
-
-%token<op_val> ENDL
-%left<op_val> COLON
+// define type
+%type <exp> expOp
 
 
 
@@ -63,6 +68,10 @@ int yylex(void);
 %%
 
 input:
+    expOp
+    ;
+
+program:
     statements
     | declarations
     | declarations statements
@@ -102,32 +111,25 @@ statements:
     ;
 
 expOp:
-    expOp '-' expOp
+    expOp '-' expOp 
     | expOp '+' expOp
     | expOp '*' expOp
     | expOp '/' expOp
     | '(' expOp ')'
     | '-' expOp %prec NEG
-    | tINT 
-    | tFLOAT
-    | tIDEN
+    | tINT                              { $$ = makeEXPintconst ($1); }               
+    | tFLOAT                            
+    | tIDEN                             { $$ = makeEXPid ($1); }               
     | tSTRING_LITERAL
     ;
 
 %%
 
 
-int yyerror(string s)
-{
-  extern int line_num;  // defined and maintained in lex.c
-  extern char *yytext;  // defined and maintained in lex.c
-  
-  cout << "INVALID: at symbol \"" << yytext;
-  cout << "\" on line " << (line_num) << endl;
-  exit(1);
-}
-
 int yyerror(char *s)
 {
-  return yyerror(string(s));
+  
+  printf ("INVALID: at symbol \" %s", yytext);
+  printf ("\" on line %d\n", line_num);
+  exit(1);
 }

@@ -2,21 +2,21 @@
 
 #include "heading.h"
 
-using namespace std;
+
 // prototype of bison-generated parser function
 int yyparse();
 
 int main(int argc, char **argv)
 {
-  if ((argc > 1) && (freopen(argv[1], "r", stdin) == NULL))
+  if ((argc > 1) && (fopen(argv[1], "r") == NULL))
   {
-    cerr << argv[0] << ": File " << argv[1] << " cannot be opened.\n";
+    printf("%s: File %s cannot be opened.\n", argv[0], argv[1]);
     exit(1);
   }
   
   yyparse();
   
-  cout << "VALID" << endl;
+  printf ("VALID\n");
 
   return 0;
 }
