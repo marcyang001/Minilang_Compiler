@@ -1,8 +1,5 @@
-// Approximate the square root of x.
+// valid identifiers with underscore
+var z_1 : int;
+var __z : int;
 
 
-while iter do
-	quot = x / guess;
-	guess = 0.5 * (guess + quot);
-	iter = iter - 1;
-done

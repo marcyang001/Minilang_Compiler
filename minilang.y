@@ -62,9 +62,11 @@ int yylex(void);
 
 %%
 
-input:      
+input:
     statements
+    | declarations
     | declarations statements
+    | %empty
     ;
 
 declarations:
@@ -86,12 +88,17 @@ statements:
     statements WHILE expOp DO statements DONE
     | statements IF expOp THEN statements ELSE statements ENDIF
     | statements IF expOp THEN statements ENDIF 
+    | statements WHILE expOp DO DONE
+    | statements IF expOp THEN ELSE ENDIF
+    | statements IF expOp THEN ENDIF 
     | statements simpleStmts
     | WHILE expOp DO statements DONE 
     | IF expOp THEN statements ELSE statements ENDIF
-    | IF expOp THEN statements ENDIF 
+    | IF expOp THEN statements ENDIF
+    | WHILE expOp DO DONE
+    | IF expOp THEN ENDIF 
+    | IF expOp THEN ELSE ENDIF
     | simpleStmts
-    | %empty
     ;
 
 expOp:
