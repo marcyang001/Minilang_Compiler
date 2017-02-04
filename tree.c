@@ -3,7 +3,7 @@
  
 extern int line_num;
 
-EXP *makeEXPid(char *id)
+EXP *makeEXPid(char* id)
 { EXP *e;
   e = NEW(EXP);
   e->lineno = line_num;
@@ -21,25 +21,33 @@ EXP *makeEXPintconst(int intconst)
   return e;
 }
 
-// EXP *makeEXPfloatconst(float floatconst)
-// { EXP *e;
-//   e = NEW(EXP);
-//   e->lineno = line_num;
-//   e->kind = floatconstK;
-//   e->val.floatconstE = floatconst;
-//   return e;
-// }
+EXP *makeEXPfloatconst(float floatconst)
+{ EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = floatconstK;
+  e->val.floatconstE = floatconst;
+  return e;
+}
 
+EXP *makeEXPstringconst(char* stringconst)
+{ EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = stringconstK;
+  e->val.stringconstE = stringconst;
+  return e;
+}
 
-// EXP *makeEXPtimes(EXP *left, EXP *right)
-// { EXP *e;
-//   e = NEW(EXP);
-//   e->lineno = line_num;
-//   e->kind = timesK;
-//   e->val.timesE.left = left;
-//   e->val.timesE.right = right;
-//   return e;
-// }
+EXP *makeEXPtimes(EXP* left, EXP* right)
+{ EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = timesK;
+  e->val.timesE.left = left;
+  e->val.timesE.right = right;
+  return e;
+}
 
 // EXP *makeEXPdiv(EXP *left, EXP *right)
 // { EXP *e;

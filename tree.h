@@ -3,21 +3,35 @@
  
 typedef struct EXP {
   int lineno;
-  enum { idK,intconstK,floatconstK,stringconstK,timesK,divK,plusK,minusK } kind;
+  enum { idK,
+         intconstK,
+         floatconstK,
+         stringconstK,
+         timesK,
+         divK,
+         plusK,
+         minusK } kind;
+  
   union {
-    char *idE;
+    char* idE;
     int intconstE;
     float floatconstE;
+    char* stringconstE;
     struct {struct EXP *left; struct EXP *right;} timesE;
     struct {struct EXP *left; struct EXP *right;} divE;
     struct {struct EXP *left; struct EXP *right;} plusE;
     struct {struct EXP *left; struct EXP *right;} minusE;
   } val;
+
 } EXP;
 
 EXP *makeEXPid(char *id);
 
 EXP *makeEXPintconst(int intconst);
+
+EXP *makeEXPfloatconst(float floatconst);
+
+EXP *makeEXPstringconst(char* stringconst);
 
 EXP *makeEXPtimes(EXP *left, EXP *right);
 

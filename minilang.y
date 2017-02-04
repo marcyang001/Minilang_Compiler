@@ -58,7 +58,7 @@ extern EXP *theexpression;
 
 
 // define type
-%type <exp> expOp
+%type <exp> input expOp
 
 
 
@@ -113,23 +113,22 @@ statements:
 expOp:
     expOp '-' expOp 
     | expOp '+' expOp
-    | expOp '*' expOp
+    | expOp '*' expOp                   { $$ = makeEXPtimes($1, $3); }
     | expOp '/' expOp
     | '(' expOp ')'
     | '-' expOp %prec NEG
+    | tIDEN                             { $$ = makeEXPid ($1); }          
+    | tSTRING_LITERAL                   { $$ = makeEXPstringconst ($1); }
     | tINT                              { $$ = makeEXPintconst ($1); }               
-    | tFLOAT                            
-    | tIDEN                             { $$ = makeEXPid ($1); }               
-    | tSTRING_LITERAL
+    | tFLOAT                            { $$ = makeEXPfloatconst($1); }    
     ;
-
 %%
 
 
 int yyerror(char *s)
 {
-  
-  printf ("INVALID: at symbol \" %s", yytext);
-  printf ("\" on line %d\n", line_num);
-  exit(1);
+
+    printf ("INVALID: at symbol \" %s", yytext);
+    printf ("\" on line %d\n", line_num);
+    exit(1);
 }
