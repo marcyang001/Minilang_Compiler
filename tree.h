@@ -15,8 +15,10 @@ typedef struct EXP {
          printstmtK,
          readstmtK,
          assignstmtK,
+         makeSimplestmtK,
          declareK,
-         declarationsK } kind;
+         declarationsK,
+         combineK } kind;
   
   union {
     char* idE;
@@ -30,7 +32,9 @@ typedef struct EXP {
     struct {char* left; struct EXP *right; } assignE;
     struct {char* left; char* right; } declareE;
     struct {struct EXP *left; struct EXP *right;} declarationsE;
+    struct {struct EXP *left; struct EXP *right;} simplestmtsE;
     struct {struct EXP *expVal; } generalE;
+    struct {struct EXP *left; struct EXP *right;} combineE;
   } val;
 
 } EXP;
@@ -63,4 +67,7 @@ EXP *makeDECL(char* left, char* right);
 
 EXP *makeDECLS(EXP *left, EXP *right);
 
+EXP *makeSimplestmts(EXP *left, EXP *right);
+
+EXP *makeCombineE(EXP *left, EXP *right);
 #endif /* !TREE_H */

@@ -121,6 +121,21 @@ EXP *makeASSIGNStmt(char* left, EXP *right) {
   return e;
 }
 
+EXP *makeSimplestmts(EXP *left, EXP *right) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = makeSimplestmtK;
+  e->val.simplestmtsE.left = left;
+  e->val.simplestmtsE.right = right;
+  return e;
+}
+
+
+
+
+// declarations
+
 EXP *makeDECL(char* left, char* right) {
   EXP *e;
   e = NEW(EXP);
@@ -139,10 +154,17 @@ EXP *makeDECLS(EXP *left, EXP *right) {
   e->val.declarationsE.left = left;
   e->val.declarationsE.right = right;
   return e;  
-
-
-
 }
 
+
+EXP *makeCombineE(EXP *left, EXP *right) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = combineK;
+  e->val.combineE.left = left;
+  e->val.combineE.right = right;
+  return e;  
+}
 
 

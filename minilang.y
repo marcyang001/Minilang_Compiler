@@ -74,7 +74,7 @@ input:
 program: 
     statements
     | declarations                  { $$ = $1; }
-    | declarations statements
+    | declarations statements       { $$ = makeCombineE ($1, $2); }
     | %empty                        { }
     ;
 
@@ -101,14 +101,14 @@ statements:
     | statements WHILE expOp DO DONE                                  {  }
     | statements IF expOp THEN ELSE ENDIF                             {  }
     | statements IF expOp THEN ENDIF                                  {  }
-    | statements simpleStmts                                          {  }
+    | statements simpleStmts                                          { $$ = makeSimplestmts ($1, $2); }
     | WHILE expOp DO statements DONE                                  {  }
     | IF expOp THEN statements ELSE statements ENDIF                  {  }
     | IF expOp THEN statements ENDIF                                  {  }
     | WHILE expOp DO DONE                                             {  }
     | IF expOp THEN ENDIF                                             {  }
     | IF expOp THEN ELSE ENDIF                                        {  }
-    | simpleStmts                                                     { $$ = $1; }
+    | simpleStmts                                                     { $$ = makeSimplestmts ($1, NULL); }
     ;
 
 expOp:

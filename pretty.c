@@ -57,18 +57,28 @@ void prettyEXP(EXP *e)
     case printstmtK:
          printf("print ");
          prettyEXP(e->val.generalE.expVal);
-         printf(";");
+         printf(";\n");
          break;
     case readstmtK:
          printf("read ");
          printf("%s",e->val.idE);
-         printf(";");
+         printf(";\n");
          break;
     case assignstmtK:
          printf("%s",e->val.assignE.left);
          printf(" = ");
          prettyEXP(e->val.assignE.right);
-         printf(";");
+         printf(";\n");
+         break;
+    
+    case makeSimplestmtK:
+         if (e->val.simplestmtsE.left != NULL) {
+            prettyEXP(e->val.simplestmtsE.left);   
+         }
+
+         if (e->val.simplestmtsE.right != NULL) {
+            prettyEXP(e->val.simplestmtsE.right);     
+         }
          break;
 
     //declarations
@@ -80,6 +90,16 @@ void prettyEXP(EXP *e)
          prettyEXP(e->val.declarationsE.left);
          prettyEXP(e->val.declarationsE.right);
          break;
-    
+
+    // input (combine)
+    case combineK: 
+        if (e->val.combineE.left != NULL) {
+            prettyEXP(e->val.combineE.left);
+        }
+
+        if (e->val.combineE.right != NULL) {
+            prettyEXP(e->val.combineE.right);
+        }
+        break;
   }
 }

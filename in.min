@@ -1,5 +1,7 @@
 // valid identifiers with underscore
 var z_1 : int;
 var __z : int;
+z_1 = 1;
+__z = "asdasd";
 
 
