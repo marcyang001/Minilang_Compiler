@@ -12,7 +12,7 @@ int line_num = 1;
 
 digit 	    			[0-9]
 integer 	    		([1-9]{digit}*|0?)
-floatNumber	    		{integer}\.{digit}+
+floatNumber	    		{digit}\.{digit}+
 string_literal			(\"(\\[abfnrtv"\\]|[^\\"])*\")
 comment 				(\/\/.*)
 
@@ -25,7 +25,7 @@ comment 				(\/\/.*)
 
 
 {integer}					{ yylval.int_val = atoi(yytext); return tINT; }
-{floatNumber}				{ yylval.int_val = atof(yytext); return tFLOAT; }
+{floatNumber}				{ yylval.f_val = atof(yytext); return tFLOAT; }
 
 
 "+"							{ return '+'; }
@@ -36,9 +36,9 @@ comment 				(\/\/.*)
 ")"							{ return ')'; }
 
 
-"="         				{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return tASSIGN; }
-":"							{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return COLON; }
-";"							{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return ENDL; }
+"="         				{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tASSIGN; }
+":"							{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return COLON; }
+";"							{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return ENDL; }
 
 
 while 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return WHILE; }
@@ -57,7 +57,7 @@ var	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return 
 
 
 [_a-zA-Z][_a-zA-Z0-9]*		{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return tIDEN; }
-{string_literal}			{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tSTRING_LITERAL; }
+{string_literal}			{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return tSTRING_LITERAL; }
 .           				{ yyerror(yytext); exit(1);    }
 
 %%

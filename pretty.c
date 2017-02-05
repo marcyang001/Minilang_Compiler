@@ -4,19 +4,19 @@
 void prettyEXP(EXP *e)
 { switch (e->kind) {
     case idK:
-         printf ("enter here identifier ");
+         //printf ("enter here identifier ");
          printf("%s",e->val.idE);
          break;
     case stringconstK:
-         printf ("enter here string const "); 
+         //printf ("enter here string const "); 
          printf ("%s", e->val.stringconstE);
          break;
     case intconstK:
-         printf (" enter here int ");
+         //printf (" enter here int ");
          printf("%i",e->val.intconstE);
          break;
     case floatconstK:
-         printf ("enter here float ");
+         //printf ("enter here float ");
          printf ("%f", e->val.floatconstE);
          break;
     case plusK:
@@ -52,5 +52,8 @@ void prettyEXP(EXP *e)
          prettyEXP(e->val.unarymE.expVal);
          printf(")");
          break;
+    case printstmtK:
+         printf("print ");
+         prettyEXP(e->val.printstmtE.expVal);
   }
 }

@@ -3,6 +3,8 @@
  
 extern int line_num;
 
+// expressions
+
 EXP *makeEXPid(char* id)
 { EXP *e;
   e = NEW(EXP);
@@ -87,5 +89,18 @@ EXP *makeEXPunarym(EXP *exval)
   e->val.unarymE.expVal = exval;
   return e;
 }
+
+
+//simple statements
+
+EXP *makePRINTStmt(EXP *exval) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = printstmtK;
+  e->val.printstmtE.expVal = exval;
+  return e;
+}
+
 
 

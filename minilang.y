@@ -58,7 +58,7 @@ extern EXP *theexpression;
 
 
 // define type
-%type <exp> input expOp
+%type <exp> input program expOp simpleStmts declarations statements 
 
 
 
@@ -68,10 +68,10 @@ extern EXP *theexpression;
 %%
 
 input:
-    expOp { theexpression = $1; }
+    program { theexpression = $1; }
     ;
 
-program:
+program: 
     statements
     | declarations
     | declarations statements
@@ -88,13 +88,13 @@ declarations:
     ;
 
 simpleStmts:
-    PRINT expOp ENDL
-    | READ tIDEN ENDL
-    | tIDEN tASSIGN expOp ENDL
+    PRINT expOp ENDL            { $$ = makePRINTStmt ($2); }
+    | READ tIDEN ENDL           
+    | tIDEN tASSIGN expOp ENDL  
     ;
 
 statements:
-    statements WHILE expOp DO statements DONE
+    statements WHILE expOp DO statements DONE 
     | statements IF expOp THEN statements ELSE statements ENDIF
     | statements IF expOp THEN statements ENDIF 
     | statements WHILE expOp DO DONE
