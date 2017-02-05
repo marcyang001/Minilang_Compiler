@@ -10,7 +10,8 @@ typedef struct EXP {
          timesK,
          divK,
          plusK,
-         minusK } kind;
+         minusK, 
+         unarymK } kind;
   
   union {
     char* idE;
@@ -21,6 +22,7 @@ typedef struct EXP {
     struct {struct EXP *left; struct EXP *right;} divE;
     struct {struct EXP *left; struct EXP *right;} plusE;
     struct {struct EXP *left; struct EXP *right;} minusE;
+    struct {struct EXP *expVal; } unarymE;
   } val;
 
 } EXP;
@@ -40,5 +42,7 @@ EXP *makeEXPdiv(EXP *left, EXP *right);
 EXP *makeEXPplus(EXP *left, EXP *right);
 
 EXP *makeEXPminus(EXP *left, EXP *right);
+
+EXP *makeEXPunarym(EXP *exval);
 
 #endif /* !TREE_H */

@@ -111,16 +111,16 @@ statements:
     ;
 
 expOp:
-    expOp '-' expOp 
-    | expOp '+' expOp
-    | expOp '*' expOp                   { $$ = makeEXPtimes($1, $3); }
-    | expOp '/' expOp
-    | '(' expOp ')'
-    | '-' expOp %prec NEG
+    expOp '+' expOp                     { $$ = makeEXPplus ($1, $3); }
+    | expOp '-' expOp                   { $$ = makeEXPminus ($1, $3); }
+    | expOp '*' expOp                   { $$ = makeEXPtimes ($1, $3); }
+    | expOp '/' expOp                   { $$ = makeEXPdiv ($1, $3); }
+    | '(' expOp ')'                     { $$ = $2; }
+    | '-' expOp %prec NEG               { $$ = makeEXPunarym ($2); }
     | tIDEN                             { $$ = makeEXPid ($1); }          
     | tSTRING_LITERAL                   { $$ = makeEXPstringconst ($1); }
     | tINT                              { $$ = makeEXPintconst ($1); }               
-    | tFLOAT                            { $$ = makeEXPfloatconst($1); }    
+    | tFLOAT                            { $$ = makeEXPfloatconst ($1); }    
     ;
 %%
 
