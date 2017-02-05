@@ -49,11 +49,24 @@ void prettyEXP(EXP *e)
          break;
     case unarymK:
          printf("(-");
-         prettyEXP(e->val.unarymE.expVal);
+         prettyEXP(e->val.generalE.expVal);
          printf(")");
          break;
+
+    // simple statements
     case printstmtK:
          printf("print ");
-         prettyEXP(e->val.printstmtE.expVal);
+         prettyEXP(e->val.generalE.expVal);
+         printf(";");
+         break;
+    case readstmtK:
+         printf("read ");
+         printf("%s",e->val.idE);
+         printf(";");
+    case assignstmtK:
+         printf("%s",e->val.assignE.left);
+         printf(" = ");
+         prettyEXP(e->val.assignE.right);
+         printf(";");
   }
 }

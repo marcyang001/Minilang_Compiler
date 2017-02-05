@@ -86,7 +86,7 @@ EXP *makeEXPunarym(EXP *exval)
   e = NEW(EXP);
   e->lineno = line_num;
   e->kind = unarymK;
-  e->val.unarymE.expVal = exval;
+  e->val.generalE.expVal = exval;
   return e;
 }
 
@@ -98,9 +98,29 @@ EXP *makePRINTStmt(EXP *exval) {
   e = NEW(EXP);
   e->lineno = line_num;
   e->kind = printstmtK;
-  e->val.printstmtE.expVal = exval;
+  e->val.generalE.expVal = exval;
   return e;
 }
+
+EXP *makeREADStmt(char* id) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = readstmtK;
+  e->val.idE = id;
+  return e;
+}
+
+EXP *makeASSIGNStmt(char* left, EXP *right) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = assignstmtK;
+  e->val.assignE.left = left;
+  e->val.assignE.right = right;
+  return e;
+}
+
 
 
 

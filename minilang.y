@@ -88,9 +88,9 @@ declarations:
     ;
 
 simpleStmts:
-    PRINT expOp ENDL            { $$ = makePRINTStmt ($2); }
-    | READ tIDEN ENDL           
-    | tIDEN tASSIGN expOp ENDL  
+    PRINT expOp ENDL                { $$ = makePRINTStmt ($2); }
+    | READ tIDEN ENDL               { $$ = makeREADStmt ($2); }
+    | tIDEN tASSIGN expOp ENDL      { $$ = makeASSIGNStmt ($1, $3); } 
     ;
 
 statements:
