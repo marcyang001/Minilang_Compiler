@@ -63,10 +63,23 @@ void prettyEXP(EXP *e)
          printf("read ");
          printf("%s",e->val.idE);
          printf(";");
+         break;
     case assignstmtK:
          printf("%s",e->val.assignE.left);
          printf(" = ");
          prettyEXP(e->val.assignE.right);
          printf(";");
+         break;
+
+    //declarations
+    case declareK:
+         printf("var %s : %s;\n",e->val.declareE.left, e->val.declareE.right);
+         break;
+
+    case declarationsK:
+         prettyEXP(e->val.declarationsE.left);
+         prettyEXP(e->val.declarationsE.right);
+         break;
+    
   }
 }

@@ -121,6 +121,28 @@ EXP *makeASSIGNStmt(char* left, EXP *right) {
   return e;
 }
 
+EXP *makeDECL(char* left, char* right) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = declareK;
+  e->val.declareE.left = left;
+  e->val.declareE.right = right;
+  return e;
+}
+
+EXP *makeDECLS(EXP *left, EXP *right) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = declarationsK;
+  e->val.declarationsE.left = left;
+  e->val.declarationsE.right = right;
+  return e;  
+
+
+
+}
 
 
 

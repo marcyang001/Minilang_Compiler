@@ -12,7 +12,7 @@ extern EXP *theexpression;
 
 %union  {
     int             int_val;
-    char*    stringconst;
+    char*           stringconst;
     float           f_val;
     struct EXP *exp;
 }
@@ -58,7 +58,7 @@ extern EXP *theexpression;
 
 
 // define type
-%type <exp> input program expOp simpleStmts declarations statements 
+%type <exp> input program expOp simpleStmts declarations declaration statements 
 
 
 
@@ -73,41 +73,42 @@ input:
 
 program: 
     statements
-    | declarations
+    | declarations                  { $$ = $1; }
     | declarations statements
-    | %empty
+    | %empty                        { }
     ;
 
 declarations:
-    declarations VAR tIDEN COLON FLOAT ENDL  
-    | declarations VAR tIDEN COLON INT ENDL   
-    | declarations VAR tIDEN COLON STRING ENDL 
-    | VAR tIDEN COLON FLOAT ENDL 
-    | VAR tIDEN COLON INT ENDL 
-    | VAR tIDEN COLON STRING ENDL
+    declarations declaration        { $$ = makeDECLS ($1, $2); }
+    | declaration                   { $$ = $1; }
     ;
 
+declaration:
+    VAR tIDEN COLON FLOAT ENDL      { $$ = makeDECL ($2, $4); }
+    | VAR tIDEN COLON INT ENDL      { $$ = makeDECL ($2, $4); }
+    | VAR tIDEN COLON STRING ENDL   { $$ = makeDECL ($2, $4); }
+
 simpleStmts:
-    PRINT expOp ENDL                { $$ = makePRINTStmt ($2); }
-    | READ tIDEN ENDL               { $$ = makeREADStmt ($2); }
+    PRINT expOp ENDL                { $$ = makePRINTStmt ($2);  }
+    | READ tIDEN ENDL               { $$ = makeREADStmt ($2);   }
     | tIDEN tASSIGN expOp ENDL      { $$ = makeASSIGNStmt ($1, $3); } 
     ;
 
 statements:
-    statements WHILE expOp DO statements DONE 
-    | statements IF expOp THEN statements ELSE statements ENDIF
-    | statements IF expOp THEN statements ENDIF 
-    | statements WHILE expOp DO DONE
-    | statements IF expOp THEN ELSE ENDIF
-    | statements IF expOp THEN ENDIF 
-    | statements simpleStmts
-    | WHILE expOp DO statements DONE 
-    | IF expOp THEN statements ELSE statements ENDIF
-    | IF expOp THEN statements ENDIF
-    | WHILE expOp DO DONE
-    | IF expOp THEN ENDIF 
-    | IF expOp THEN ELSE ENDIF
-    | simpleStmts
+    statements WHILE expOp DO statements DONE                         {  }
+    | statements IF expOp THEN statements ELSE statements ENDIF       {  }
+    | statements IF expOp THEN statements ENDIF                       {  }
+    | statements WHILE expOp DO DONE                                  {  }
+    | statements IF expOp THEN ELSE ENDIF                             {  }
+    | statements IF expOp THEN ENDIF                                  {  }
+    | statements simpleStmts                                          {  }
+    | WHILE expOp DO statements DONE                                  {  }
+    | IF expOp THEN statements ELSE statements ENDIF                  {  }
+    | IF expOp THEN statements ENDIF                                  {  }
+    | WHILE expOp DO DONE                                             {  }
+    | IF expOp THEN ENDIF                                             {  }
+    | IF expOp THEN ELSE ENDIF                                        {  }
+    | simpleStmts                                                     { $$ = $1; }
     ;
 
 expOp:
