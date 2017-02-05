@@ -36,9 +36,9 @@ comment 				(\/\/.*)
 ")"							{ return ')'; }
 
 
-"="         				{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tASSIGN; }
-":"							{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return COLON; }
-";"							{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return ENDL; }
+"="         				{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return tASSIGN; }
+":"							{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return COLON; }
+";"							{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return ENDL; }
 
 
 while 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return WHILE; }
@@ -56,9 +56,8 @@ endif  						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); retur
 var	 						{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return VAR; }
 
 
-[_a-zA-Z][_a-zA-Z0-9]*		{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tIDEN; }
+[_a-zA-Z][_a-zA-Z0-9]*		{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); sprintf (yylval.stringconst, "%s", yytext); return tIDEN; }
 {string_literal}			{ yylval.stringconst = (char *) malloc (strlen (yytext) + 1); return tSTRING_LITERAL; }
-
 .           				{ yyerror(yytext); exit(1);    }
 
 %%

@@ -1,6 +1,6 @@
 # Makefile
 
-OBJS	= bison.o lex.o main.o tree.o memory.o
+OBJS	= bison.o lex.o main.o tree.o memory.o pretty.o
 
 CC	= gcc
 CFLAGS	= -g -Wall -pedantic
@@ -28,6 +28,9 @@ memory.o: memory.c memory.h
 
 tree.o:  tree.c tree.h
 		$(CC) $(CFLAGS) -c tree.c -o tree.o
+
+pretty.o:  pretty.c pretty.h
+		$(CC) $(CFLAGS) -c pretty.c -o pretty.o
 
 main.o:		main.c
 		$(CC) $(CFLAGS) -c main.c -o main.o

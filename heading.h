@@ -7,5 +7,6 @@
 #include <string.h>
 #include <errno.h>
 #include "tree.h"
+#include "pretty.h"
 
 

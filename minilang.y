@@ -68,7 +68,7 @@ extern EXP *theexpression;
 %%
 
 input:
-    expOp
+    expOp { theexpression = $1; }
     ;
 
 program:

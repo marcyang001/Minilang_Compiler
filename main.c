@@ -5,6 +5,7 @@
 
 // prototype of bison-generated parser function
 int yyparse();
+EXP *theexpression;
 
 int main(int argc, char **argv)
 {
@@ -15,7 +16,9 @@ int main(int argc, char **argv)
   }
   
   yyparse();
-  
+  printf("\nThe result of evaluating:\n");
+  prettyEXP(theexpression);
+  printf("\n");
   printf ("VALID\n");
 
   return 0;
