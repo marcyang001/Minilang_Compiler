@@ -18,7 +18,10 @@ typedef struct EXP {
          makeSimplestmtK,
          declareK,
          declarationsK,
-         combineK } kind;
+         combineK,
+         ifstatementK,
+         whilestmtK,
+         emptyK } kind;
   
   union {
     char* idE;
@@ -34,6 +37,8 @@ typedef struct EXP {
     struct {struct EXP *left; struct EXP *right;} declarationsE;
     struct {struct EXP *left; struct EXP *right;} simplestmtsE;
     struct {struct EXP *expVal; } generalE;
+    struct {struct EXP *previousstmts; struct EXP *ifcondition; struct EXP *ifbody; struct EXP *elsebody; int hasElse;} ifstatementE;
+    struct {struct EXP *previousstmts; struct EXP *whileCond; struct EXP *whileBody;} whilestmtE;
     struct {struct EXP *left; struct EXP *right;} combineE;
   } val;
 
@@ -70,4 +75,11 @@ EXP *makeDECLS(EXP *left, EXP *right);
 EXP *makeSimplestmts(EXP *left, EXP *right);
 
 EXP *makeCombineE(EXP *left, EXP *right);
+
+EXP *makeIFstmt(EXP *previousstmts, EXP *ifcondition, EXP *ifbody, EXP *elsebody, int hasElse);
+
+EXP *makeWHILEstmt(EXP *previousstmts, EXP *whileExp, EXP *whileBody);
+
+EXP *treatEmptystmt();
+
 #endif /* !TREE_H */

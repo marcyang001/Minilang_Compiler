@@ -75,7 +75,7 @@ program:
     statements
     | declarations                  { $$ = $1; }
     | declarations statements       { $$ = makeCombineE ($1, $2); }
-    | %empty                        { }
+    | %empty                        { $$ = treatEmptystmt(); }
     ;
 
 declarations:
@@ -95,19 +95,19 @@ simpleStmts:
     ;
 
 statements:
-    statements WHILE expOp DO statements DONE                         {  }
-    | statements IF expOp THEN statements ELSE statements ENDIF       {  }
-    | statements IF expOp THEN statements ENDIF                       {  }
-    | statements WHILE expOp DO DONE                                  {  }
-    | statements IF expOp THEN ELSE ENDIF                             {  }
-    | statements IF expOp THEN ENDIF                                  {  }
+    statements WHILE expOp DO statements DONE                         { $$ = makeWHILEstmt($1, $3, $5); }
+    | statements WHILE expOp DO DONE                                  { $$ = makeWHILEstmt($1, $3, NULL); }
+    | statements IF expOp THEN statements ELSE statements ENDIF       { $$ = makeIFstmt($1, $3, $5, $7, 1); }
+    | statements IF expOp THEN statements ENDIF                       { $$ = makeIFstmt($1, $3, $5, NULL, 0); }
+    | statements IF expOp THEN ELSE ENDIF                             { $$ = makeIFstmt($1, $3, NULL, NULL, 1); }
+    | statements IF expOp THEN ENDIF                                  { $$ = makeIFstmt($1, $3, NULL, NULL, 0); }
     | statements simpleStmts                                          { $$ = makeSimplestmts ($1, $2); }
-    | WHILE expOp DO statements DONE                                  {  }
-    | IF expOp THEN statements ELSE statements ENDIF                  {  }
-    | IF expOp THEN statements ENDIF                                  {  }
-    | WHILE expOp DO DONE                                             {  }
-    | IF expOp THEN ENDIF                                             {  }
-    | IF expOp THEN ELSE ENDIF                                        {  }
+    | WHILE expOp DO statements DONE                                  { $$ = makeWHILEstmt(NULL, $2, $4); }
+    | WHILE expOp DO DONE                                             { $$ = makeWHILEstmt(NULL, $2, NULL); }
+    | IF expOp THEN statements ELSE statements ENDIF                  { $$ = makeIFstmt(NULL, $2, $4, $6, 1);  }
+    | IF expOp THEN statements ENDIF                                  { $$ = makeIFstmt(NULL, $2, $4, NULL, 0);  }
+    | IF expOp THEN ELSE ENDIF                                        { $$ = makeIFstmt(NULL, $2, NULL, NULL, 1); }
+    | IF expOp THEN ENDIF                                             { $$ = makeIFstmt(NULL, $2, NULL, NULL, 0); }
     | simpleStmts                                                     { $$ = makeSimplestmts ($1, NULL); }
     ;
 

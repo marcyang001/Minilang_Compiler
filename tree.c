@@ -132,8 +132,6 @@ EXP *makeSimplestmts(EXP *left, EXP *right) {
 }
 
 
-
-
 // declarations
 
 EXP *makeDECL(char* left, char* right) {
@@ -165,6 +163,41 @@ EXP *makeCombineE(EXP *left, EXP *right) {
   e->val.combineE.left = left;
   e->val.combineE.right = right;
   return e;  
+}
+
+EXP *makeIFstmt(EXP *previousstmts, EXP *ifcondition, EXP *ifbody, EXP *elsebody, int hasElse) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = ifstatementK;
+  e->val.ifstatementE.previousstmts = previousstmts;
+  e->val.ifstatementE.ifcondition = ifcondition;
+  e->val.ifstatementE.ifbody = ifbody;
+  e->val.ifstatementE.elsebody = elsebody;
+  e->val.ifstatementE.hasElse = hasElse;
+
+  return e;
+}
+
+EXP *makeWHILEstmt(EXP *previousstmts, EXP *whileCond, EXP *whileBody) {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = whilestmtK;
+  e->val.whilestmtE.previousstmts = previousstmts;
+  e->val.whilestmtE.whileCond = whileCond;
+  e->val.whilestmtE.whileBody = whileBody;
+  
+  return e;
+}
+
+
+EXP *treatEmptystmt() {
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = line_num;
+  e->kind = emptyK;
+  return e;
 }
 
 
