@@ -1,146 +1,158 @@
 #include <stdio.h>
 #include "pretty.h"
  
-void prettyEXP(EXP *e)
+void prettyEXP(EXP *e, int indentLevel)
 { 
     switch (e->kind) {
         case idK:
-             //printf ("enter here identifier ");
              printf("%s",e->val.idE);
              break;
         case stringconstK:
-             //printf ("enter here string const "); 
              printf ("%s", e->val.stringconstE);
              break;
         case intconstK:
-             //printf (" enter here int ");
              printf("%i",e->val.intconstE);
              break;
         case floatconstK:
-             //printf ("enter here float ");
              printf ("%f", e->val.floatconstE);
              break;
         case plusK:
              printf("(");
-             prettyEXP(e->val.plusE.left);
+             prettyEXP(e->val.plusE.left, 0);
              printf("+");
-             prettyEXP(e->val.plusE.right);
+             prettyEXP(e->val.plusE.right, 0);
              printf(")");
              break;
         case minusK:
              printf("(");
-             prettyEXP(e->val.minusE.left);
+             prettyEXP(e->val.minusE.left, 0);
              printf("-");
-             prettyEXP(e->val.minusE.right);
+             prettyEXP(e->val.minusE.right, 0);
              printf(")");
              break;
         case timesK:
              printf("(");
-             prettyEXP(e->val.timesE.left);
+             prettyEXP(e->val.timesE.left, 0);
              printf("*");
-             prettyEXP(e->val.timesE.right);
+             prettyEXP(e->val.timesE.right, 0);
              printf(")");
              break;
         case divK:
              printf("(");
-             prettyEXP(e->val.divE.left);
+             prettyEXP(e->val.divE.left, 0);
              printf("/");
-             prettyEXP(e->val.divE.right);
+             prettyEXP(e->val.divE.right, 0);
              printf(")");
              break;
         case unarymK:
              printf("(-");
-             prettyEXP(e->val.generalE.expVal);
+             prettyEXP(e->val.generalE.expVal, 0);
              printf(")");
              break;
 
         // simple statements
         case printstmtK:
+             
              printf("print ");
-             prettyEXP(e->val.generalE.expVal);
+             prettyEXP(e->val.generalE.expVal, 0);
              printf(";\n");
              break;
         case readstmtK:
+             
              printf("read ");
              printf("%s",e->val.idE);
              printf(";\n");
              break;
         case assignstmtK:
+             
              printf("%s",e->val.assignE.left);
              printf(" = ");
-             prettyEXP(e->val.assignE.right);
+             prettyEXP(e->val.assignE.right, 0);
              printf(";\n");
              break;
         
         case makeSimplestmtK:
+             
              if (e->val.simplestmtsE.left != NULL) {
-                prettyEXP(e->val.simplestmtsE.left);   
+                prettyEXP(e->val.simplestmtsE.left, needIndent);   
              }
-
+             
              if (e->val.simplestmtsE.right != NULL) {
-                prettyEXP(e->val.simplestmtsE.right);     
+                prettyEXP(e->val.simplestmtsE.right, needIndent);     
              }
              break;
 
         //declarations
         case declareK:
+             
              printf("var %s : %s;\n",e->val.declareE.left, e->val.declareE.right);
              break;
 
         case declarationsK:
-
-             prettyEXP(e->val.declarationsE.left);
-             prettyEXP(e->val.declarationsE.right);
+             
+             prettyEXP(e->val.declarationsE.left, needIndent);
+             
+             prettyEXP(e->val.declarationsE.right, needIndent);
              break;
 
         // input (combine)
-        case combineK: 
+        case combineK:
+            printf("enter the root!!\n");
             if (e->val.combineE.left != NULL) {
-                prettyEXP(e->val.combineE.left);
+                prettyEXP(e->val.combineE.left, needIndent);
             }
 
             if (e->val.combineE.right != NULL) {
-                prettyEXP(e->val.combineE.right);
+                prettyEXP(e->val.combineE.right, needIndent);
             }
             break;
       
         case ifstatementK:
-            
+
             if (e->val.ifstatementE.previousstmts != NULL) {
-                prettyEXP(e->val.ifstatementE.previousstmts);
+                
+                prettyEXP(e->val.ifstatementE.previousstmts, needIndent);
             }
+
+            
             printf ("if ");
-            prettyEXP(e->val.ifstatementE.ifcondition);
+            prettyEXP(e->val.ifstatementE.ifcondition, 0);
             printf (" then\n");
             if (e->val.ifstatementE.ifbody != NULL) {
-                prettyEXP(e->val.ifstatementE.ifbody);
+ 
+                prettyEXP(e->val.ifstatementE.ifbody, 1);
             }
 
             if (e->val.ifstatementE.hasElse == 1) {
+
                 printf ("else\n");
                 if (e->val.ifstatementE.elsebody != NULL) {
-
-                    prettyEXP(e->val.ifstatementE.elsebody);
+            
+                    prettyEXP(e->val.ifstatementE.elsebody, 1);
                 }
             }
+            
             printf ("endif\n");
             break;
 
         case whilestmtK:
-
+            printf("enter the while root!!\n");
             if (e->val.whilestmtE.previousstmts != NULL) {
-                prettyEXP(e->val.whilestmtE.previousstmts);
+                
+                prettyEXP(e->val.whilestmtE.previousstmts, needIndent);
             }
+            
             printf("while ");
 
-            if (e->val.whilestmtE.whileCond != NULL) {
-                prettyEXP(e->val.whilestmtE.whileCond);   
-            }
+            
+            prettyEXP(e->val.whilestmtE.whileCond, 0);   
+            
             printf (" do\n");
 
             if (e->val.whilestmtE.whileBody != NULL) {
-                prettyEXP(e->val.whilestmtE.whileBody);
+                prettyEXP(e->val.whilestmtE.whileBody, 1);
             }
+            
             printf("done\n");
 
             break;

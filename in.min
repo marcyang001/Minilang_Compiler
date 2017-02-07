@@ -4,4 +4,31 @@ var __z : int;
 z_1 = 1;
 __z = "asdasd";
 
+if x then
+	x = (1 + 1) + 1;
+	b = "asdasda\n\as\as";
+	// this is a comment
+	if x+x then 
+	endif
+endif 
 
+if x then
+	x = (1 + 1) + 1;
+	b = "asdasda\n\as\as";
+	// this is a comment
+	while x do
+	done
+endif 
+
+while x do
+	a = 1;
+if x then
+	x = (1 + 1) + 1;
+	b = "asdasda\n\as\as";
+	// this is a comment
+	while x do
+		a = 1;
+		b = 2;
+	done
+endif 
+done
