@@ -4,24 +4,26 @@
 typedef struct EXP {
   int lineno;
   enum { idK,
-         intconstK,
-         floatconstK,
-         stringconstK,
-         timesK,
-         divK,
-         plusK,
-         minusK, 
-         unarymK, 
-         printstmtK,
-         readstmtK,
-         assignstmtK,
-         makeSimplestmtK,
-         declareK,
-         declarationsK,
+         intconstK, // int value
+         floatconstK, // float value
+         stringconstK, //string value 
+         timesK, // *
+         divK, // / 
+         plusK, // + 
+         minusK,  // - 
+         unarymK,  // unary -
+         printstmtK, // print statement  
+         readstmtK, // read statement
+         assignstmtK, // assign statement 
+         makeSimplestmtK,  
+         declareK,   // declarations
+         declarationsK, // multiple declarations 
          combineK,
-         ifstatementK,
-         whilestmtK,
-         emptyK } kind;
+         ifstatementK,  // if statements 
+         whilestmtK, // while statements
+         emptyK  // empty statement
+
+    } kind; 
   
   union {
     char* idE;
