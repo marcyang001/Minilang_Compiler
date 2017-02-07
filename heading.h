@@ -8,5 +8,5 @@
 #include <errno.h>
 #include "tree.h"
 #include "pretty.h"
-
+#include "typecheck.h"
 

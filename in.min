@@ -32,3 +32,6 @@ if x then
 	done
 endif 
 done
+
+var a : string;
+a = "asda";

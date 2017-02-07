@@ -17,8 +17,10 @@ int main(int argc, char **argv)
   
   yyparse();
   printf("\nThe result of evaluating:\n");
-  prettyEXP(theexpression, 0);
+  //prettyEXP(theexpression, 0);
+  typeCheck(theexpression);
   printf("\n");
+  
   printf ("VALID\n");
 
   return 0;
