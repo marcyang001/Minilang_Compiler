@@ -1,6 +1,7 @@
 #ifndef TREE_H
 #define TREE_H
  
+
 typedef struct EXP {
   int lineno;
   enum { idK,
@@ -45,6 +46,20 @@ typedef struct EXP {
   } val;
 
 } EXP;
+
+typedef enum{stringK, intK, floatK} SymbolKind;
+
+typedef struct SYMBOL {
+    char *name;
+    SymbolKind kind;
+    union {
+      char* stringVal;
+      float floatVal;
+      int   intVal;
+    } val;
+    struct SYMBOL *next;
+} SYMBOL; 
+
 
 EXP *makeEXPid(char *id);
 
