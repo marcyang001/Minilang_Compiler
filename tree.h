@@ -47,7 +47,7 @@ typedef struct EXP {
 
 } EXP;
 
-typedef enum{stringK, intK, floatK} SymbolKind;
+typedef enum{stringK, intK, floatK, errorK} SymbolKind;
 
 typedef struct SYMBOL {
     char *name;

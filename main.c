@@ -17,11 +17,12 @@ int main(int argc, char **argv)
   
   yyparse();
   printf("\nThe result of evaluating:\n");
-  prettyEXP(theexpression, 0);
-  typeCheck(theexpression);
+  //prettyEXP(theexpression, 0);
+  int satisfyTypecheck = typeCheck(theexpression);
   printf("\n");
-
-  printf ("VALID\n");
-
+  if (satisfyTypecheck == 1) {
+      printf ("VALID\n");
+  }
+  
   return 0;
 }

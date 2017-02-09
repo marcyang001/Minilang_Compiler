@@ -93,7 +93,9 @@ void prettyEXP(EXP *e, int indentLevel)
         //declarations
         case declareK:
              printTabs(indentLevel);
-             printf("var %s : %s;\n",e->val.declareE.left, e->val.declareE.right);
+             char *idName = e->val.declareE.left;
+             char *idType = e->val.declareE.right;
+             printf("var %s : %s;\n",idName,idType);
              break;
 
         case declarationsK:
