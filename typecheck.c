@@ -101,7 +101,7 @@ int checker(SymbolTable *symbolTable, EXP *e) {
                 
             }
             else {
-                printf("identifer %s is already declared \n", e->val.idE);
+                printf("identifer %s is already declared  ---line %d\n", e->val.idE, e->lineno);
                 return 0;
             }
 
@@ -228,6 +228,8 @@ int checker(SymbolTable *symbolTable, EXP *e) {
 	return 1;
 }
 
+
+
 SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
     int isSymbolDefined;
     SymbolKind leftExpType;
@@ -279,7 +281,7 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
                 return floatK;
             }
             else {
-                printf("type error in addition \n");
+                printf("type error in addition ---line  %d\n", e->val.plusE.left->lineno);
             }
 
             break;
@@ -301,7 +303,7 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
                 return floatK;
             }
             else {
-                printf("type error in substraction\n");
+                printf("type error in substraction  ---line %d\n", e->val.minusE.left->lineno);
             }
 
             break;
@@ -327,7 +329,7 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
                 return stringK;
             }
             else {
-                printf("type error in multiplication\n");
+                printf("type error in multiplication ---line %d\n", e->val.timesE.left->lineno);
             }
 
             break;
@@ -336,9 +338,9 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
             // float <op> float
             // int <op> float            
 
-            leftExpType = evaluateExpressType(symbolTable, e->val.timesE.left);
+            leftExpType = evaluateExpressType(symbolTable, e->val.divE.left);
             
-            rightExpType = evaluateExpressType(symbolTable, e->val.timesE.right);
+            rightExpType = evaluateExpressType(symbolTable, e->val.divE.right);
             
             if (leftExpType == intK && rightExpType == intK) {
                 return intK;
@@ -350,14 +352,23 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
                 return floatK;
             }
             else {
-                printf("type error in multiplication\n");
+                printf("type error in division  ---line %d\n", e->val.divE.left->lineno);
             }
 
             break;
         case unarymK:
 
             // <expression> must be either of type int or of type float
-            return evaluateExpressType(symbolTable, e->val.generalE.expVal);
+            leftExpType = evaluateExpressType(symbolTable, e->val.generalE.expVal);
+            if (leftExpType == intK) {
+                return intK;
+            }
+            else if (leftExpType == floatK) {
+                return floatK;
+            }
+            else {
+                printf("type error in unary operator ---line %d\n", e->lineno);
+            }            
             break;
         default:
             break;
@@ -367,18 +378,3 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
     return errorK;
 
 }
-
-
-/*
-
- putSymbol(symboleTable, e->val.assignE.left, intK);
-            
-            //int exists = defSymbol(symboleTable, e->val.assignE.left);
-            
-        	SYMBOL *s = getSymbol(symboleTable, e->val.assignE.left);
-            printf("%d\n", s->kind == intK);
-
-            //printf("%d\n", exists);
-        	printf("%s\n", s->name); 
-
-*/
