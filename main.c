@@ -74,8 +74,8 @@ int main(int argc, char **argv)
   if (satisfyTypecheck == 1) {
       printf ("VALID\n");
 
-
-
+      // generator c code
+      
   }
   else {
     printf ("INVALID\n");
