@@ -62,6 +62,9 @@ int main(int argc, char **argv)
 
   prettyFile = fopen(newPrettyFileName, "w");
   
+  printf("pretty print to file: %s\n", newPrettyFileName);
+  
+  //pretty print
   prettyEXP(prettyFile, theexpression, 0);
   
   fclose(prettyFile);
@@ -70,6 +73,9 @@ int main(int argc, char **argv)
   printf("\n");
   if (satisfyTypecheck == 1) {
       printf ("VALID\n");
+
+
+
   }
   else {
     printf ("INVALID\n");
