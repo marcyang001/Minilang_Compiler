@@ -9,18 +9,26 @@
 // returns 1 if the program satisfied type check 
 // zero if it does not
 SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *passE);
-int checker(SymbolTable *symbolTable, EXP *e);
+int checker(SymbolTable *symbolTable, EXP *e, FILE *symbolTableName);
+void outputSymbolTable(SymbolTable *t, char *filename);
 
-int typeCheck(EXP *e) {
+int typeCheck(EXP *e, char* symbolfilename) {
 
+    char *symbolTableText = strcat(symbolfilename, ".symbol.txt");
+    FILE *fs = fopen(symbolTableText, "w");
+    
     SymbolTable *symbolTable;
     symbolTable = initSymbolTable();
 
-    return checker(symbolTable, e);
+    int istypeValid = checker(symbolTable, e, fs);
+    
+    fclose(fs);
+
+    return istypeValid;
 }
 
 
-int checker(SymbolTable *symbolTable, EXP *e) {
+int checker(SymbolTable *symbolTable, EXP *e, FILE *symbolTableName) {
 	
     
     SymbolKind exp1Type;
@@ -40,13 +48,13 @@ int checker(SymbolTable *symbolTable, EXP *e) {
             break;
         
         case readstmtK:
-             // check if the identifer exists in the symbol table 
+             // check if the identifier exists in the symbol table 
              // if not --> error 
              // if yes --> continue
 
             isSymbolDefined = defSymbol(symbolTable, e->val.declareE.left);
             if (isSymbolDefined == 0) {
-                printf("the identifier %s is not defined -- line %d\n", e->val.declareE.left, e->lineno);
+                printf("the identifier \"%s\" is not defined -- line %d\n", e->val.declareE.left, e->lineno);
                 return 0;
             }
 
@@ -65,14 +73,14 @@ int checker(SymbolTable *symbolTable, EXP *e) {
                 // get the expression type
                 exp2Type = evaluateExpressType(symbolTable, e->val.assignE.right);
                 
-                // compare the identifer with the assigned expression
+                // compare the identifier with the assigned expression
                 if (exp1Type != exp2Type || exp1Type == errorK || exp2Type == errorK) {
-                    printf("identifer %s is assigned to a bad type  ---line %d\n", e->val.assignE.left, e->lineno);
+                    printf("identifier \"%s\" is assigned to a bad type  ---line %d\n", e->val.assignE.left, e->lineno);
                     return 0;
                 }
             }
             else {
-                printf("identifer %s is not defined  ---line %d\n", e->val.assignE.left, e->lineno);
+                printf("identifier \"%s\" is not defined  ---line %d\n", e->val.assignE.left, e->lineno);
                 return 0;
             }
 
@@ -97,11 +105,11 @@ int checker(SymbolTable *symbolTable, EXP *e) {
                     skind = floatK;
                 }
 
-                putSymbol(symbolTable, e->val.declareE.left, skind);
+                putSymbol(symbolTable, e->val.declareE.left, skind, symbolTableName);
                 
             }
             else {
-                printf("identifer %s is already declared  ---line %d\n", e->val.idE, e->lineno);
+                printf("identifier \"%s\" is already declared  ---line %d\n", e->val.idE, e->lineno);
                 return 0;
             }
 
@@ -111,14 +119,14 @@ int checker(SymbolTable *symbolTable, EXP *e) {
         case makeSimplestmtK:
             
             if (e->val.simplestmtsE.left != NULL) {
-                exp1Valid = checker(symbolTable, e->val.simplestmtsE.left);   
+                exp1Valid = checker(symbolTable, e->val.simplestmtsE.left, symbolTableName);   
                 if (exp1Valid == 0) {
                     return 0;
                 }
             }
             
             if (e->val.simplestmtsE.right != NULL) {
-                exp2Valid = checker(symbolTable, e->val.simplestmtsE.right);     
+                exp2Valid = checker(symbolTable, e->val.simplestmtsE.right, symbolTableName);     
                 if (exp2Valid == 0) {
                     return 0;
                 }
@@ -129,11 +137,11 @@ int checker(SymbolTable *symbolTable, EXP *e) {
         // multiple declarations
         case declarationsK:
              
-            exp1Valid = checker(symbolTable, e->val.declarationsE.left);
+            exp1Valid = checker(symbolTable, e->val.declarationsE.left, symbolTableName);
             if (exp1Valid == 0) {
                 return 0;
             }
-            exp2Valid = checker(symbolTable, e->val.declarationsE.right);
+            exp2Valid = checker(symbolTable, e->val.declarationsE.right, symbolTableName);
             if (exp2Valid == 0) {
                 return 0;
             }
@@ -145,7 +153,7 @@ int checker(SymbolTable *symbolTable, EXP *e) {
             // check the validity of the statements before ifstatements
             if (e->val.ifstatementE.previousstmts != NULL) {
                 
-                exp1Valid = checker(symbolTable, e->val.ifstatementE.previousstmts);
+                exp1Valid = checker(symbolTable, e->val.ifstatementE.previousstmts, symbolTableName);
                 if (exp1Valid == 0) {
                     return 0;
                 }
@@ -154,12 +162,13 @@ int checker(SymbolTable *symbolTable, EXP *e) {
             // The condition <expression> must be an integer
             exp1Type = evaluateExpressType(symbolTable, e->val.ifstatementE.ifcondition);
             if (exp1Type != intK) {
+                printf("the if condition <expression> must be an integer.  ---line %d\n", e->lineno);
                 return 0;
             }
             //check the if statement body
             if (e->val.ifstatementE.ifbody != NULL) {
                 
-                exp2Valid = checker(symbolTable, e->val.ifstatementE.ifbody);
+                exp2Valid = checker(symbolTable, e->val.ifstatementE.ifbody, symbolTableName);
                 if (exp2Valid == 0) {
                     return 0;
                 }
@@ -170,7 +179,7 @@ int checker(SymbolTable *symbolTable, EXP *e) {
 
                 if (e->val.ifstatementE.elsebody != NULL) {
             
-                    exp2Valid = checker(symbolTable, e->val.ifstatementE.elsebody);
+                    exp2Valid = checker(symbolTable, e->val.ifstatementE.elsebody, symbolTableName);
                     if (exp2Valid == 0) {
                         return 0;
                     }
@@ -184,7 +193,7 @@ int checker(SymbolTable *symbolTable, EXP *e) {
             // check the validity of the statements before while statement
             if (e->val.whilestmtE.previousstmts != NULL) {
                 
-                exp1Valid = checker(symbolTable, e->val.whilestmtE.previousstmts);
+                exp1Valid = checker(symbolTable, e->val.whilestmtE.previousstmts, symbolTableName);
                 if (exp1Valid == 0) {
                     return 0;
                 }
@@ -194,12 +203,13 @@ int checker(SymbolTable *symbolTable, EXP *e) {
             
             exp1Type = evaluateExpressType(symbolTable, e->val.whilestmtE.whileCond);
             if (exp1Type != intK) {
+                printf("the while condiion <expression> must be an integer  ---line %d\n", e->lineno);
                 return 0;
             }  
             
             // check the while statement body
             if (e->val.whilestmtE.whileBody != NULL) {
-                exp2Valid = checker(symbolTable, e->val.whilestmtE.whileBody);
+                exp2Valid = checker(symbolTable, e->val.whilestmtE.whileBody, symbolTableName);
                 if (exp2Valid == 0) {
                     return 0;
                 }
@@ -209,11 +219,10 @@ int checker(SymbolTable *symbolTable, EXP *e) {
         
         // combine declarations and statements
         case combineK:
+
+            exp1Valid = checker(symbolTable, e->val.combineE.left, symbolTableName);
             
-            
-            exp1Valid = checker(symbolTable, e->val.combineE.left);
-            
-            exp2Valid = checker(symbolTable, e->val.combineE.right);
+            exp2Valid = checker(symbolTable, e->val.combineE.right, symbolTableName);
             
             if (exp1Valid == 0 || exp2Valid == 0) {
                 return 0;
@@ -243,7 +252,7 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
                 return idType->kind;
             }
             else {
-                printf("identifer %s is undefined ---line %d\n", e->val.idE, e->lineno);
+                printf("identifier \"%s\" is undefined ---line %d\n", e->val.idE, e->lineno);
             }
 
             break;

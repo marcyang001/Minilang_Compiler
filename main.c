@@ -14,27 +14,29 @@ int main(int argc, char **argv)
 
   char *inputFile =argv[1];
   char *newPrettyFileName;
+  char *originalFileName;
 
   FILE *myfile;
   FILE *prettyFile;
 
   // open a file handle to a particular file:
 	if (argv[1] != NULL) {
-    myfile = fopen(inputFile, "r");
     int length = strlen(inputFile);
 
     newPrettyFileName = (char *) malloc(sizeof(char) * (length+7));
-    
+    originalFileName = (char *) malloc(sizeof(char));
 
+    myfile = fopen(inputFile, "r");
+  
 	  if (!myfile) {
 		  printf("%s: File %s cannot be opened.\n", argv[0], argv[1]);
 		  exit(1);
 	  }
     
     resultFileName(inputFile, newPrettyFileName, length);
+    strcpy(originalFileName, newPrettyFileName);
     strcat(newPrettyFileName, ".pretty.min");
 
-    
 	  // set flex to read from it instead of defaulting to STDIN:
 	  yyin = myfile;
   }
@@ -52,6 +54,7 @@ int main(int argc, char **argv)
   
   if (newPrettyFileName == NULL) {
     newPrettyFileName = "a.output.min";
+    strcpy(originalFileName, "a.output");
     
   }
 
@@ -63,7 +66,7 @@ int main(int argc, char **argv)
   
   fclose(prettyFile);
   
-  int satisfyTypecheck = typeCheck(theexpression);
+  int satisfyTypecheck = typeCheck(theexpression, originalFileName);
   printf("\n");
   if (satisfyTypecheck == 1) {
       printf ("VALID\n");
@@ -76,8 +79,6 @@ int main(int argc, char **argv)
 }
 
 void resultFileName(char* inputFile, char* buffer, int length) {
-
-  
 
   int i = 0;
   while (i < length) {

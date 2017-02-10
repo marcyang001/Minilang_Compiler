@@ -17,6 +17,8 @@
 
 extern char *currentfile;
 
+void outputSymbolTable(FILE *fs, char *varname, SymbolKind kind);
+
 int Hash(char *str)
 { unsigned int hash = 0;
   while (*str) hash = (hash << 1) + *str++; 
@@ -39,7 +41,7 @@ SymbolTable *scopeSymbolTable(SymbolTable *s)
   return t;
 }
 
-SYMBOL *putSymbol(SymbolTable *t, char *name, SymbolKind kind)
+SYMBOL *putSymbol(SymbolTable *t, char *name, SymbolKind kind, FILE *filename)
 { int i = Hash(name);
   SYMBOL *s;
   for (s = t->table[i]; s; s = s->next) {
@@ -57,6 +59,7 @@ SYMBOL *putSymbol(SymbolTable *t, char *name, SymbolKind kind)
   else {
     s->val.stringVal = "";
   }
+  outputSymbolTable(filename, name, kind);
   s->next = t->table[i];
   t->table[i] = s;
   return s;
@@ -81,5 +84,27 @@ int defSymbol(SymbolTable *t, char *name)
   return 0;
 }
 
+void outputSymbolTable(FILE *fs, char *varname, SymbolKind kind) {
+    
+    char *varType; 
+
+    if (kind == errorK) {
+      return;
+    }
+    else if (kind == intK) {
+      varType = "int";
+    }
+    else if (kind == stringK) {
+      varType = "string";
+    }
+    else {
+      varType = "float";
+    }
+    
+    fprintf(fs, "%s : %s\n", varname, varType);
+    
+    
+
+}
 
 

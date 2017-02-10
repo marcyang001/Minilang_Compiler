@@ -23,7 +23,7 @@ SymbolTable *initSymbolTable();
 
 SymbolTable *scopeSymbolTable(SymbolTable *t);
 
-SYMBOL *putSymbol(SymbolTable *t, char *name, SymbolKind kind);
+SYMBOL *putSymbol(SymbolTable *t, char *name, SymbolKind kind, FILE *filename);
 
 SYMBOL *getSymbol(SymbolTable *t, char *name);
 

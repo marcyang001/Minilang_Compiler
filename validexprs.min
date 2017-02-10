@@ -1,5 +1,9 @@
 var a : int;
 var b : string;
+var x : int;
+var quot : float;
+var guess : float;
+var iter: int;
 
 if x then
 	x = (1 + 1) + 1;
@@ -26,6 +30,7 @@ while x do
 			a =1;
 			if x - a then
 				print x;
+				b = "1";
 			else
 				read b;
 			endif
