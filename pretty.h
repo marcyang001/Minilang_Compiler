@@ -3,6 +3,6 @@
 
 #include "tree.h"
 
-void prettyEXP(EXP *e, int indentLevel);
+void prettyEXP(FILE *file, EXP *e, int indentLevel);
 
 #endif /* !PRETTY_H */

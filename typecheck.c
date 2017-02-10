@@ -31,7 +31,7 @@ int typeCheck(EXP *e) {
             // get the expression type
             expType = evaluateExpressType(symboleTable, e->val.assignE.right);
             
-            printf("%d\n", expType == intK);
+            printf("%d\n", expType == stringK);
             break;
         
         case makeSimplestmtK:
@@ -80,12 +80,22 @@ int typeCheck(EXP *e) {
 	return 1;
 }
 
-SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *passE) {
-    
-    switch (passE->kind) {
-        
+SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *e) {
+    int isSymbolDefined;
+    SymbolKind leftExpType;
+    SymbolKind rightExpType;
+    switch (e->kind) {
         case idK:
-            
+            isSymbolDefined = defSymbol(symbolTable, e->val.idE);
+
+            if (isSymbolDefined == 1) {
+                SYMBOL *idType = getSymbol(symbolTable, e->val.idE);
+                return idType->kind;
+            }
+            else {
+                printf("error type in identifer %s\n", e->val.idE);
+            }
+
             break;
         case stringconstK:
             
@@ -100,20 +110,103 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *passE) {
             return floatK;
             break;
         case plusK:
+            // string + string = string 
+            // int <op> int
+            // float <op> float
+            // int <op> float
 
+            leftExpType = evaluateExpressType(symbolTable, e->val.plusE.left);
+            rightExpType = evaluateExpressType(symbolTable, e->val.plusE.right);
+            
+            if (leftExpType == stringK && rightExpType == stringK) {
+                return stringK;
+            }
+            else if (leftExpType == intK && rightExpType == intK) {
+                return intK;
+            }
+            else if (leftExpType == floatK && rightExpType == floatK) {
+                return floatK;
+            }
+            else if (leftExpType == intK && rightExpType == floatK){
+                return floatK;
+            }
+            else {
+                printf("type error in addition \n");
+            }
 
             break;
         case minusK:
-                
+            // int <op> int
+            // float <op> float
+            // int <op> float
+
+            leftExpType =  evaluateExpressType(symbolTable, e->val.minusE.left);
+
+            rightExpType = evaluateExpressType(symbolTable, e->val.minusE.right);
+            if (leftExpType == intK && rightExpType == intK) {
+                return intK;
+            }
+            else if (leftExpType == floatK && rightExpType == floatK) {
+                return floatK;
+            }
+            else if (leftExpType == intK && rightExpType == floatK) {
+                return floatK;
+            }
+            else {
+                printf("type error in substraction\n");
+            }
+
             break;
         case timesK:
-                
+            // int <op> int
+            // float <op> float
+            // int <op> float
+            
+            leftExpType = evaluateExpressType(symbolTable, e->val.timesE.left);
+            
+            rightExpType = evaluateExpressType(symbolTable, e->val.timesE.right);
+            
+            if (leftExpType == intK && rightExpType == intK) {
+                return intK;
+            }
+            else if (leftExpType == floatK && rightExpType == floatK) {
+                return floatK;
+            }
+            else if (leftExpType == intK && rightExpType == floatK) {
+                return floatK;
+            }
+            else {
+                printf("type error in multiplication\n");
+            }
+
             break;
         case divK:
-                
+            // int <op> int
+            // float <op> float
+            // int <op> float            
+
+            leftExpType = evaluateExpressType(symbolTable, e->val.timesE.left);
+            
+            rightExpType = evaluateExpressType(symbolTable, e->val.timesE.right);
+            
+            if (leftExpType == intK && rightExpType == intK) {
+                return intK;
+            }
+            else if (leftExpType == floatK && rightExpType == floatK) {
+                return floatK;
+            }
+            else if (leftExpType == intK && rightExpType == floatK) {
+                return floatK;
+            }
+            else {
+                printf("type error in multiplication\n");
+            }
+
             break;
         case unarymK:
-            
+        
+            // <expression> must be either of type int or of type float
+            return evaluateExpressType(symbolTable, e->val.generalE.expVal);
             break;
         default:
             break;

@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*htypeinfo": "cpp"
+        "*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*h*htypeinfo": "cpp",
+        "cstdlib": "cpp"
     }
 }

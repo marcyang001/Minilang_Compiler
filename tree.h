@@ -4,7 +4,7 @@
 
 typedef struct EXP {
   int lineno;
-  enum { idK,
+  enum { idK,    // identifier
          intconstK, // int value
          floatconstK, // float value
          stringconstK, //string value 

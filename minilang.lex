@@ -4,6 +4,8 @@
 %{
 #include "heading.h"
 #include "tok.h"
+#include "minilang.tab.h"
+
 int yyerror(char *s);
 int line_num = 1;
 %}
