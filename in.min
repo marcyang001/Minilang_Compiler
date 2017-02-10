@@ -1,8 +1,13 @@
 // valid identifiers with underscore
 var z_1 : int;
-var __z : int;
+var __z : string;
+var x : int;
+var b : string;
+var a : int;
+
 z_1 = 1;
 __z = "asdasd";
+
 
 if x then
 	x = (1 + 1) + 1;
@@ -28,7 +33,7 @@ if x then
 	// this is a comment
 	while x do
 		a = 1;
-		b = 2;
+		b = "2";
 	done
 endif 
 done

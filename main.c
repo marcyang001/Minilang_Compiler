@@ -48,20 +48,29 @@ int main(int argc, char **argv)
 
   printf("\nThe result of evaluating:\n");
 
-  printf("new file name: %s\n", newPrettyFileName);
   
+  
+  if (newPrettyFileName == NULL) {
+    newPrettyFileName = "a.output.min";
+    
+  }
+
+  printf("new file name: %s\n", newPrettyFileName);
+
   prettyFile = fopen(newPrettyFileName, "w");
-
-
+  
   prettyEXP(prettyFile, theexpression, 0);
   
   fclose(prettyFile);
-
-  //int satisfyTypecheck = typeCheck(theexpression);
-  //printf("\n");
-  //if (satisfyTypecheck == 1) {
+  
+  int satisfyTypecheck = typeCheck(theexpression);
+  printf("\n");
+  if (satisfyTypecheck == 1) {
       printf ("VALID\n");
-  //}
+  }
+  else {
+    printf ("INVALID\n");
+  }
   
   return 0;
 }

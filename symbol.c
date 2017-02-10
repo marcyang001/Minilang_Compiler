@@ -48,6 +48,15 @@ SYMBOL *putSymbol(SymbolTable *t, char *name, SymbolKind kind)
   s = NEW(SYMBOL);
   s->name = name;
   s->kind = kind;
+  if (kind == intK) {
+    s->val.intVal = 0;
+  }
+  else if (kind == floatK) {
+    s->val.floatVal = 0.0;
+  }
+  else {
+    s->val.stringVal = "";
+  }
   s->next = t->table[i];
   t->table[i] = s;
   return s;
