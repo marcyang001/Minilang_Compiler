@@ -22,7 +22,9 @@ int typeCheck(EXP *e) {
              
              break;
         case readstmtK:
-             
+             // check if the identifer exists in the symbol table 
+             // if not --> error 
+             // if yes --> correct
              break;
         case assignstmtK:
             
@@ -39,7 +41,7 @@ int typeCheck(EXP *e) {
             if (e->val.simplestmtsE.left != NULL) {
                typeCheck(e->val.simplestmtsE.left);   
             }
-             
+            
             if (e->val.simplestmtsE.right != NULL) {
                typeCheck(e->val.simplestmtsE.right);     
             }
@@ -49,8 +51,8 @@ int typeCheck(EXP *e) {
         case declareK:
              // check if there exists the symbol name 
              // if not put the symbol name into the symbol table 
-            
-        
+
+             
 
             break;
 
