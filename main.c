@@ -75,7 +75,7 @@ int main(int argc, char **argv)
       printf ("VALID\n");
 
       // generator c code
-      
+      codegenerator(theexpression, originalFileName);
   }
   else {
     printf ("INVALID\n");

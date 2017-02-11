@@ -1,6 +1,6 @@
 var x : string;
 var a : int;
 x = "true";
-if x then
+if a then
 	print x;
 endif

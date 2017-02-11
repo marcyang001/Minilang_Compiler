@@ -14,7 +14,9 @@ void outputSymbolTable(SymbolTable *t, char *filename);
 
 int typeCheck(EXP *e, char* symbolfilename) {
 
-    char *symbolTableText = strcat(symbolfilename, ".symbol.txt");
+    char symbolTableText[strlen(symbolfilename)+11];
+    strcpy(symbolTableText, symbolfilename);
+    strcat(symbolTableText, ".symbol.txt");
     FILE *fs = fopen(symbolTableText, "w");
     
     SymbolTable *symbolTable;
