@@ -5,222 +5,119 @@
 #include "pretty.h"
 #include "symbol.h"
 #include "string.h"
+#include "memory.h"
 
 void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable) {
-    
+    printf("enter here in code generate\n");
+    RESULTEXP *s;
     switch (e->kind) {
-        case idK:
-
-            fprintf(file, "%s",e->val.idE);
-            break;
-        case stringconstK:
-             
-            fprintf(file, "%s", e->val.stringconstE);
-            break;
-        case intconstK:
-
-            fprintf(file, "%i",e->val.intconstE);
-            break;
-        case floatconstK:
-             
-            fprintf(file, "%f", e->val.floatconstE);
-            break;
-        case plusK:
-             
-            fprintf(file, "(");
-            generateCode(file, e->val.plusE.left, 0, symbolTable);
-             
-            fprintf(file, "+");
-             
-            generateCode(file, e->val.plusE.right, 0, symbolTable);
-             
-            fprintf(file, ")");
-             
-            break;
-        case minusK:
-             
-            fprintf(file, "(");
-            generateCode(file, e->val.minusE.left, 0, symbolTable);
-             
-            fprintf(file, "-");
-
-            generateCode(file, e->val.minusE.right, 0, symbolTable);
-            
-            fprintf(file, ")");
-            break;
-        case timesK:
-
-            
-            fprintf(file, "(");
-            generateCode(file, e->val.timesE.left, 0, symbolTable);
-            
-            fprintf(file, "*");
-            generateCode(file, e->val.timesE.right, 0, symbolTable);
-            
-            fprintf(file, ")");
-
-            break;
-        case divK:
-            
-            fprintf(file, "(");
-            generateCode(file, e->val.divE.left, 0, symbolTable);
-            
-            fprintf(file, "/");
-            generateCode(file, e->val.divE.right, 0, symbolTable);
-            
-            fprintf(file, ")");
-            break;
-        case unarymK:
-            
-            fprintf(file, "(-");
-            generateCode(file, e->val.generalE.expVal, 0, symbolTable);
-            
-            fprintf(file, ")");
-            break;
 
         // simple statements
         case printstmtK:
             printTabs(file, indentLevel);
-            
+
             fprintf(file, "printf");
-            RESULTEXP *s = evaluateExpression(symbolTable, e->val.generalE.expVal);
+            s = evaluateExpression(symbolTable, e->val.generalE.expVal);
+            printf("done evaluating expression");
             if (s->kind == stringK) {
-                //fprintf(file, "(\"\%%s\", ");
+                fprintf(file, "(\"%%s\", %s);\n", s->val.stringVal);
             }
-            generateCode(file, e->val.generalE.expVal, 0, symbolTable);
-            
-            fprintf(file, ");\n");
+            else if (s->kind == intK) {
+                printf("enter here generating\n");
+                fprintf(file, "(\"%%d\", %d);\n", s->val.intVal);
+            }
+            else if (s->kind == floatK) {
+                fprintf(file, "(\"%%f\", %f);\n", s->val.floatVal);
+            }
+            else {
+                printf("error in generating printf statement\n");
+            }
             break;
         case readstmtK:
             printTabs(file, indentLevel);
             
-            fprintf(file, "read ");
+            s = evaluateExpression(symbolTable, e->val.generalE.expVal);
             
-            fprintf(file, "%s",e->val.idE);
+            if (s->kind == stringK) {
+                fprintf(file, "scanf(\"%%s\", %s)\n", e->val.idE);
+            }
+            else if (s->kind == intK) {
+                fprintf(file, "scanf(\"%%d\", &%s)\n", e->val.idE);
+            }
+            else if (s->kind == floatK) {
+                fprintf(file, "scanf(\"%%f\", &%s)\n", e->val.idE);
+            }
+            else {
+                printf("error in generating scanf statement\n");
+            }
+
             
-            fprintf(file, ";\n");
             break;
         case assignstmtK:
-            printTabs(file, indentLevel);
-            
-            fprintf(file, "%s",e->val.assignE.left);
-            
-            fprintf(file, " = ");
-            generateCode(file, e->val.assignE.right, indentLevel, symbolTable);
-            
-            fprintf(file, ";\n");
-
+            printf("ente here2\n");
             break;
         
         case makeSimplestmtK:
-             
-             if (e->val.simplestmtsE.left != NULL) {
+            
+            if (e->val.simplestmtsE.left != NULL) {
                 generateCode(file, e->val.simplestmtsE.left, indentLevel, symbolTable);   
-             }
+            }
              
-             if (e->val.simplestmtsE.right != NULL) {
-                generateCode(file, e->val.simplestmtsE.right, indentLevel, symbolTable);     
-             }
-             break;
+            if (e->val.simplestmtsE.right != NULL) {
+                generateCode(file, e->val.simplestmtsE.right, indentLevel, symbolTable);  
+            }
+            break;
 
         //declarations
         case declareK:
-             printTabs(file, indentLevel);
-             char *idName = e->val.declareE.left;
-             char *idType = e->val.declareE.right;
-             
-             fprintf(file, "var %s : %s;\n",idName,idType);
-             break;
+            
+            printTabs(file, indentLevel);
+            char *idName = e->val.declareE.left;
+            char *idType = e->val.declareE.right;
+            if (strcmp(idType, "string")== 0) {
+                fprintf(file, "char %s[1024];\n", idName);
+            }
+            else if (strcmp(idType, "int")== 0) {
+                fprintf(file, "int %s;\n", idName);
+            }
+            else if (strcmp(idType, "float")== 0) {
+                fprintf(file, "float %s;\n", idName);
+            }
+            
+            break;
 
         case declarationsK:
-             
-             generateCode(file, e->val.declarationsE.left, indentLevel, symbolTable);
-             
-             generateCode(file, e->val.declarationsE.right, indentLevel, symbolTable);
+            
+            printf("ente here5\n");
              break;
 
         // input (combine)
         case combineK:
-            
-            if (e->val.combineE.left != NULL) {
-                generateCode(file, e->val.combineE.left, indentLevel, symbolTable);
-            }
-
-            if (e->val.combineE.right != NULL) {
-                generateCode(file, e->val.combineE.right, indentLevel, symbolTable);
-            }
+            printf("ente here6\n");
             break;
       
         case ifstatementK:
-
-            if (e->val.ifstatementE.previousstmts != NULL) {
-                
-                generateCode(file, e->val.ifstatementE.previousstmts, indentLevel, symbolTable);
-            }
-
-            printTabs(file, indentLevel);
-
-            
-            fprintf (file, "if ");
-            generateCode(file, e->val.ifstatementE.ifcondition, 0, symbolTable);
-            
-            fprintf (file, " then\n");
-            if (e->val.ifstatementE.ifbody != NULL) {
-                
-                generateCode(file, e->val.ifstatementE.ifbody, indentLevel+1, symbolTable);
-            }
-
-
-            if (e->val.ifstatementE.hasElse == 1) {
-
-                printTabs(file, indentLevel);
-             
-                fprintf (file, "else\n");
-                if (e->val.ifstatementE.elsebody != NULL) {
-            
-                    generateCode(file, e->val.ifstatementE.elsebody, indentLevel+1, symbolTable);
-                }
-            }
-
-            printTabs(file, indentLevel);
-            
-            fprintf (file, "endif\n");
+            printf("ente here7\n");
 
             break;
 
         case whilestmtK:
-            
-            if (e->val.whilestmtE.previousstmts != NULL) {
-                
-                generateCode(file, e->val.whilestmtE.previousstmts, indentLevel, symbolTable);
-            }
-
-            printTabs(file, indentLevel);
-
-            fprintf (file, "while ");
-            
-            generateCode(file, e->val.whilestmtE.whileCond, 0, symbolTable);   
-            
-            fprintf (file, " do\n");
-            
-            if (e->val.whilestmtE.whileBody != NULL) {
-                generateCode(file, e->val.whilestmtE.whileBody, indentLevel+1, symbolTable);
-            }
-
-            printTabs(file, indentLevel);
-        
-            fprintf (file, "done\n");
-
+            printf("ente here8\n");
             break;
 
         case emptyK:
+            break;
+        
+        default:
+            printf("ente here9\n");
             break;
     }    
 
 }
 
 RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
-    RESULTEXP* r = NULL;
+    RESULTEXP* r;
+    r = NEW(RESULTEXP);
     int isSymbolDefined;
     RESULTEXP *leftExpType;
     RESULTEXP *rightExpType;
@@ -254,19 +151,19 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
             break;
         case stringconstK:
             r->kind = e->kind;
-            r->val.stringVal = e->val.stringVal;
+            r->val.stringVal = e->val.stringconstE;
 
             return r;
             break;
         case intconstK:
             r->kind = e->kind;
-            r->val.intVal = e->val.intVal;
+            r->val.intVal = e->val.intconstE;
 
             return r;
             break;
         case floatconstK:
             r->kind = e->kind;
-            r->val.floatVal = e->val.floatVal;
+            r->val.floatVal = e->val.floatconstE;
 
             return r;
             break;
@@ -284,20 +181,28 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                 char result[strlen(leftExpType->val.stringVal)+strlen(rightExpType->val.stringVal)];
                 strcpy(result, leftExpType->val.stringVal);
                 strcpy(result, rightExpType->val.stringVal);
-                
+
                 r->val.stringVal = result;
                 
             }
-            else if (leftExpType == intK && rightExpType == intK) {
-                
+            else if (leftExpType->kind == intK && rightExpType->kind == intK) {
+                r->kind = intK;
+                r->val.intVal = leftExpType->val.intVal + rightExpType->val.intVal;
 
             }
-            else if (leftExpType == floatK && rightExpType == floatK) {
-                
+            else if (leftExpType->kind == floatK && rightExpType->kind == floatK) {
+                r->kind = floatK;
+                r->val.floatVal = leftExpType->val.floatVal + rightExpType->val.floatVal;
 
             }
-            else if ((leftExpType == intK && rightExpType == floatK) || (leftExpType == floatK && rightExpType == intK)) {
+            else if ((leftExpType->kind == intK && rightExpType->kind == floatK) || (leftExpType->kind == floatK && rightExpType->kind == intK)) {
                 
+                if(leftExpType->kind == intK && rightExpType->kind == floatK) {
+                    r->val.floatVal = leftExpType->val.intVal + rightExpType->val.floatVal;
+                }
+                else {
+                    r->val.floatVal = leftExpType->val.floatVal + rightExpType->val.intVal;
+                }
 
             }
             else {
@@ -407,14 +312,14 @@ void codegenerator(EXP *e, char *originalFileName, SymbolTable *symbolTable) {
     strcpy(cfilename, originalFileName);
     strcat(cfilename, ".c");
     FILE *cfile = fopen(cfilename, "w");
-
+    printf("enter here in code generator\n");
     fprintf(cfile, "#include <stdio.h>\n\n");
     fprintf(cfile, "int main(int argc, char **argv) {\n\n");
     
     generateCode(cfile, e, 1, symbolTable);
 
 
-    fprintf(cfile, "return 0;\n\n}\n");
+    fprintf(cfile, "\treturn 0;\n\n}\n");
 
     fclose(cfile);
 

@@ -1,7 +1,1 @@
-var x : string;
-var a : int;
-x = "true";
-a = (1 + (1 -1));
-if a then
-	print x;
-endif
+print 1+1;

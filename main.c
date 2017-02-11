@@ -13,8 +13,8 @@ int main(int argc, char **argv)
 { 
 
   char *inputFile =argv[1];
-  char *newPrettyFileName;
-  char *originalFileName;
+  char *newPrettyFileName = NULL;
+  char *originalFileName = NULL;
 
   FILE *myfile;
   FILE *prettyFile;
@@ -39,47 +39,50 @@ int main(int argc, char **argv)
 
 	  // set flex to read from it instead of defaulting to STDIN:
 	  yyin = myfile;
-  }
+    // parse through the input until there is no more:
+	  do {
+		  yyparse();
+	  } while (!feof(yyin));
 
-	// parse through the input until there is no more:
-	do {
-		yyparse();
-	} while (!feof(yyin));
-
-  fclose(myfile);
-
-  printf("\nThe result of evaluating:\n");
-
-  
-  
-  if (newPrettyFileName == NULL) {
-    newPrettyFileName = "a.output.min";
-    strcpy(originalFileName, "a.output");
+    fclose(myfile);
+    printf("\nThe result of evaluating:\n");
     
-  }
+    if (newPrettyFileName == NULL) {
+      
+      newPrettyFileName = "a.output.min";
+      strcpy(originalFileName, "a.output");
+      
+    }
 
-  printf("new file name: %s\n", newPrettyFileName);
+    printf("new file name: %s\n", newPrettyFileName);
 
-  prettyFile = fopen(newPrettyFileName, "w");
-  
-  printf("pretty print to file: %s\n", newPrettyFileName);
-  
-  //pretty print
-  prettyEXP(prettyFile, theexpression, 0);
-  
-  fclose(prettyFile);
-  SymbolTable *symbolTable;
-  symbolTable = initSymbolTable();
-  int satisfyTypecheck = typeCheck(theexpression, originalFileName, symbolTable);
-  printf("\n");
-  if (satisfyTypecheck == 1) {
-      printf ("VALID\n");
+    prettyFile = fopen(newPrettyFileName, "w");
+    
+    
 
-      // generator c code
-      codegenerator(theexpression, originalFileName, symbolTable);
+    printf("pretty print to file: %s\n", newPrettyFileName);
+    
+    //pretty print
+    prettyEXP(prettyFile, theexpression, 0);
+    printf("done pretty print\n");
+    fclose(prettyFile);
+    SymbolTable *symbolTable;
+    symbolTable = initSymbolTable();
+    int satisfyTypecheck = typeCheck(theexpression, originalFileName, symbolTable);
+   
+    printf("\n");
+    if (satisfyTypecheck == 1) {
+        printf ("VALID\n");
+        
+        // generator c code
+        codegenerator(theexpression, originalFileName, symbolTable);
+    }
+    else {
+      printf ("INVALID\n");
+    }
   }
   else {
-    printf ("INVALID\n");
+    printf("Please give an input file\n");
   }
   
   return 0;
