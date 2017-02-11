@@ -1,7 +1,9 @@
 var a : int; 
 a = a + 1;
 
+while a do
 if a then
 	print a;
 endif
+done
 

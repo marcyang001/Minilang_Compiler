@@ -20,12 +20,12 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
 
             fprintf(file, "printf");
             s = evaluateExpression(symbolTable, e->val.generalE.expVal);
-            printf("done evaluating expression\n");
+            
             if (s->kind == stringK) {
                 fprintf(file, "(\"%%s\", %s);\n", s->val.stringVal);
             }
             else if (s->kind == intK) {
-                printf("enter here generating\n");
+                
                 fprintf(file, "(\"%%d\", %d);\n", s->val.intVal);
             }
             else if (s->kind == floatK) {
@@ -33,6 +33,7 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
             }
             else {
                 printf("error in generating printf statement\n");
+                return;
             }
             break;
         case readstmtK:
@@ -57,6 +58,7 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
             }
             else {
                 printf("error in generating  in scanf statement\n");
+                return;
             }
 
             break;
@@ -74,13 +76,14 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
                     fprintf(file, "%f;\n", s->val.floatVal);
                 }
                 updateSymbolValue(symbolTable, e->val.assignE.left, s);
-                
+
             }
             else if (s->kind == stringK) {
                 fprintf(file, "strcpy(%s, %s);\n",e->val.assignE.left, s->val.stringVal);
             }
             else {
                 printf("error in generating assign statement\n");
+                return;
             }
 
             break;
@@ -156,7 +159,10 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
 
                 printTabs(file, indentLevel);
                 
-                fprintf (file, "\n}\nelse { \n");
+                fprintf (file, "}\n");
+                
+                printTabs(file, indentLevel);
+                fprintf (file, "else { \n");
                 if (e->val.ifstatementE.elsebody != NULL) {
             
                     generateCode(file, e->val.ifstatementE.elsebody, indentLevel+1, symbolTable);
@@ -169,7 +175,27 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
             break;
 
         case whilestmtK:
-            printf("ente here8\n");
+            
+            if (e->val.whilestmtE.previousstmts != NULL) {
+                
+                generateCode(file, e->val.whilestmtE.previousstmts, indentLevel, symbolTable);
+            }
+
+            printTabs(file, indentLevel);
+
+            s = evaluateExpression(symbolTable, e->val.whilestmtE.whileCond);   
+
+            fprintf (file, "while ( %d ) { \n", s->val.intVal);
+
+
+            if (e->val.whilestmtE.whileBody != NULL) {
+                generateCode(file, e->val.whilestmtE.whileBody, indentLevel+1, symbolTable);
+            }
+
+            printTabs(file, indentLevel);
+        
+            fprintf (file, "}\n");
+
             break;
 
         case emptyK:
@@ -197,22 +223,24 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                 r->kind = idType->kind;
 
                 if (idType->kind == stringK) {
-                    printf("this is  a string type\n");
+                    
                     r->val.stringVal = idType->val.stringVal;
                 }
                 else if (idType->kind == intK) {
-                    printf("this is an int type\n");
+                    
                     r->val.intVal = idType->val.intVal;
                 }
                 else if (idType->kind == floatK) {
                     r->val.floatVal = idType->val.floatVal;
                 }
                 else {
-                    printf("error type for identifier \"%s\"---line %d\n", e->val.idE, e->lineno);
+                    printf("code generator error for identifier \"%s\"---line %d\n", e->val.idE, e->lineno);
+                    
                 }
             }
             else {
-                printf("identifier \"%s\" is undefined ---line %d\n", e->val.idE, e->lineno);
+                printf("code generator error identifier \"%s\" is undefined ---line %d\n", e->val.idE, e->lineno);
+                
             }
 
             return r;
