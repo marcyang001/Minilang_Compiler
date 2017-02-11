@@ -60,6 +60,15 @@ typedef struct SYMBOL {
     struct SYMBOL *next;
 } SYMBOL; 
 
+typedef struct RESULTEXP {
+  SymbolKind kind;
+  union {
+      char* stringVal;
+      float floatVal;
+      int   intVal;
+  } val;
+} RESULTEXP;
+
 
 EXP *makeEXPid(char *id);
 

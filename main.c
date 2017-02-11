@@ -68,14 +68,15 @@ int main(int argc, char **argv)
   prettyEXP(prettyFile, theexpression, 0);
   
   fclose(prettyFile);
-  
-  int satisfyTypecheck = typeCheck(theexpression, originalFileName);
+  SymbolTable *symbolTable;
+  symbolTable = initSymbolTable();
+  int satisfyTypecheck = typeCheck(theexpression, originalFileName, symbolTable);
   printf("\n");
   if (satisfyTypecheck == 1) {
       printf ("VALID\n");
 
       // generator c code
-      codegenerator(theexpression, originalFileName);
+      codegenerator(theexpression, originalFileName, symbolTable);
   }
   else {
     printf ("INVALID\n");

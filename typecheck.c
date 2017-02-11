@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include "symbol.h"
-#include "typecheck.h"
 #include "memory.h"
 #include "tree.h"
 #include <string.h>
@@ -12,15 +11,12 @@ SymbolKind evaluateExpressType(SymbolTable *symbolTable, EXP *passE);
 int checker(SymbolTable *symbolTable, EXP *e, FILE *symbolTableName);
 void outputSymbolTable(SymbolTable *t, char *filename);
 
-int typeCheck(EXP *e, char* symbolfilename) {
+int typeCheck(EXP *e, char* symbolfilename, SymbolTable *symbolTable) {
 
     char symbolTableText[strlen(symbolfilename)+11];
     strcpy(symbolTableText, symbolfilename);
     strcat(symbolTableText, ".symbol.txt");
     FILE *fs = fopen(symbolTableText, "w");
-    
-    SymbolTable *symbolTable;
-    symbolTable = initSymbolTable();
 
     int istypeValid = checker(symbolTable, e, fs);
     

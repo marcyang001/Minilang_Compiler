@@ -29,5 +29,11 @@ SYMBOL *getSymbol(SymbolTable *t, char *name);
 
 int defSymbol(SymbolTable *t, char *name);
 
+int typeCheck(EXP *e, char* symbolfilename, SymbolTable *symbolTable);
 
+void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable);
+
+RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e);
+
+void codegenerator(EXP *e, char *originalFileName, SymbolTable *symbolTable);
 

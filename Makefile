@@ -32,13 +32,13 @@ tree.o:  tree.c tree.h
 pretty.o:  pretty.c pretty.h
 		$(CC) $(CFLAGS) -c pretty.c -o pretty.o
 
-typecheck.o:  typecheck.c typecheck.h
+typecheck.o:  typecheck.c
 		$(CC) $(CFLAGS) -c typecheck.c -o typecheck.o
 
 symbol.o:  symbol.c symbol.h
 		$(CC) $(CFLAGS) -c symbol.c -o symbol.o
 
-codegenerator.o:  codegenerator.c codegenerator.h
+codegenerator.o:  codegenerator.c
 		$(CC) $(CFLAGS) -c codegenerator.c -o codegenerator.o
 
 main.o:		main.c

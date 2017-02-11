@@ -5,4 +5,6 @@
 
 void prettyEXP(FILE *file, EXP *e, int indentLevel);
 
+void printTabs(FILE *file, int times);
+
 #endif /* !PRETTY_H */

@@ -8,5 +8,4 @@
 #include <errno.h>
 #include "tree.h"
 #include "pretty.h"
-#include "typecheck.h"
-#include "codegenerator.h"
+#include "symbol.h"
