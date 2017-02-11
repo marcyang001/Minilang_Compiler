@@ -27,6 +27,8 @@ SYMBOL *putSymbol(SymbolTable *t, char *name, SymbolKind kind, FILE *filename);
 
 SYMBOL *getSymbol(SymbolTable *t, char *name);
 
+SYMBOL *updateSymbolValue(SymbolTable *t, char *name, RESULTEXP *e);
+
 int defSymbol(SymbolTable *t, char *name);
 
 int typeCheck(EXP *e, char* symbolfilename, SymbolTable *symbolTable);

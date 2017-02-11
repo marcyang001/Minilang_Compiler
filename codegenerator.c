@@ -7,6 +7,7 @@
 #include "string.h"
 #include "memory.h"
 
+
 void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable) {
     
     RESULTEXP *s;
@@ -72,6 +73,8 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
                 else {
                     fprintf(file, "%f;\n", s->val.floatVal);
                 }
+                updateSymbolValue(symbolTable, e->val.assignE.left, s);
+                
             }
             else if (s->kind == stringK) {
                 fprintf(file, "strcpy(%s, %s);\n",e->val.assignE.left, s->val.stringVal);
@@ -132,38 +135,37 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
       
         case ifstatementK:
             
-            // if (e->val.ifstatementE.previousstmts != NULL) {
+            if (e->val.ifstatementE.previousstmts != NULL) {
                 
-            //     generateCode(file, e->val.ifstatementE.previousstmts, indentLevel);
-            // }
+                generateCode(file, e->val.ifstatementE.previousstmts, indentLevel, symbolTable);
+            }
 
-            // printTabs(file, indentLevel);
+            printTabs(file, indentLevel);
 
-            
-            // fprintf (file, "if ");
-            // prettyEXP(file, e->val.ifstatementE.ifcondition, 0);
-            
-            // fprintf (file, " then\n");
-            // if (e->val.ifstatementE.ifbody != NULL) {
+            s = evaluateExpression(symbolTable, e->val.ifstatementE.ifcondition);
+
+            fprintf (file, "if ( %d ) { \n", s->val.intVal);
+
+            if (e->val.ifstatementE.ifbody != NULL) {
                 
-            //     prettyEXP(file, e->val.ifstatementE.ifbody, indentLevel+1);
-            // }
+                generateCode(file, e->val.ifstatementE.ifbody, indentLevel+1, symbolTable);
+            }
 
 
-            // if (e->val.ifstatementE.hasElse == 1) {
+            if (e->val.ifstatementE.hasElse == 1) {
 
-            //     printTabs(file, indentLevel);
-             
-            //     fprintf (file, "else\n");
-            //     if (e->val.ifstatementE.elsebody != NULL) {
+                printTabs(file, indentLevel);
+                
+                fprintf (file, "\n}\nelse { \n");
+                if (e->val.ifstatementE.elsebody != NULL) {
             
-            //         prettyEXP(file, e->val.ifstatementE.elsebody, indentLevel+1);
-            //     }
-            // }
+                    generateCode(file, e->val.ifstatementE.elsebody, indentLevel+1, symbolTable);
+                }
+            }
 
-            // printTabs(file, indentLevel);
+            printTabs(file, indentLevel);
             
-            // fprintf (file, "endif\n");
+            fprintf (file, "}\n");
             break;
 
         case whilestmtK:

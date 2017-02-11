@@ -1,0 +1,5 @@
+var a : int;
+a = (a+1);
+if a then
+	print a;
+endif

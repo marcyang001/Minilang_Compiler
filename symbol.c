@@ -64,7 +64,32 @@ SYMBOL *putSymbol(SymbolTable *t, char *name, SymbolKind kind, FILE *filename)
   t->table[i] = s;
   return s;
 }
- 
+
+SYMBOL *updateSymbolValue(SymbolTable *t, char *name, RESULTEXP *e) {
+    int i = Hash(name);
+    SYMBOL *s;
+
+    for (s = t->table[i]; s; s = s->next) {
+        if (strcmp(s->name, name)==0) {
+
+            if (e->kind == intK) {
+              s->val.intVal = e->val.intVal;
+            }
+            else if (e->kind == floatK) {
+              s->val.floatVal = e->val.floatVal;
+            }
+            else {
+              s->val.stringVal = e->val.stringVal;
+            }
+            return s;
+        }
+    }
+    
+    if (t->next==NULL) return NULL;
+    return getSymbol(t->next,name);
+}
+
+
 SYMBOL *getSymbol(SymbolTable *t, char *name)
 { int i = Hash(name);
   SYMBOL *s;
