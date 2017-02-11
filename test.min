@@ -1,2 +1,3 @@
-print "asd" * 0;
+var a :string; 
+a="1.0";
 

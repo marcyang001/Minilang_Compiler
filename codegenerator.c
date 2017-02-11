@@ -10,6 +10,7 @@
 void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable) {
     
     RESULTEXP *s;
+    EXP* temp;
     switch (e->kind) {
 
         // simple statements
@@ -35,7 +36,7 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
             break;
         case readstmtK:
             printTabs(file, indentLevel);
-            EXP* temp = NEW(EXP);
+            temp = NEW(EXP);
             temp->kind = idK;
             temp->val.idE = e->val.idE;
             
@@ -54,12 +55,31 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
                 fprintf(file, "scanf(\"%%f\", &%s);\n", e->val.idE);
             }
             else {
-                printf("error in generating scanf statement\n");
+                printf("error in generating  in scanf statement\n");
             }
-            
+
             break;
         case assignstmtK:
-            printf("ente here2\n");
+            printTabs(file, indentLevel);
+
+            s = evaluateExpression(symbolTable, e->val.assignE.right);
+            
+            if (s->kind == intK || s->kind == floatK) {
+                fprintf(file, "%s = ",e->val.assignE.left);
+                if (s->kind == intK) {
+                    fprintf(file, "%d;\n", s->val.intVal); 
+                }
+                else {
+                    fprintf(file, "%f;\n", s->val.floatVal);
+                }
+            }
+            else if (s->kind == stringK) {
+                fprintf(file, "strcpy(%s, %s);\n",e->val.assignE.left, s->val.stringVal);
+            }
+            else {
+                printf("error in generating assign statement\n");
+            }
+
             break;
         
         case makeSimplestmtK:
@@ -439,7 +459,10 @@ void codegenerator(EXP *e, char *originalFileName, SymbolTable *symbolTable) {
     strcat(cfilename, ".c");
     FILE *cfile = fopen(cfilename, "w");
     
-    fprintf(cfile, "#include <stdio.h>\n\n");
+    fprintf(cfile, "#include <stdio.h>\n");
+    fprintf(cfile, "#include <stdlib.h>\n");
+    fprintf(cfile, "#include <string.h>\n");
+    fprintf(cfile, "\n\n\n");
     fprintf(cfile, "int main(int argc, char **argv) {\n\n");
     
     generateCode(cfile, e, 1, symbolTable);
