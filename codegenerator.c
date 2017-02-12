@@ -24,9 +24,12 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
             if (s->kind == stringK) {
                 fprintf(file, "(\"%%s\", %s);\n", s->val.stringVal);
             }
-            else if (s->kind == intK || s->kind == floatK) {
+            else if (s->kind == intK) {
 
                 fprintf(file, "(\"%%d\", %s);\n", s->val.expVal);
+            }
+            else if (s->kind == floatK) {
+                fprintf(file, "(\"%%f\", %s);\n", s->val.expVal);
             }
             else {
                 printf("error in generating printf statement\n");

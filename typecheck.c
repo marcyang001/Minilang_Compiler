@@ -72,7 +72,19 @@ int checker(SymbolTable *symbolTable, EXP *e, FILE *symbolTableName) {
                 exp2Type = evaluateExpressType(symbolTable, e->val.assignE.right);
                 
                 // compare the identifier with the assigned expression
-                if (exp1Type != exp2Type || exp1Type == errorK || exp2Type == errorK) {
+                if (exp1Type == stringK && exp2Type == stringK) {
+                   break;
+                }
+                else if (exp1Type == intK && exp2Type == intK) {
+                    break;
+                }
+                else if (exp1Type == floatK && exp2Type == floatK) {
+                    break;
+                }
+                else if (exp1Type == floatK && exp2Type == intK) {
+                    break;
+                }
+                else {
                     printf("identifier \"%s\" is assigned to a bad type  ---line %d\n", e->val.assignE.left, e->lineno);
                     return 0;
                 }

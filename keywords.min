@@ -1,8 +1,12 @@
-var x: float; 
+var x: int; 
 var guess: float; 
 var quot: float; 
 var iter: int; 
-read x; 
+var a : int;
+var y : int;
+var b : float;
+read x;
+
 guess = 1; 
 iter = 10;
 
@@ -19,9 +23,8 @@ done
 print guess; 
 print guess * guess;
 
-var a : int;
-// this is a comment
-var a : int;
+
+
 if x then
 
 	x = 1;
