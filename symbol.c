@@ -73,13 +73,13 @@ SYMBOL *updateSymbolValue(SymbolTable *t, char *name, RESULTEXP *e) {
         if (strcmp(s->name, name)==0) {
 
             if (e->kind == intK) {
-              s->val.intVal = e->val.intVal;
+              s->val.intVal = atoi(e->val.expVal);
             }
             else if (e->kind == floatK) {
-              s->val.floatVal = e->val.floatVal;
+              s->val.floatVal = atof(e->val.expVal);
             }
             else {
-              s->val.stringVal = e->val.stringVal;
+              s->val.stringVal = e->val.expVal;
             }
             return s;
         }

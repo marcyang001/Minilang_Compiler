@@ -1,9 +1,22 @@
-var a : int; 
-a = a + 1;
+//var a : int; 
+//a = a + 1;
 
-while a do
-if a then
-	print a;
-endif
+//while a do
+//if a then
+//	print a;
+//endif
+//done
+
+var quot : float;
+var guess : float;
+var x : int;
+var iter : int;
+
+while 100 do
+	while 100 do
+		quot = x / guess;
+	done
+	
+	guess = 0.5 * guess;
+	iter = iter - 1;
 done
-

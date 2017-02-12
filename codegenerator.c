@@ -24,12 +24,9 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
             if (s->kind == stringK) {
                 fprintf(file, "(\"%%s\", %s);\n", s->val.stringVal);
             }
-            else if (s->kind == intK) {
-                
-                fprintf(file, "(\"%%d\", %d);\n", s->val.intVal);
-            }
-            else if (s->kind == floatK) {
-                fprintf(file, "(\"%%f\", %f);\n", s->val.floatVal);
+            else if (s->kind == intK || s->kind == floatK) {
+
+                fprintf(file, "(\"%%d\", %s);\n", s->val.expVal);
             }
             else {
                 printf("error in generating printf statement\n");
@@ -68,13 +65,8 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
             s = evaluateExpression(symbolTable, e->val.assignE.right);
             
             if (s->kind == intK || s->kind == floatK) {
-                fprintf(file, "%s = ",e->val.assignE.left);
-                if (s->kind == intK) {
-                    fprintf(file, "%d;\n", s->val.intVal); 
-                }
-                else {
-                    fprintf(file, "%f;\n", s->val.floatVal);
-                }
+                fprintf(file, "%s = %s;\n",e->val.assignE.left, s->val.expVal);
+
                 updateSymbolValue(symbolTable, e->val.assignE.left, s);
 
             }
@@ -147,7 +139,7 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
 
             s = evaluateExpression(symbolTable, e->val.ifstatementE.ifcondition);
 
-            fprintf (file, "if ( %d ) { \n", s->val.intVal);
+            fprintf (file, "if ( %s ) { \n", s->val.expVal);
 
             if (e->val.ifstatementE.ifbody != NULL) {
                 
@@ -185,7 +177,7 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
 
             s = evaluateExpression(symbolTable, e->val.whilestmtE.whileCond);   
 
-            fprintf (file, "while ( %d ) { \n", s->val.intVal);
+            fprintf (file, "while ( %s ) { \n", s->val.expVal);
 
 
             if (e->val.whilestmtE.whileBody != NULL) {
@@ -213,6 +205,7 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
     int isSymbolDefined;
     RESULTEXP *leftExpType;
     RESULTEXP *rightExpType;
+    char *str;
 
     switch (e->kind) {
         case idK:
@@ -226,12 +219,9 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                     
                     r->val.stringVal = idType->val.stringVal;
                 }
-                else if (idType->kind == intK) {
-                    
-                    r->val.intVal = idType->val.intVal;
-                }
-                else if (idType->kind == floatK) {
-                    r->val.floatVal = idType->val.floatVal;
+                else if (idType->kind == intK || idType->kind == floatK) {
+                    // get the variable of the int or of the float
+                    r->val.expVal = idType->name;
                 }
                 else {
                     printf("code generator error for identifier \"%s\"---line %d\n", e->val.idE, e->lineno);
@@ -243,26 +233,31 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                 
             }
 
-            return r;
             break;
         case stringconstK:
             
             r->kind = stringK;
             r->val.stringVal = e->val.stringconstE;
 
-            return r;
+            
             break;
         case intconstK:
             r->kind = intK;
-            r->val.intVal = e->val.intconstE;
 
-            return r;
+            str = (char *) malloc(sizeof(char)*32);
+            sprintf(str, "%d", e->val.intconstE);
+
+            r->val.expVal = str;
+
             break;
         case floatconstK:
             r->kind = floatK;
-            r->val.floatVal = e->val.floatconstE;
+            str = (char *) malloc(sizeof(char)*32);
+            sprintf(str, "%f", e->val.floatconstE);
 
-            return r;
+            r->val.expVal = str;
+
+            
             break;
         case plusK:
             // string + string = string 
@@ -282,33 +277,28 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                 r->val.stringVal = result;
                 
             }
-            else if (leftExpType->kind == intK && rightExpType->kind == intK) {
-                r->kind = intK;
-                r->val.intVal = leftExpType->val.intVal + rightExpType->val.intVal;
+            else {
+                if (leftExpType->kind == intK && rightExpType->kind == intK) {
+                    r->kind = intK;
+                }
+                else if (leftExpType->kind == floatK && rightExpType->kind == floatK) {
+                    r->kind = floatK;
 
-            }
-            else if (leftExpType->kind == floatK && rightExpType->kind == floatK) {
-                r->kind = floatK;
-                r->val.floatVal = leftExpType->val.floatVal + rightExpType->val.floatVal;
-
-            }
-            else if ((leftExpType->kind == intK && rightExpType->kind == floatK) || (leftExpType->kind == floatK && rightExpType->kind == intK)) {
-                
-                r->kind = floatK;
-                if(leftExpType->kind == intK && rightExpType->kind == floatK) {
-                    r->val.floatVal = leftExpType->val.intVal + rightExpType->val.floatVal;
+                }
+                else if ((leftExpType->kind == intK && rightExpType->kind == floatK) || (leftExpType->kind == floatK && rightExpType->kind == intK)) {
+                    r->kind = floatK;
                 }
                 else {
-                    r->val.floatVal = leftExpType->val.floatVal + rightExpType->val.intVal;
+                    printf("code generation error in addition ---line  %d\n", e->val.plusE.left->lineno);
+                    return r;
                 }
-              
 
-            }
-            else {
-                printf("code generation error in addition ---line  %d\n", e->val.plusE.left->lineno);
-            }
+                str = (char *) malloc(sizeof(char) * 1024);
+                sprintf(str, "(%s + %s)",leftExpType->val.expVal, rightExpType->val.expVal);
+                r->val.expVal = str;
+            }            
             
-            return r;
+            
             break;
         case minusK:
             // int <op> int
@@ -321,28 +311,21 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
            
             if (leftExpType->kind == intK && rightExpType->kind == intK) {
                 r->kind = intK;
-                r->val.intVal = leftExpType->val.intVal - rightExpType->val.intVal;
-
             }
             else if (leftExpType->kind == floatK && rightExpType->kind == floatK) {
                 r->kind = floatK;
-                r->val.floatVal = leftExpType->val.floatVal - rightExpType->val.floatVal;
-
             }
             else if ((leftExpType->kind == intK && rightExpType->kind == floatK) || (leftExpType->kind == floatK && rightExpType->kind == intK)) {
-                
                 r->kind = floatK;
-                if(leftExpType->kind == intK && rightExpType->kind == floatK) {
-                    r->val.floatVal = leftExpType->val.intVal - rightExpType->val.floatVal;
-                }
-                else {
-                    r->val.floatVal = leftExpType->val.floatVal - rightExpType->val.intVal;
-                }
-
             }
             else {
                 printf("code generation error in subtraction ---line  %d\n", e->val.plusE.left->lineno);
+                return r;
             }
+
+            str = (char *) malloc(sizeof(char) * 1024);
+            sprintf(str, "(%s - %s)",leftExpType->val.expVal, rightExpType->val.expVal);
+            r->val.expVal = str;
 
             break;
         case timesK:
@@ -350,32 +333,11 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
             // float <op> float
             // int <op> float
             // string * int 
-
+            
             leftExpType = evaluateExpression(symbolTable, e->val.timesE.left);
             
             rightExpType = evaluateExpression(symbolTable, e->val.timesE.right);
-            
-
-            if (leftExpType->kind == intK && rightExpType->kind == intK) {
-                r->kind = intK;
-                r->val.intVal = leftExpType->val.intVal * rightExpType->val.intVal;
-            }
-            else if (leftExpType->kind == floatK && rightExpType->kind == floatK) {
-                r->kind = floatK;
-                r->val.intVal = leftExpType->val.floatVal * rightExpType->val.floatVal;
-            }
-            else if ((leftExpType->kind == intK && rightExpType->kind == floatK) || (leftExpType->kind == floatK && rightExpType->kind == intK)) {
-                r->kind = floatK;
-                
-                if(leftExpType->kind == intK && rightExpType->kind == floatK) {
-                    r->val.floatVal = leftExpType->val.intVal * rightExpType->val.floatVal;
-                }
-                else {
-                    r->val.floatVal = leftExpType->val.floatVal * rightExpType->val.intVal;
-                }
-
-            }
-            else if ((leftExpType->kind == stringK && rightExpType->kind == intK) || (leftExpType->kind == intK && rightExpType->kind == stringK)) {
+            if ((leftExpType->kind == stringK && rightExpType->kind == intK) || (leftExpType->kind == intK && rightExpType->kind == stringK)) {
                 
                 char *resultString;
                 char *pattern; 
@@ -387,11 +349,11 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                 if(leftExpType->kind == stringK && rightExpType->kind == intK) {
 
                     pattern = leftExpType->val.stringVal;
-                    times = rightExpType->val.intVal;
+                    times = atoi(rightExpType->val.expVal);
                 }
                 else {
                     pattern = rightExpType->val.stringVal;
-                    times = leftExpType->val.intVal;
+                    times = atoi(leftExpType->val.expVal);
                 }
 
                 if (times > 0) {
@@ -413,10 +375,28 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                 }
 
                 r->val.stringVal = resultString;
-
             }
             else {
-                printf("code generation error in multiplication ---line %d\n", e->val.timesE.left->lineno);
+                
+                if (leftExpType->kind == intK && rightExpType->kind == intK) {
+                    r->kind = intK;
+                    
+                }
+                else if (leftExpType->kind == floatK && rightExpType->kind == floatK) {
+                    r->kind = floatK;
+                    
+                }
+                else if ((leftExpType->kind == intK && rightExpType->kind == floatK) || (leftExpType->kind == floatK && rightExpType->kind == intK)) {
+                    r->kind = floatK;
+                }
+                else {
+                    printf("code generation error in multiplication ---line %d\n", e->val.timesE.left->lineno);
+                    return r;
+                }
+                
+                str = (char *) malloc(sizeof(char) * 1024);
+                sprintf(str, "(%s * %s)",leftExpType->val.expVal, rightExpType->val.expVal);
+                r->val.expVal = str;
             }
 
             break;
@@ -432,28 +412,22 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
             if (leftExpType->kind == intK && rightExpType->kind == intK) {
                 r->kind = intK;
 
-                r->val.intVal = leftExpType->val.intVal / rightExpType->val.intVal;
-
             }
             else if (leftExpType->kind == floatK && rightExpType->kind == floatK) {
                 r->kind = floatK;
-
-                r->val.floatVal = leftExpType->val.floatVal / rightExpType->val.floatVal;
             }
             else if ((leftExpType->kind == intK && rightExpType->kind == floatK) || (leftExpType->kind == floatK && rightExpType->kind == intK)) {
                 r->kind = floatK;
 
-                if(leftExpType->kind == intK && rightExpType->kind == floatK) {
-                    r->val.floatVal = leftExpType->val.intVal / rightExpType->val.floatVal;
-                }
-                else {
-                    r->val.floatVal = leftExpType->val.floatVal / rightExpType->val.intVal;
-                }
             }
             else {
                 printf("code generation error in division  ---line %d\n", e->val.divE.left->lineno);
+                return r;
             }
 
+            str = (char *) malloc(sizeof(char) * 1024);
+            sprintf(str, "(%s / %s)",leftExpType->val.expVal, rightExpType->val.expVal);
+            r->val.expVal = str;
             break;
         case unarymK:
 
@@ -461,16 +435,18 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
             leftExpType = evaluateExpression(symbolTable, e->val.generalE.expVal);
             if (leftExpType->kind == intK) {
                 r->kind = intK;
-                r->val.intVal = -leftExpType->val.intVal;
             }
             else if (leftExpType->kind == floatK) {
                 r->kind = floatK;
-                r->val.floatVal = -leftExpType->val.floatVal;
-
             }
             else {
                 printf("code generation error in unary operator ---line %d\n", e->lineno);
+                return r;
             }            
+            str = (char *) malloc(sizeof(char) * 33);
+            sprintf(str, "(-%s)",leftExpType->val.expVal);
+            r->val.expVal = str;
+
             break;
         default:
             break;

@@ -64,8 +64,7 @@ typedef struct RESULTEXP {
   SymbolKind kind;
   union {
       char* stringVal;
-      float floatVal;
-      int   intVal;
+      char* expVal;
   } val;
 } RESULTEXP;
 
