@@ -12,11 +12,18 @@ var guess : float;
 var x : int;
 var iter : int;
 
-while 100 do
-	while 100 do
+print "please enter a number: 1 -- loop 0 out\n";
+
+read x;
+
+while x do
+	print "enter the infinite loop\n";
+	while 0 do
 		quot = x / guess;
 	done
 	
 	guess = 0.5 * guess;
 	iter = iter - 1;
 done
+
+print "loop is not entered\n";

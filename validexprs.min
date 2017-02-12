@@ -65,6 +65,7 @@ while x do
 			quot = x / guess;
 		done
 		guess = 0.5 * (guess + quot);
+		guess = 0.5 * (guess - quot);
 		iter = iter - 1;
 	done
 

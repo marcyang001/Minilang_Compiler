@@ -139,7 +139,7 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
 
             s = evaluateExpression(symbolTable, e->val.ifstatementE.ifcondition);
 
-            fprintf (file, "if ( %s ) { \n", s->val.expVal);
+            fprintf (file, "if (%s) { \n", s->val.expVal);
 
             if (e->val.ifstatementE.ifbody != NULL) {
                 
@@ -177,7 +177,7 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
 
             s = evaluateExpression(symbolTable, e->val.whilestmtE.whileCond);   
 
-            fprintf (file, "while ( %s ) { \n", s->val.expVal);
+            fprintf (file, "while (%s) { \n", s->val.expVal);
 
 
             if (e->val.whilestmtE.whileBody != NULL) {
