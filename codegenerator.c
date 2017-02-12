@@ -74,6 +74,9 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
 
             }
             else if (s->kind == stringK) {
+                // update the symbol symbolTable
+                updateSymbolValue(symbolTable, e->val.assignE.left, s);
+
                 fprintf(file, "strcpy(%s, %s);\n",e->val.assignE.left, s->val.stringVal);
             }
             else {
@@ -209,6 +212,7 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
     RESULTEXP *leftExpType;
     RESULTEXP *rightExpType;
     char *str;
+    char *resultString;
 
     switch (e->kind) {
         case idK:
@@ -267,18 +271,33 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
             // int <op> int
             // float <op> float
             // int <op> float
+            
 
             leftExpType = evaluateExpression(symbolTable, e->val.plusE.left);
             rightExpType = evaluateExpression(symbolTable, e->val.plusE.right);
             
             if (leftExpType->kind == stringK && rightExpType->kind == stringK) {
                 r->kind = stringK;
-                char result[strlen(leftExpType->val.stringVal)+strlen(rightExpType->val.stringVal)];
-                strcpy(result, leftExpType->val.stringVal);
-                strcpy(result, rightExpType->val.stringVal);
+                char *first  = leftExpType->val.stringVal;
+                char *second = rightExpType->val.stringVal;
 
-                r->val.stringVal = result;
+                resultString = (char *) malloc(sizeof(char) * (strlen(first) + strlen(second) + 3));
+                char temp1[strlen(leftExpType->val.stringVal)];
+                char temp2[strlen(rightExpType->val.stringVal)];
+
+                strncpy(temp1, &first[1], strlen(first)-2);
+                temp1[strlen(first)-2] = '\0';
+                strncpy(temp2, &second[1], strlen(second)-2);
+                temp2[strlen(second)-2] = '\0';
+
+                resultString[0] = '"';
+
+                strcat(resultString, temp1);
+                strcat(resultString, temp2);
+                resultString[strlen(resultString)] = '"';
                 
+                r->val.stringVal = resultString;
+
             }
             else {
                 if (leftExpType->kind == intK && rightExpType->kind == intK) {
@@ -325,7 +344,7 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                 printf("code generation error in subtraction ---line  %d\n", e->val.plusE.left->lineno);
                 return r;
             }
-
+            
             str = (char *) malloc(sizeof(char) * 1024);
             sprintf(str, "(%s - %s)",leftExpType->val.expVal, rightExpType->val.expVal);
             r->val.expVal = str;
@@ -342,7 +361,7 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
             rightExpType = evaluateExpression(symbolTable, e->val.timesE.right);
             if ((leftExpType->kind == stringK && rightExpType->kind == intK) || (leftExpType->kind == intK && rightExpType->kind == stringK)) {
                 
-                char *resultString;
+                
                 char *pattern; 
                 int times; 
                 int i;
@@ -466,6 +485,8 @@ void codegenerator(EXP *e, char *originalFileName, SymbolTable *symbolTable) {
     char cfilename[strlen(originalFileName)+2];
     strcpy(cfilename, originalFileName);
     strcat(cfilename, ".c");
+
+    printf("c code file name %s\n", cfilename);
     FILE *cfile = fopen(cfilename, "w");
     
     fprintf(cfile, "#include <stdio.h>\n");

@@ -1,0 +1,5 @@
+var a:string;
+
+a = "as" + "a";
+a = a + "a";
+a = a * 3;

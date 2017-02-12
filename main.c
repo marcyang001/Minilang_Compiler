@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   char *inputFile =argv[1];
   char *newPrettyFileName = NULL;
   char *originalFileName = NULL;
-
+  
   FILE *myfile;
   FILE *prettyFile;
 
@@ -33,10 +33,11 @@ int main(int argc, char **argv)
 		  exit(1);
 	  }
     
-    resultFileName(inputFile, newPrettyFileName, length);
-    strcpy(originalFileName, newPrettyFileName);
+    resultFileName(inputFile, originalFileName, length);
+    strcpy(newPrettyFileName, originalFileName);
     strcat(newPrettyFileName, ".pretty.min");
 
+    
 	  // set flex to read from it instead of defaulting to STDIN:
 	  yyin = myfile;
     // parse through the input until there is no more:
@@ -53,13 +54,11 @@ int main(int argc, char **argv)
       strcpy(originalFileName, "a.output");
       
     }
-
+    
     printf("new file name: %s\n", newPrettyFileName);
 
     prettyFile = fopen(newPrettyFileName, "w");
     
-    
-
     printf("pretty print to file: %s\n", newPrettyFileName);
     
     //pretty print
@@ -73,7 +72,8 @@ int main(int argc, char **argv)
     printf("\n");
     if (satisfyTypecheck == 1) {
         printf ("VALID\n");
-        
+        resultFileName(inputFile, originalFileName, length);
+
         // generator c code
         codegenerator(theexpression, originalFileName, symbolTable);
     }
