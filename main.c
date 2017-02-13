@@ -5,7 +5,7 @@ extern FILE *yyin;
 
 // prototype of bison-generated parser function
 int yyparse();
-void resultFileName(char* inputFile, char* buffer, int length);
+void resultFileName(char* inputFile, char* bufferc, int length);
 EXP *theexpression;
 
 
@@ -15,7 +15,9 @@ int main(int argc, char **argv)
   char *inputFile =argv[1];
   char *newPrettyFileName = NULL;
   char *originalFileName = NULL;
-  
+  char *symbolTableFileName = NULL;
+  char *cfilename = NULL;
+
   FILE *myfile;
   FILE *prettyFile;
 
@@ -23,8 +25,10 @@ int main(int argc, char **argv)
 	if (argv[1] != NULL) {
     int length = strlen(inputFile);
 
-    newPrettyFileName = (char *) malloc(sizeof(char) * (length+7));
-    originalFileName = (char *) malloc(sizeof(char));
+    originalFileName = (char *) malloc(sizeof(char)*(length-4+6));
+    newPrettyFileName = (char *) malloc(sizeof(char) * (length+7+6));
+    symbolTableFileName = (char *) malloc(sizeof(char) * (length-4+11+6));
+    cfilename = (char *) malloc(sizeof(char) * (length-4+2+7));
 
     myfile = fopen(inputFile, "r");
   
@@ -32,12 +36,29 @@ int main(int argc, char **argv)
 		  printf("%s: File %s cannot be opened.\n", argv[0], argv[1]);
 		  exit(1);
 	  }
-    
+    printf("input file name %s \n", inputFile);
+    // delete the extension and take the input file name
+    // store into originalFileName
     resultFileName(inputFile, originalFileName, length);
+     
+    // create foo.pretty.min file name
     strcpy(newPrettyFileName, originalFileName);
     strcat(newPrettyFileName, ".pretty.min");
 
-    
+    strcpy(symbolTableFileName, originalFileName);
+    strcat(symbolTableFileName, ".symbol.txt");
+
+    // create c file name
+    strcpy(cfilename, originalFileName);
+    strcat(cfilename, ".c");
+
+
+
+
+    printf("pretty print to file: %s\n", newPrettyFileName);
+    printf("symbol table : %s\n", symbolTableFileName);
+    printf("c file : %s", cfilename);
+
 	  // set flex to read from it instead of defaulting to STDIN:
 	  yyin = myfile;
     // parse through the input until there is no more:
@@ -52,33 +73,31 @@ int main(int argc, char **argv)
       
       newPrettyFileName = "a.output.min";
       strcpy(originalFileName, "a.output");
+
       
     }
-    
-    printf("new file name: %s\n", newPrettyFileName);
 
-    prettyFile = fopen(newPrettyFileName, "w");
-    
-    printf("pretty print to file: %s\n", newPrettyFileName);
-    
     //pretty print
+    prettyFile = fopen(newPrettyFileName, "w");
     prettyEXP(prettyFile, theexpression, 0);
     printf("done pretty print\n");
     fclose(prettyFile);
+
+    // type check
     SymbolTable *symbolTable;
     symbolTable = initSymbolTable();
-    int satisfyTypecheck = typeCheck(theexpression, originalFileName, symbolTable);
+    int satisfyTypecheck = typeCheck(theexpression, symbolTableFileName, symbolTable);
    
     printf("\n");
     if (satisfyTypecheck == 1) {
-        printf ("VALID\n");
-        resultFileName(inputFile, originalFileName, length);
-
-        // generator c code
-        codegenerator(theexpression, originalFileName, symbolTable);
+       printf ("VALID\n");
+      FILE *cfile = fopen(cfilename, "w");
+      //generator c code
+      codegenerator(theexpression, cfile, symbolTable);
+      fclose(cfile);
     }
     else {
-      printf ("INVALID\n");
+     printf ("INVALID\n");
     }
   }
   else {
@@ -90,7 +109,7 @@ int main(int argc, char **argv)
 
 void resultFileName(char* inputFile, char* buffer, int length) {
 
-  int i = 0;
+   int i = 0;
   while (i < length) {
 
     if (inputFile[i] == '.' && inputFile[i+1] == 'm' && inputFile[i+2] == 'i' && inputFile[i+3]=='n') {
@@ -102,4 +121,6 @@ void resultFileName(char* inputFile, char* buffer, int length) {
 
     i++;
   }
+  buffer[i] = '\0';
+
 }

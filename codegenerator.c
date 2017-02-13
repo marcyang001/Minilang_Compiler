@@ -295,7 +295,7 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                 strcat(resultString, temp1);
                 strcat(resultString, temp2);
                 resultString[strlen(resultString)] = '"';
-                
+
                 r->val.stringVal = resultString;
 
             }
@@ -386,7 +386,7 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
                     temp[strlen(pattern)-2] = '\0';
 
                     resultString[0] = '"';
-                    printf("pattern is %s\n", temp);
+                    
                     for (i = 0; i < (times); i++) {
                         strcat(resultString, temp);
                     }
@@ -480,14 +480,14 @@ RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e) {
 }
 
 
-void codegenerator(EXP *e, char *originalFileName, SymbolTable *symbolTable) {
+void codegenerator(EXP *e, FILE *cfile, SymbolTable *symbolTable) {
 
-    char cfilename[strlen(originalFileName)+2];
-    strcpy(cfilename, originalFileName);
-    strcat(cfilename, ".c");
+    // char cfilename[strlen(originalFileName)+2];
+    // strcpy(cfilename, originalFileName);
+    // strcat(cfilename, ".c");
 
-    printf("c code file name %s\n", cfilename);
-    FILE *cfile = fopen(cfilename, "w");
+    // printf("c code file name %s\n", cfilename);
+    // FILE *cfile = fopen(cfilename, "w");
     
     fprintf(cfile, "#include <stdio.h>\n");
     fprintf(cfile, "#include <stdlib.h>\n");
@@ -500,6 +500,5 @@ void codegenerator(EXP *e, char *originalFileName, SymbolTable *symbolTable) {
 
     fprintf(cfile, "\n\n\treturn 0;\n\n}\n");
 
-    fclose(cfile);
 
 }

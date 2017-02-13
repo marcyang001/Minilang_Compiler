@@ -37,5 +37,5 @@ void generateCode(FILE *file, EXP *e, int indentLevel, SymbolTable *symbolTable)
 
 RESULTEXP *evaluateExpression(SymbolTable *symbolTable, EXP *e);
 
-void codegenerator(EXP *e, char *originalFileName, SymbolTable *symbolTable);
+void codegenerator(EXP *e, FILE *cfile, SymbolTable *symbolTable);
 
