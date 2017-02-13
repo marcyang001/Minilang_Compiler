@@ -73,10 +73,10 @@ input:
     ;
 
 program: 
-    statements
+                                    { $$ = treatEmptystmt(); }
+    | statements
     | declarations                  { $$ = $1; }
-    | declarations statements       { $$ = makeCombineE ($1, $2); }
-    | %empty                        { $$ = treatEmptystmt(); }
+    | declarations statements       { $$ = makeCombineE ($1, $2); }                     
     ;
 
 declarations:

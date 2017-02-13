@@ -4,16 +4,16 @@
 
 typedef struct EXP {
   int lineno;
-  enum { idK,    // identifier
-         intconstK, // int value
-         floatconstK, // float value
-         stringconstK, //string value 
-         timesK, // *
-         divK, // / 
-         plusK, // + 
-         minusK,  // - 
-         unarymK,  // unary -
-         printstmtK, // print statement  
+  enum { idK,    
+         intconstK, 
+         floatconstK, 
+         stringconstK, 
+         timesK, 
+         divK, 
+         plusK, 
+         minusK,  
+         unarymK,  
+         printstmtK, 
          readstmtK, // read statement
          assignstmtK, // assign statement 
          makeSimplestmtK,  

@@ -2,8 +2,8 @@
 #include "pretty.h"
  
 void printTabs(FILE *file, int times) {
-
-    for (int i = 0; i< times; i++) {
+    int i;
+    for (i= 0; i< times; i++) {
         fprintf(file, "\t");
     }
 }
