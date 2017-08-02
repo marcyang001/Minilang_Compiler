@@ -48,4 +48,4 @@ lex.o yac.o main.o	: heading.h
 lex.o main.o		: tok.h
 
 clean:
-	rm -f *.o *~ lex.c lex.yy.c bison.c tok.h minilang.tab.c minilang.tab.h minilang.output minilang
+	rm -f *.o *~ lex.c lex.yy.c bison.c tok.h minilang.tab.c minilang.tab.h minilang.output minilang *.out
